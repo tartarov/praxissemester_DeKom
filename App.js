@@ -6,10 +6,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './screens/Login';
 import SignUp from './screens/SignUp'
 
-
-
-const Stack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <View style={{flex: 1}}>
