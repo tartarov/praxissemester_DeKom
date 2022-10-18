@@ -22,11 +22,20 @@ export default function Login() {
   const { handleChange, handleSubmit, handleBlur, values,  errors, touched } = useFormik({
     validationSchema: LoginSchema,
     initialValues: { id: '', pin: '' },
-    onSubmit: values => {
+    onSubmit: values => { 
+      fetchData();
       alert(`Id: ${values.id}, Pin: ${values.pin}`)
-      console.log();
+     // console.log();
     }
   });
+
+  const fetchData = async () => {
+    const resp = await fetch("http://192.168.20.129:3000/testdb.userdaten");
+    const data = await resp.json();
+  console.log(data);
+  };
+
+
 
   const pin = useRef(null);
 
