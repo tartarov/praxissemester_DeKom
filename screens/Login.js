@@ -25,7 +25,6 @@ export default function Login() {
     onSubmit: values => { 
       fetchData();
       alert(`Id: ${values.id}, Pin: ${values.pin}`)
-     // console.log();
     }
   });
 
