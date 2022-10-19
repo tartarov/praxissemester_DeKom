@@ -29,7 +29,7 @@ export default function Login() {
     initialValues: { id: '', pin: '' },
     onSubmit: values => {
       fetchData();
-      alert(`Id: ${values.id}, Pin: ${values.pin}`)
+    //  alert(`Id: ${values.id}, Pin: ${values.pin}`)
     }
   });
 
@@ -43,6 +43,11 @@ export default function Login() {
     console.log(result);
     console.log(data);
     console.log(obj.some(item => item.PIN === values.pin));
+    if(obj.some(item => item.PIN === values.pin)){
+      alert('You are authorized!' + '\n' + 'Welcome to deKom!')
+    } else{
+      alert('Password incorect. Please try again.')
+    }
   };
 
 
