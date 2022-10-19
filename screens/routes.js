@@ -43,5 +43,5 @@ app.get('/testdb.userdaten', function (req, res) {
 
 // Starting our server.
 app.listen(3000, () => {
- console.log('Go to http://localhost:3000/testdb.userdaten so you can see the data.');
+ console.log('Go to http://localhost:3000/testdb.userdaten so you can see the data.'); //http://93.132.35.91:3000/testdb.userdaten
 });

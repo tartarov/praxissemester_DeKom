@@ -19,19 +19,30 @@ const LoginSchema = Yup.object().shape({
 
 export default function Login() {
 
-  const { handleChange, handleSubmit, handleBlur, values,  errors, touched } = useFormik({
+  let resp 
+  let data  
+  let result  
+  let obj 
+
+  const { handleChange, handleSubmit, handleBlur, values,  errors, touched } =  useFormik({
     validationSchema: LoginSchema,
     initialValues: { id: '', pin: '' },
-    onSubmit: values => { 
+    onSubmit: values => {
       fetchData();
       alert(`Id: ${values.id}, Pin: ${values.pin}`)
     }
   });
 
+
   const fetchData = async () => {
-    const resp = await fetch("http://192.168.20.129:3000/testdb.userdaten");
-    const data = await resp.json();
-  console.log(data);
+    resp = await fetch("http://localhost:3000/testdb.userdaten"); //"http://93.132.35.91:3000/testdb.userdaten"
+    data = await resp.json();
+    result = JSON.stringify(data);
+    obj = JSON.parse(result);
+    console.log(obj);
+    console.log(result);
+    console.log(data);
+    console.log(obj.some(item => item.PIN === values.pin));
   };
 
 
