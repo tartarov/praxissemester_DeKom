@@ -1,16 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react'
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 
-import Login from './screens/Login';
-import SignUp from './screens/SignUp'
 
-export default function App() {
-  return (
-    <View style={{flex: 1}}>
-      <SignUp></SignUp>
-     <Login></Login>
-    </View>
-  );
-}
+//const {Navigator, Screen } = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+    return(
+    <NavigationContainer>
+      <Stack.Navigator headerMode="none" initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login}></Stack.Screen>
+        <Stack.Screen name="SignUp" component={SignUp}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+    )
+};
+
+export default App;

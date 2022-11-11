@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import {ActivityIndicator, Text, View, StyleSheet, Modal, Pressable } from 'react-native';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -17,40 +17,40 @@ const LoginSchema = Yup.object().shape({
     .required('Required')
 });
 
-export default function Login() {
 
-  let resp 
-  let data  
-  let result  
-  let obj 
+
+export default function Login({navigation}) {
+
+  let resp; 
+  let data;
+  let result;  
+  let obj; 
 
   const { handleChange, handleSubmit, handleBlur, values,  errors, touched } =  useFormik({
     validationSchema: LoginSchema,
     initialValues: { id: '', pin: '' },
     onSubmit: values => {
-      fetchData();
+     fetchData({navigation})
     //  alert(`Id: ${values.id}, Pin: ${values.pin}`)
     }
   });
 
+  
 
   const fetchData = async () => {
     resp = await fetch("http://localhost:3000/testdb.userdaten"); //"http://93.132.35.91:3000/testdb.userdaten"
     data = await resp.json();
     result = JSON.stringify(data);
     obj = JSON.parse(result);
-    console.log(obj);
-    console.log(result);
-    console.log(data);
     console.log(obj.some(item => item.PIN === values.pin));
     if(obj.some(item => item.PIN === values.pin)){
+    //  modalView();
       alert('You are authorized!' + '\n' + 'Welcome to deKom!')
+      navigation.navigate('SignUp');
     } else{
-      alert('Password incorect. Please try again.')
+      alert('PIN incorrect. Please try again.')
     }
   };
-
-
 
   const pin = useRef(null);
 
@@ -64,10 +64,13 @@ export default function Login() {
         justifyContent: 'center'
       }}
     >
-      <Text style={{ color: '#223e4b', fontSize: 40, fontWeight: 'bold', marginBottom: 16 }}>
-        DeKom
+      <Text style={{ color: '#223e4b', fontSize: 40, fontWeight: 'bold' }}>
+        DeKom.
       </Text>
-      <View style={{ paddingHorizontal: 32, marginBottom: 16, width: '100%' }}>
+      <Text style={{ color: '#223e4b', fontSize: 10, fontWeight: 'light', marginBottom: 100 }}>
+        All bueraucracies. One app.
+      </Text>
+      <View style={{ paddingHorizontal: 32, marginBottom: 36, width: '100%' }}>
         <TextInput
           icon="user"
           placeholder="Enter your ID"
@@ -83,7 +86,7 @@ export default function Login() {
           onSubmitEditing={() => pin.current?.focus()}
         />
       </View>
-      <View style={{ paddingHorizontal: 32, marginBottom: 16, width: '100%' }}>
+      <View style={{ paddingHorizontal: 32, marginBottom: 36, width: '100%' }}>
         <TextInput
           icon="key"
           placeholder="Enter your PIN"

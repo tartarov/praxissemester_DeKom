@@ -40,10 +40,13 @@ export default function Login() {
         justifyContent: 'center'
       }}
     >
-      <Text style={{ color: '#223e4b', fontSize: 40, fontWeight: 'bold', marginBottom: 16 }}>
-        DeKom
+      <Text style={{ color: '#223e4b', fontSize: 40, fontWeight: 'bold'}}>
+        DeKom.
       </Text>
-      <View style={{ paddingHorizontal: 32, marginBottom: 16, width: '100%' }}>
+      <Text style={{ color: '#223e4b', fontSize: 10, fontWeight: 'light', marginBottom: 100 }}>
+        All bueraucracies. One app.
+      </Text>
+      <View style={{ paddingHorizontal: 32, marginBottom:36, width: '100%' }}>
         <TextInput
           icon="user"
           placeholder="Enter your ID"
@@ -59,7 +62,7 @@ export default function Login() {
           onSubmitEditing={() => pin.current?.focus()}
         />
       </View>
-      <View style={{ paddingHorizontal: 32, marginBottom: 16, width: '100%' }}>
+      <View style={{ paddingHorizontal: 32, marginBottom: 36, width: '100%' }}>
         <TextInput
           icon="key"
           placeholder="Enter your PIN"
