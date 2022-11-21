@@ -1,90 +1,255 @@
-import React, { useRef } from 'react';
-import { Text, View } from 'react-native';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { useRef } from "react";
+import { Text, View } from "react-native";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import Button from '../components/Button.js';
-import TextInput from '../components/TextInput.js';
+import Button from "../components/Button.js";
+import TextInput from "../components/TextInput.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
-  .min(8, 'Too Short!')
-  .max(8,'Too Long!')
-  .required('Required'),
+    .min(8, "Too Short!")
+    .max(8, "Too Long!")
+    .required("Required"),
   pin: Yup.string()
-    .min(6, 'Too Short!')
-    .max(6, 'Too Long!')
-    .required('Required')
+    .min(6, "Too Short!")
+    .max(6, "Too Long!")
+    .required("Required"),
 });
 
 export default function Login() {
-
-  const { handleChange, handleSubmit, handleBlur, values,  errors, touched } = useFormik({
-    validationSchema: LoginSchema,
-    initialValues: { id: '', pin: '' },
-    onSubmit: values => {
-      alert(`Id: ${values.id}, Pin: ${values.pin}`)
-      console.log();
-    }
-  });
+  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
+    useFormik({
+      validationSchema: LoginSchema,
+      initialValues: { id: "", pin: "" },
+      onSubmit: (values) => {
+        alert(`Id: ${values.id}, Pin: ${values.pin}`);
+        console.log();
+      },
+    });
 
   const pin = useRef(null);
 
   return (
-    
     <View
       style={{
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center'
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Text style={{ color: '#223e4b', fontSize: 40, fontWeight: 'bold'}}>
+      <Text style={{ color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
         DeKom.
       </Text>
-      <Text style={{ color: '#223e4b', fontSize: 10, fontWeight: 'light', marginBottom: 100 }}>
+
+      <Text
+        style={{
+          color: "#223e4b",
+          fontSize: 10,
+          fontWeight: "light",
+          marginBottom: 100,
+        }}
+      >
         All bueraucracies. One app.
       </Text>
-      <View style={{ paddingHorizontal: 32, marginBottom:36, width: '100%' }}>
+
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
         <TextInput
-          icon="user"
-          placeholder="Enter your ID"
+          //icon="user"
+          placeholder="Geburtsname"
           autoCapitalize="none"
           autoCompleteType="cc-number"
           keyboardAppearance="dark"
           returnKeyType="next"
           returnKeyLabel="next"
-          onChangeText={handleChange('id')}
-          onBlur={handleBlur('id')}
+          onChangeText={handleChange("Geburtsname")}
+          onBlur={handleBlur("Geburtsname")}
           error={errors.id}
           touched={touched.id}
           onSubmitEditing={() => pin.current?.focus()}
         />
-      </View>
-      <View style={{ paddingHorizontal: 32, marginBottom: 36, width: '100%' }}>
+
         <TextInput
-          icon="key"
-          placeholder="Enter your PIN"
-          secureTextEntry
-          autoCompleteType="password"
-          keyboardType="number-pad"
+          // icon="key"
+          placeholder="Nachname"
+          autoCompleteType="cc-number"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="go"
-          returnKeyLabel="go"
-          onChangeText={handleChange('pin')}
-          onBlur={handleBlur('pin')}
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Nachname")}
+          onBlur={handleBlur("Nachname")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+      </View>
+
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <TextInput
+          // icon="key"
+          placeholder="Alter"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardType="number-pad"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Alter")}
+          onBlur={handleBlur("Alter")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+      </View>
+
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <TextInput
+          // icon="key"
+          placeholder="Adresse"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Adresse")}
+          onBlur={handleBlur("Adresse")}
           error={errors.pin}
           touched={touched.pin}
           ref={pin}
           onSubmitEditing={() => handleSubmit()}
         />
 
-        
+        <TextInput
+          // icon="key"
+          placeholder="Hausnummer"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardType="number-pad"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Hausnummer")}
+          onBlur={handleBlur("Hausnummer")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
       </View>
-      <Button label='Sign Up' onPress={handleSubmit} />
+
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <TextInput
+          // icon="key"
+          placeholder="Bundesland"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Bundesland")}
+          onBlur={handleBlur("Bundesland")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+
+        <TextInput
+          // icon="key"
+          placeholder="Stadt"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Stadt")}
+          onBlur={handleBlur("Stadt")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <TextInput
+          // icon="key"
+          placeholder="E-Mail"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("E-Mail")}
+          onBlur={handleBlur("E-Mail")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+
+        <TextInput
+          // icon="key"
+          placeholder="Telefonnummer"
+          autoCompleteType="cc-number"
+          autoCapitalize="none"
+          keyboardType="number-pad"
+          keyboardAppearance="dark"
+          returnKeyType="next"
+          returnKeyLabel="next"
+          onChangeText={handleChange("Telefonnummer")}
+          onBlur={handleBlur("Telefonnummer")}
+          error={errors.pin}
+          touched={touched.pin}
+          ref={pin}
+          onSubmitEditing={() => handleSubmit()}
+        />
+      </View>
+
+      <Button label="Sign Up" onPress={handleSubmit} />
     </View>
   );
 }
-
