@@ -90,6 +90,7 @@ function HomeScreen() {
               padding: SPACING * 2,
               paddingBottom: 0,
               marginTop: 50,
+              marginBottom: 50,
             }}
             scrollEnabled={false}
             removeClippedSubviews={false}
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 10,
+    justifyContent: 'center',
   },
   headerContainer: {
     height: 50,
@@ -192,5 +193,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 38,
     marginLeft:  20,
+    color: '#223e4b',
   },
 });
