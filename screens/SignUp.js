@@ -17,7 +17,7 @@ const LoginSchema = Yup.object().shape({
     .required("Required"),
 });
 
-export default function Login() {
+export default function SignUp() {
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
@@ -56,14 +56,20 @@ export default function Login() {
 
       <View
         style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+        paddingHorizontal: 10,
+        marginBottom: 36,
+        flex: 1,
+        width: "50%",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-around"
         }}
       >
         <TextInput
+              style={{
+                paddingRight: "10vw",
+                //paddingVertical: 50
+                }}
           //icon="user"
           placeholder="Geburtsname"
           autoCapitalize="none"
@@ -79,6 +85,10 @@ export default function Login() {
         />
 
         <TextInput
+             style={{
+              paddingRight: "10vw",
+            //  paddingVertical: 50
+              }}
           // icon="key"
           placeholder="Nachname"
           autoCompleteType="cc-number"
@@ -99,9 +109,10 @@ export default function Login() {
         style={{
           paddingHorizontal: 32,
           marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+          width: "50%",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <TextInput
@@ -126,9 +137,10 @@ export default function Login() {
         style={{
           paddingHorizontal: 32,
           marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+          width: "50%",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
         <TextInput
@@ -146,7 +158,17 @@ export default function Login() {
           ref={pin}
           onSubmitEditing={() => handleSubmit()}
         />
-
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 32,
+          marginBottom: 36,
+          width: "50%",
+          flexWrap: "wrap",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         <TextInput
           // icon="key"
           placeholder="Hausnummer"
@@ -167,14 +189,21 @@ export default function Login() {
 
       <View
         style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+            paddingHorizontal: 10,
+            marginBottom: 36,
+            flex: 1,
+            width: "50%",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-around"
         }}
       >
         <TextInput
+             style={{
+              paddingRight: "10vw",
+              paddingVertical: "5vw",
+             // paddingBottom: "50vw"
+              }}
           // icon="key"
           placeholder="Bundesland"
           autoCompleteType="cc-number"
@@ -191,6 +220,10 @@ export default function Login() {
         />
 
         <TextInput
+             style={{
+              paddingRight: "10vw",
+              paddingVertical: "5vw"
+              }}
           // icon="key"
           placeholder="Stadt"
           autoCompleteType="cc-number"
@@ -208,7 +241,7 @@ export default function Login() {
       </View>
       <View
         style={{
-          paddingHorizontal: 32,
+          paddingHorizontal: 60,
           marginBottom: 36,
           width: "100%",
           flexDirection: "row",
@@ -216,6 +249,10 @@ export default function Login() {
         }}
       >
         <TextInput
+               style={{
+                paddingRight: "10vw",
+                paddingVertical: "5vw"
+                }}
           // icon="key"
           placeholder="E-Mail"
           autoCompleteType="cc-number"
@@ -232,6 +269,10 @@ export default function Login() {
         />
 
         <TextInput
+               style={{
+                paddingRight: "10vw",
+                paddingVertical: "5vw"
+                }}
           // icon="key"
           placeholder="Telefonnummer"
           autoCompleteType="cc-number"
