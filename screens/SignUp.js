@@ -5,6 +5,7 @@ import * as Yup from "yup";
 
 import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
+import DropDown from "../components/DropDown.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -16,6 +17,40 @@ const LoginSchema = Yup.object().shape({
     .max(6, "Too Long!")
     .required("Required"),
 });
+
+const styles = {
+  app: {
+    marginTop: 30,
+    flex: 6, // the number of columns you want to devide the screen into
+    width: "90%",
+    marginHorizontal: "auto",
+  },
+  row: {
+    flexDirection: "row"
+  },
+  "1col":  {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    height: 50,
+    flex:  1
+  },
+
+  "5col":  {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    flex:  5
+  },
+};
+
+const Col = ({ numRows, children }) => {
+  return  (
+    <View style={styles[`${numRows}col`]}>{children}</View>
+  )
+}
+
+const Row = ({ children }) => (
+  <View style={styles.row}>{children}</View>
+)
 
 export default function Login() {
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
@@ -39,7 +74,7 @@ export default function Login() {
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
+      <Text style={{marginTop: 50, color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
         DeKom.
       </Text>
 
@@ -48,208 +83,236 @@ export default function Login() {
           color: "#223e4b",
           fontSize: 10,
           fontWeight: "light",
-          marginBottom: 100,
+          marginBottom: 10,
         }}
       >
         All bueraucracies. One app.
       </Text>
 
-      <View
-        style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-        }}
-      >
+      <View style={styles.app}>
+      <Row>
+        <Col numRows={1}>
         <TextInput
-          //icon="user"
-          placeholder="Geburtsname"
+          placeholder="ggfs. Titel"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
-          autoCompleteType="cc-number"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Geburtsname")}
-          onBlur={handleBlur("Geburtsname")}
-          error={errors.id}
-          touched={touched.id}
-          onSubmitEditing={() => pin.current?.focus()}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('titel')}
+          onBlur={handleBlur('titel')}
+          onSubmitEditing={() => handleSubmit()}
         />
-
+        </Col>
+        <Col numRows={1}>
         <TextInput
-          // icon="key"
+          placeholder="Geschlecht"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('geschlecht')}
+          onBlur={handleBlur('geschlecht')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={1}>
+        <TextInput
+          placeholder="Vorname"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('vorname')}
+          onBlur={handleBlur('vorname')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+        <Col numRows={1}>
+        <TextInput
+          placeholder="ggfs. Zweitname"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('zweitname')}
+          onBlur={handleBlur('zweitname')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={1}>
+        <TextInput
           placeholder="Nachname"
-          autoCompleteType="cc-number"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Nachname")}
-          onBlur={handleBlur("Nachname")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('nachname')}
+          onBlur={handleBlur('nachname')}
           onSubmitEditing={() => handleSubmit()}
         />
-      </View>
-
-      <View
-        style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-        }}
-      >
+        </Col>
+        <Col numRows={1}>
         <TextInput
-          // icon="key"
-          placeholder="Alter"
-          autoCompleteType="cc-number"
-          autoCapitalize="none"
-          keyboardType="number-pad"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Alter")}
-          onBlur={handleBlur("Alter")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
-          onSubmitEditing={() => handleSubmit()}
-        />
-      </View>
-
-      <View
-        style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <TextInput
-          // icon="key"
-          placeholder="Adresse"
-          autoCompleteType="cc-number"
+          placeholder="Geburtsdatum"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Adresse")}
-          onBlur={handleBlur("Adresse")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('geburtsdatum')}
+          onBlur={handleBlur('geburtsdatum')}
           onSubmitEditing={() => handleSubmit()}
         />
-
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={5}>
         <TextInput
-          // icon="key"
+          placeholder="Straße"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('straße')}
+          onBlur={handleBlur('straße')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+        <Col numRows={1}>
+        <TextInput
           placeholder="Hausnummer"
-          autoCompleteType="cc-number"
-          autoCapitalize="none"
-          keyboardType="number-pad"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Hausnummer")}
-          onBlur={handleBlur("Hausnummer")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
-          onSubmitEditing={() => handleSubmit()}
-        />
-      </View>
-
-      <View
-        style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <TextInput
-          // icon="key"
-          placeholder="Bundesland"
-          autoCompleteType="cc-number"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Bundesland")}
-          onBlur={handleBlur("Bundesland")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('hausnummer')}
+          onBlur={handleBlur('hausnummer')}
           onSubmitEditing={() => handleSubmit()}
         />
-
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={1}>
         <TextInput
-          // icon="key"
           placeholder="Stadt"
-          autoCompleteType="cc-number"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Stadt")}
-          onBlur={handleBlur("Stadt")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('stadt')}
+          onBlur={handleBlur('stadt')}
           onSubmitEditing={() => handleSubmit()}
         />
-      </View>
-      <View
-        style={{
-          paddingHorizontal: 32,
-          marginBottom: 36,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-        }}
-      >
+        </Col>
+        <Col numRows={1}>
         <TextInput
-          // icon="key"
-          placeholder="E-Mail"
-          autoCompleteType="cc-number"
+          placeholder="Postleitzahl"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("E-Mail")}
-          onBlur={handleBlur("E-Mail")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('postleitzahl')}
+          onBlur={handleBlur('postleitzahl')}
           onSubmitEditing={() => handleSubmit()}
         />
-
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={1}>
         <TextInput
-          // icon="key"
+          placeholder="Bundesland"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('bundesland')}
+          onBlur={handleBlur('bundesland')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+      </Row>
+      <Row>
+        <Col numRows={1}>
+        <TextInput
+          placeholder="Vorwahl"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('vorwahl')}
+          onBlur={handleBlur('vorwahl')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+        <Col numRows={5}>
+        <TextInput
           placeholder="Telefonnummer"
-          autoCompleteType="cc-number"
+          autoCompleteType="text"
+          keyboardType="default"
           autoCapitalize="none"
-          keyboardType="number-pad"
           keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          onChangeText={handleChange("Telefonnummer")}
-          onBlur={handleBlur("Telefonnummer")}
-          error={errors.pin}
-          touched={touched.pin}
-          ref={pin}
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('telefonnummer')}
+          onBlur={handleBlur('telefonnummer')}
           onSubmitEditing={() => handleSubmit()}
         />
-      </View>
+        </Col>
+      </Row>
+      
+      <Row>
+        <Col numRows={1}>
+        <TextInput
+          placeholder="E-Mail"
+          autoCompleteType="text"
+          keyboardType="default"
+          autoCapitalize="none"
+          keyboardAppearance="dark"
+          returnKeyType="go"
+          returnKeyLabel="go"
+          onChangeText={handleChange('email')}
+          onBlur={handleBlur('email')}
+          onSubmitEditing={() => handleSubmit()}
+        />
+        </Col>
+      </Row>
+    </View>
 
-      <Button label="Sign Up" onPress={handleSubmit} />
+    <DropDown />
+  
+  <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+
+      <Button 
+      label="Sign Up" 
+      onPress={handleSubmit} />
+      </View>
     </View>
   );
 }
