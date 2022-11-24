@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, Dimensions, Platform } from "react-native";
 
 
 const { width } = Dimensions.get('screen');
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     heading: {
-        fontSize: 12,
+        fontSize: Platform.OS === 'android' ? 10 : 12, //Platform.OS === 'android' ? 10 : 12,
         fontStyle: 'italic',
         color: 'white',
         paddingHorizontal: 10,
     },
     text: {
         color: 'white',
-        fontSize: 18,
+        fontSize: Platform.OS === 'android' ? 16 : 18,
         fontWeight: 'bold',
         paddingHorizontal: 10,
     }
