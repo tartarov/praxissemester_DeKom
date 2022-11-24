@@ -51,13 +51,13 @@ export default function Login({ navigation }) {
 
   const fetchData = async () => {
     respTestdb = await fetch(
-      "http://localhost:3000/testdb.userdaten?pin=" + values.pin
+      "http://localhost:3000/testdb.userdaten?pin=" + values.pin + "&id=" + values.id
     );
     dataTestdb = await respTestdb.json();
     resultTestdb = JSON.stringify(dataTestdb);
     objTestdb = JSON.parse(resultTestdb);
     console.log(objTestdb.some((item) => item.PIN === values.pin));
-    if (objTestdb.some((item) => item.PIN === values.pin)) {
+    if (objTestdb.some((item) => item.PIN === values.pin) && objTestdb.some((item2) => item2.ID === values.id)) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
 
       respDekomdb = await fetch(
@@ -74,7 +74,7 @@ export default function Login({ navigation }) {
       }
 
     } else {
-      alert("PIN incorrect. Please try again.");
+      alert("ID or PIN incorrect. Please try again.");
     }
   };
 

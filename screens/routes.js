@@ -34,12 +34,13 @@ app.use(function (req, res, next) {
 let ourConnection;
 // Creating a GET route that returns data from the 'users' table.
 app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
-  console.log("REQUEST: " + reqTestdb.query.pin);
+  console.log("REQUEST 1: " + reqTestdb.query.pin);
+  console.log("REQUEST 2: " + reqTestdb.query.id);
   // Connecting to the database.
   connectionTestdb.getConnection(function (err, ourConnection) {
     // Executing the MySQL query (select all data from the 'users' table).
     connectionTestdb.query(
-      "SELECT * FROM testdb.userdaten WHERE PIN=" + reqTestdb.query.pin,
+      "SELECT * FROM testdb.userdaten WHERE PIN=" + reqTestdb.query.pin + " AND ID='" + reqTestdb.query.id + "'",
       function (error, results, fields) {
         // If some error occurs, we throw an error.
         if (error) throw error;
