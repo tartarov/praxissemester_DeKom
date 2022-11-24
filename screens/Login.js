@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -9,6 +9,8 @@ import {
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
+//import crypto from "crypto"
+import * as Crypto from 'expo-crypto'
 
 import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
@@ -25,15 +27,17 @@ const LoginSchema = Yup.object().shape({
 });
 
 export default function Login({ navigation }) {
-  let resp;
-  let data;
-  let result;
-  let obj;
+  let respTestdb;
+  let dataTestdb;
+  let resultTestdb;
+  let objTestdb;
 
-  let resp2;
-  let data2;
-  let result2;
-  let obj2;
+  let respDekomdb;
+  let dataDekomdb;
+  let resultDekomdb;
+  let objDekomdb;
+
+  let hash;
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -46,30 +50,24 @@ export default function Login({ navigation }) {
     });
 
   const fetchData = async () => {
-    resp = await fetch(
+    respTestdb = await fetch(
       "http://localhost:3000/testdb.userdaten?pin=" + values.pin
     );
-    data = await resp.json();
-    result = JSON.stringify(data);
-    obj = JSON.parse(result);
-    console.log(obj.some((item) => item.PIN === values.pin));
-    if (obj.some((item) => item.PIN === values.pin)) {
+    dataTestdb = await respTestdb.json();
+    resultTestdb = JSON.stringify(dataTestdb);
+    objTestdb = JSON.parse(resultTestdb);
+    console.log(objTestdb.some((item) => item.PIN === values.pin));
+    if (objTestdb.some((item) => item.PIN === values.pin)) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
 
-      const { createHmac } = await import("crypto");
-      const secret = "abcdefgahah";
-      const hash = createHmac("sha256", secret).update(values.id).digest("hex");
-      console.log("Input String: " + values.id);
-      console.log("Hash Value: " + hash);
-
-      resp2 = await fetch(
-        "http://localhost:3000/dekomdb.dekom_user?userhash=" + hash
+      respDekomdb = await fetch(
+        "http://localhost:3000/dekomdb.dekom_user?userId=" + values.id
       );
-      data2 = await resp2.json();
-      result2 = JSON.stringify(data2);
-      obj2 = JSON.parse(result2);
-      console.log("obj2: " + obj2)
-      if (obj2 != true){
+      dataDekomdb = await respDekomdb.json();
+      resultDekomdb = JSON.stringify(dataDekomdb);
+      objDekomdb = JSON.parse(resultDekomdb);
+      console.log("objDekomdb: " + objDekomdb)
+      if (objDekomdb != true){
       navigation.navigate("SignUp");
       } else{
         navigation.navigate("Homescreen");
