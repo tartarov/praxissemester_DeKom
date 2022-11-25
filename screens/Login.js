@@ -90,7 +90,7 @@ export default function Login({ navigation }) {
       }}
     >
       <Text style={{ color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
-        DeKom.
+        |DeKom.
       </Text>
       <Text
         style={{
