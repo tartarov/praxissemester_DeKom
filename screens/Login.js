@@ -70,13 +70,13 @@ export default function Login({ navigation }) {
       if (objDekomdb != true){
       navigation.navigate("SignUp");
       } else{
-        navigation.navigate("Homescreen");
+        navigation.navigate("MainScreen");
       }
 
     } else {
       alert("ID or PIN incorrect. Please try again.");
-    }
-  };
+    } 
+  }; 
 
   const pin = useRef(null);
 
