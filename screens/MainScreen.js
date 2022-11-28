@@ -8,8 +8,8 @@ const Tab = createBottomTabNavigator();
 
 function MainScreen(){
     return (
-        <NavigationContainer>
-            <Tab.Navigator>
+        <>
+            <Tab.Navigator initialRouteName='Home'>
               <Tab.Screen name='Dokumente' component={HomeScreen} options={{  //change HomeScreen to DokumenteScreen
                 tabBarIcon: ({color, size}) => <Ionicons name='document' color={color} size={size} /> }} />
               <Tab.Screen name='Home' component={HomeScreen} options={{
@@ -19,7 +19,7 @@ function MainScreen(){
               <Tab.Screen name='Menu' component={HomeScreen} options={{ //change HomeScreen to MenuScreen
                 tabBarIcon: ({color, size}) => <Ionicons name='menu' color={color} size={size} /> }} />
             </Tab.Navigator>
-        </NavigationContainer>
+        </>
     );
 }
 
