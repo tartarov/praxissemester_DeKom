@@ -51,7 +51,7 @@ export default function Login({ navigation }) {
 
   const fetchData = async () => {
     respTestdb = await fetch(
-      "http://localhost:3000/testdb.userdaten?pin=" + values.pin + "&id=" + values.id
+      "http://10.1.111.32:3000/testdb.userdaten?pin=" + values.pin + "&id=" + values.id
     );
     dataTestdb = await respTestdb.json();
     resultTestdb = JSON.stringify(dataTestdb);
@@ -61,7 +61,7 @@ export default function Login({ navigation }) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
 
       respDekomdb = await fetch(
-        "http://localhost:3000/dekomdb.dekom_user?userId=" + values.id
+        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id
       );
       dataDekomdb = await respDekomdb.json();
       resultDekomdb = JSON.stringify(dataDekomdb);

@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
 });
 
 let ourConnection;
+let hash;
 // Creating a GET route that returns data from the 'users' table.
 app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
   console.log("REQUEST 1: " + reqTestdb.query.pin);
@@ -41,7 +42,11 @@ app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
   connectionTestdb.getConnection(function (err, ourConnection) {
     // Executing the MySQL query (select all data from the 'users' table).
     connectionTestdb.query(
-      "SELECT * FROM testdb.userdaten WHERE PIN=" + reqTestdb.query.pin + " AND ID='" + reqTestdb.query.id + "'",
+      "SELECT * FROM testdb.userdaten WHERE PIN=" +
+        reqTestdb.query.pin +
+        " AND ID='" +
+        reqTestdb.query.id +
+        "'",
       function (error, results, fields) {
         // If some error occurs, we throw an error.
         if (error) throw error;
@@ -57,7 +62,6 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
   connectionDekomdb.getConnection(function (err, ourConnection) {
     console.log("REQUEST HASH : " + reqDekomdb.query.userId);
 
-    let hash;
     const createHash = async () => {
       const { createHmac } = await import("crypto");
       const secret = "abcdefgahah";
@@ -97,19 +101,20 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
   });
 });
 
-app.get("/user/data", function(req,resData){
-  connectionDekomdb.getConnection(function (err, ourConnection){
+app.get("/user/data", function (req, resData) {
+  connectionDekomdb.getConnection(function (err, ourConnection) {
     connectionDekomdb.query(
-      "SELECT * FROM dekomdb.dekom_user WHERE USER_HASH='" +
-        hash +
-        "';", function(error,results,fields){
-          if(error){
-            throw error;
-          } else {
-            resData.send(results);
-          }
-        })
-  })
+      "SELECT NAME FROM dekomdb.dekom_user WHERE USER_HASH='" + hash + "';",
+      function (error, results, fields) {
+        console.log("results: " + results);
+        if (error) {
+          throw error;
+        } else {
+          resData.send(results);
+        }
+      }
+    );
+  });
 });
 
 // Starting our server.
