@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const { send } = require("process");
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -94,6 +95,21 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
       );
     });
   });
+});
+
+app.get("/user/data", function(req,resData){
+  connectionDekomdb.getConnection(function (err, ourConnection){
+    connectionDekomdb.query(
+      "SELECT * FROM dekomdb.dekom_user WHERE USER_HASH='" +
+        hash +
+        "';", function(error,results,fields){
+          if(error){
+            throw error;
+          } else {
+            resData.send(results);
+          }
+        })
+  })
 });
 
 // Starting our server.
