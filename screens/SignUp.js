@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { Text, View, useState } from "react-native";
+import React, { useRef, useState } from "react";
+import { Text, View } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -7,19 +7,55 @@ import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
 import DropDown from "../components/DropDown.js";
 
-const LoginSchema = Yup.object().shape({
-  id: Yup.string()
-    .min(8, "Too Short!")
-    .max(8, "Too Long!")
+const SignUpSchema = Yup.object().shape({
+  titel: Yup.string()
+    .min(1, "Too Short!")
+    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field "),
+  vorname: Yup.string()
+    .min(1, "Too Short!")
+    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field ")
     .required("Required"),
-  pin: Yup.string()
-    .min(6, "Too Short!")
-    .max(6, "Too Long!")
+  zweitname: Yup.string()
+  .min(1, "Too Short!")
+  .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field "),
+  nachname: Yup.string()
+  .min(1, "Too Short!")
+    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field ")
+    .required("Required"),
+  geburtsdatum: Yup.date()
+    .required("Required"),
+  straße: Yup.string()
+  .min(1, "Too Short!")
+    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field ")
+    .required("Required"),
+  hausnummer: Yup.string()
+  .min(1, "Too Short!")
+    .required("Required"),
+  stadt: Yup.string()
+  .min(1, "Too Short!")
+    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field ")
+    .required("Required"),
+  postleitzahl: Yup.string()
+    .required("Required")
+    .matches(/^\d+$/, 'Only numbers')
+    .min(1, 'Too short!')
+    .max(5, 'Too Long!'),
+  vorwahl: Yup.string()
+    .matches(/[+]+[\d]+[\d]/, "Wrong Format")
+    .max(3, 'Too Long!'),
+  telefonnummer: Yup.string()
+    .min(1, "Too short!")
+    .max(11, "Too long!")
+    .required("Required")
+    .matches(/^\d+$/, 'Only numbers'),
+  email: Yup.string()
+    .matches(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/, "No Email Format")
     .required("Required"),
 });
 
 const styles = {
   app: {
+    zIndex: 0,
     marginTop: 30,
     flex: 6, // the number of columns you want to devide the screen into
     width: "90%",
@@ -54,33 +90,36 @@ const Row = ({ children }) => (
 
 let gender = [{
   id: 1,
-  name: 'M'
+  name: 'männlich'
 },
 {
   id: 2,
-  name: 'W'
+  name: 'weiblich'
 },
-{ id: 3, name: 'X' }
+{ id: 3, name: 'divers' }
 ]
 
-const Home = () => {
+export default function SignUp() {
 
-const [selectedItem, setSelectedItem] = useState(null)
+  const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
+    validationSchema: SignUpSchema,
+    initialValues: {
+      titel: '', vorname: '', nachname: '', zweitname: '',
+      geburtsdatum: '', straße: '', hausnummer: '', stadt: '',
+      postleitzahl: '', vorwahl: '', telefonnummer: '', email: ''
+    },
+    onSubmit: values => {
+      alert(`Titel: ${values.titel}, Vorname: ${values.vorname}, Zweitname: ${values.zweitname} Nachname: ${values.nachname},
+      Geburtsdatum: ${values.geburtsdatum}, Straße: ${values.straße}, Hausnummer: ${values.hausnummer},
+      Stadt: ${values.stadt}, Postleitzahl: ${values.postleitzahl}, Vorwahl: ${values.vorwahl}, Telefonnummer: ${values.telefonnummer},
+      Email: ${values.email}`)
+    }
+  });
+
+  const [selectedItem, setSelectedItem] = useState(null)
 
   const onSelect = (item) => { setSelectedItem(item) };
 
-}
-
-export default function Login() {
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      validationSchema: LoginSchema,
-      initialValues: { id: "", pin: "" },
-      onSubmit: (values) => {
-        alert(`Id: ${values.id}, Pin: ${values.pin}`);
-        console.log();
-      },
-    });
 
   return (
     <View
@@ -113,29 +152,26 @@ export default function Login() {
               placeholder="ggfs. Titel"
               autoCompleteType="text"
               keyboardType="default"
-              autoCapitalize="none"
+              autoCapitalize="sentences"
               keyboardAppearance="dark"
               returnKeyType="go"
               returnKeyLabel="go"
               onChangeText={handleChange('titel')}
               onBlur={handleBlur('titel')}
-              onSubmitEditing={() => handleSubmit()}
+              error={errors.titel}
+              touched={touched.titel}
+              onSubmitEditing={() => vorname.current?.focus()}
             />
           </Col>
-          <Col numRows={1}>
-            <TextInput
-              placeholder="Geschlecht"
-              autoCompleteType="text"
-              keyboardType="default"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange('geschlecht')}
-              onBlur={handleBlur('geschlecht')}
-              onSubmitEditing={() => handleSubmit()}
-            />
-          </Col>
+          <View style={{ zIndex: 20 }}>
+            <Col numRows={1}>
+              <DropDown
+                value={selectedItem}
+                data={gender}
+                onSelect={onSelect}
+              />
+            </Col>
+          </View>
         </Row>
         <Row>
           <Col numRows={1}>
@@ -149,6 +185,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('vorname')}
               onBlur={handleBlur('vorname')}
+              error={errors.vorname}
+              touched={touched.vorname}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -163,6 +201,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('zweitname')}
               onBlur={handleBlur('zweitname')}
+              error={errors.zweitname}
+              touched={touched.zweitname}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -179,6 +219,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('nachname')}
               onBlur={handleBlur('nachname')}
+              error={errors.nachname}
+              touched={touched.nachname}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -193,6 +235,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('geburtsdatum')}
               onBlur={handleBlur('geburtsdatum')}
+              error={errors.geburtsdatum}
+              touched={touched.geburtsdatum}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -209,6 +253,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('straße')}
               onBlur={handleBlur('straße')}
+              error={errors.straße}
+              touched={touched.straße}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -223,6 +269,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('hausnummer')}
               onBlur={handleBlur('hausnummer')}
+              error={errors.hausnummer}
+              touched={touched.hausnummer}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -239,6 +287,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('stadt')}
               onBlur={handleBlur('stadt')}
+              error={errors.stadt}
+              touched={touched.stadt}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -253,29 +303,25 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('postleitzahl')}
               onBlur={handleBlur('postleitzahl')}
+              error={errors.postleitzahl}
+              touched={touched.postleitzahl}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
         </Row>
         <Row>
           <Col numRows={1}>
-            <TextInput
-              placeholder="Bundesland"
-              autoCompleteType="text"
-              keyboardType="default"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange('bundesland')}
-              onBlur={handleBlur('bundesland')}
-              onSubmitEditing={() => handleSubmit()}
+            <DropDown
+              value={selectedItem}
+              data={gender}
+              onSelect={onSelect}
             />
           </Col>
         </Row>
         <Row>
           <Col numRows={1}>
             <TextInput
+              value="+49"
               placeholder="Vorwahl"
               autoCompleteType="text"
               keyboardType="default"
@@ -285,6 +331,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('vorwahl')}
               onBlur={handleBlur('vorwahl')}
+              error={errors.vorwahl}
+              touched={touched.vorwahl}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -299,6 +347,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('telefonnummer')}
               onBlur={handleBlur('telefonnummer')}
+              error={errors.telefonnummer}
+              touched={touched.telefonnummer}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
@@ -316,6 +366,8 @@ export default function Login() {
               returnKeyLabel="go"
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
+              error={errors.email}
+              touched={touched.email}
               onSubmitEditing={() => handleSubmit()}
             />
           </Col>
