@@ -1,5 +1,5 @@
 
-export default async function getUserDataByHash() {
+export async function getUserDataByHash() {
   let respUserData;
   let resultData;
   let objData;

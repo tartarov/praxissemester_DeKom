@@ -4,7 +4,7 @@ import getUserDataByHash from '../data/dataTransfer';
 
 
 function WalletHandler ({data}){
-     getUserDataByHash();
+    // getUserDataByHash();
 
      let document = <Ausweis data={data} />
 

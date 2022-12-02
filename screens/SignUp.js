@@ -67,7 +67,7 @@ export default function SignUp() {
       >
         <TextInput
               style={{
-                paddingRight: "10vw",
+                paddingRight: 10,
                 //paddingVertical: 50
                 }}
           //icon="user"
@@ -86,7 +86,7 @@ export default function SignUp() {
 
         <TextInput
              style={{
-              paddingRight: "10vw",
+              paddingRight: 10,
             //  paddingVertical: 50
               }}
           // icon="key"
@@ -200,8 +200,8 @@ export default function SignUp() {
       >
         <TextInput
              style={{
-              paddingRight: "10vw",
-              paddingVertical: "5vw",
+              paddingRight: 10,
+              paddingVertical: 5,
              // paddingBottom: "50vw"
               }}
           // icon="key"
@@ -221,8 +221,8 @@ export default function SignUp() {
 
         <TextInput
              style={{
-              paddingRight: "10vw",
-              paddingVertical: "5vw"
+              paddingRight: 10,
+              paddingVertical: 5
               }}
           // icon="key"
           placeholder="Stadt"
@@ -250,8 +250,8 @@ export default function SignUp() {
       >
         <TextInput
                style={{
-                paddingRight: "10vw",
-                paddingVertical: "5vw"
+                paddingRight: 10,
+                paddingVertical: 5
                 }}
           // icon="key"
           placeholder="E-Mail"
@@ -270,8 +270,8 @@ export default function SignUp() {
 
         <TextInput
                style={{
-                paddingRight: "10vw",
-                paddingVertical: "5vw"
+                paddingRight: 10,
+                paddingVertical: 5
                 }}
           // icon="key"
           placeholder="Telefonnummer"

@@ -73,7 +73,7 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
     };
     createHash().then(() => {
       connectionDekomdb.query(
-        "SELECT USER_HASH FROM dekomdb.dekom_user WHERE USER_HASH='" +
+        "SELECT USER_UUID FROM dekomdb.dekom_user WHERE USER_UUID='" +
           hash +
           "';",
         function (error2, results2, fields) {
@@ -87,7 +87,7 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
             } else {
               console.log("User-------- not found.");
               connectionDekomdb.query(
-                "INSERT INTO dekomdb.dekom_user (USER_HASH) VALUES ('" +
+                "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
                   hash +
                   "');"
               );
