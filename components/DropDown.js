@@ -1,9 +1,9 @@
 import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native'
 import imagesPath from '../constants/imagesPath';
 import validationColor from './TextInput'
 
-const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
+const DropDown = ({ data = [], value = {}, dropDownName = {}, onSelect = () => { } }) => {
 
     const [showOption, setShowOption] = useState(false)
 
@@ -19,8 +19,8 @@ const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
                 activeOpacity={1}
                 onPress={() => setShowOption(!showOption)}
             >
-                <Text style={{color: value ? 'black' : 'rgba(34, 62, 75, 0.7)', paddingHorizontal: 10}}>
-                    {!!value ? value?.name : 'Choose an option'}</Text>
+                <Text style={{color: value ? 'black' : 'rgba(34, 62, 75, 0.7)', paddingHorizontal: 2}}>
+                    {!!value ? value?.name : dropDownName}</Text>
                 <Image style={{ width: 25, height: 25, rotate: showOption ? '180deg' : '0deg'}}
                     source={imagesPath.icDropDown} />
             </TouchableOpacity>
@@ -34,7 +34,11 @@ const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
                 borderWidth: 1,
                 borderRadius: 6,
                 borderColor: 'black',
+                maxHeight: 200,
             }}>
+                <ScrollView
+                keyboardShouldPersistTaps={"handled"}
+                showsHorizontalScrollIndicator={false}>
                 {data.map((val, i) => {
                     return (
                         <TouchableOpacity
@@ -55,6 +59,7 @@ const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
                         </TouchableOpacity>
                     )
                 })}
+                </ScrollView>
             </View>)}
         </View>
     );

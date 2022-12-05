@@ -182,8 +182,11 @@ export default function SignUp() {
     }
   });
 
+  
   const [selectedItem, setSelectedItem] = useState(null)
+  const [selectedBundesland, setSelectedBundesland] = useState(null)
   const onSelect = (item) => { setSelectedItem(item) };
+  const onSelectBundesland = (item) => { setSelectedBundesland(item)};
 
   return (
     <View
@@ -230,6 +233,7 @@ export default function SignUp() {
           </Col>
             <Col numRows={1}>
             <DropDown
+              dropDownName= {'Geschlecht'}
               value={selectedItem}
               data={gender}
               onSelect={onSelect}
@@ -329,7 +333,7 @@ export default function SignUp() {
           </Col>
           <Col numRows={1}>
             <TextInput
-              placeholder="Hausnummer"
+              placeholder="Nr"
               autoCompleteType="text"
               keyboardType="default"
               autoCapitalize="none"
@@ -385,9 +389,10 @@ export default function SignUp() {
         <Row>
           <Col numRows={1}>
             <DropDown
-              value={selectedItem}
+              dropDownName= {'Bundesland'}
+              value={selectedBundesland}
               data={bundeslaender}
-              onSelect={onSelect}
+              onSelect={onSelectBundesland}
             />
           </Col>
         </Row>
