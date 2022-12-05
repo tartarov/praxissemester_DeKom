@@ -42,6 +42,7 @@ async function addAntrag({navigation}) {
   let dataDekomdb = await respAddAntrag.json();
   let resultDekomdb = JSON.stringify(dataDekomdb);
   console.log("HOMESCREENDATA:" + resultDekomdb);
+ // console.log(resultDekomdb.cookies.token)
   if (resultDekomdb === "false") {
     console.log("BACK TO LOGIN, FREUNDCHEN!");
   }

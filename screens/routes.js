@@ -23,6 +23,12 @@ const connectionDekomdb = mysql.createPool({
   database: "dekomdb",
 });
 
+
+function formattingResponse(token,body) {
+  let response = {token: token, body: body};
+  return response;
+};
+
 // Starting our app.
 const app = express();
 app.use(bodyParser.json({ type: "application/json" }));
@@ -126,30 +132,13 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
           if (error2) {
             console.log("An error occurred:", error2.message);
           } else {
-            /*  console.log(reqDekomdb.session);
-            console.log("Session-ID / TOKEN: " + reqDekomdb.session.id);
-            session = reqDekomdb.session;
-            session.userid = hash;
-            console.log(session);
-            console.log(session.cookie.expires);
-            
 
-            connectionDekomdb.query(
-              "INSERT INTO dekomdb.sessions (TOKEN,USER_UUID,EXPIRES) VALUES ('" +
-                token +
-                "','" +
-                hash +
-                "','" +
-                reqDekomdb.session.cookie.expires +
-                "');"
-            );
-            */
 
             if (results2.length) {
               console.log("User found successfully.");
-              //  console.log("HASH THERE? : " + results2);
               if (alreadySend == false) {
-                resDekmdb.send(true);
+                console.log(formattingResponse(token, {value: true, name: "beter"}));
+                resDekmdb.send(formattingResponse(token, {value: true, name: "beter"}));
               }
             } else {
               console.log("User-------- not found.");

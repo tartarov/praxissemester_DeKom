@@ -77,12 +77,12 @@ export default function Login({ navigation }) {
       //console.log("resp Object:" + dataDekomdb.headers);
       //console.log("Session-ID im Frontend: " + resultDekomdb.session.id)
       objDekomdb = JSON.parse(resultDekomdb);
-      console.log("objDekomdb: " + objDekomdb);
-      if (objDekomdb != true && objDekomdb != false) {
+      console.log("objDekomdb.token: " + objDekomdb.token);
+      if (objDekomdb.body.value != true && objDekomdb.body.value != false) {
         navigation.navigate("SignUp");
-      } else if (objDekomdb == false) {
+      } else if (objDekomdb.body.value == false) {
         navigation.navigate("Login");
-      } else if (objDekomdb == true) {
+      } else if (objDekomdb.body.value === true) {
         navigation.navigate("MainScreen");
       }
     } else {
