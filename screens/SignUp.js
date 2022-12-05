@@ -54,11 +54,13 @@ const SignUpSchema = Yup.object().shape({
 });
 
 const styles = {
-  app: {
-    zIndex: 0,
+  contianer: {
     marginTop: 30,
-    flex: 6, // the number of columns you want to devide the screen into
-    width: "90%",
+    width: '90%'
+  },
+  app: {
+    flex: 5, // the number of columns you want to devide the screen into
+    width: "100%",
     marginHorizontal: "auto",
   },
   row: {
@@ -66,7 +68,7 @@ const styles = {
   },
   "1col": {
     marginHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 30,
     height: 50,
     flex: 1
   },
@@ -99,6 +101,70 @@ let gender = [{
 { id: 3, name: 'divers' }
 ]
 
+let bundeslaender = [{
+  id: 1,
+  name: 'Baden Württemberg'
+},
+{
+  id: 2,
+  name: 'Bayern'
+},
+{ id: 3, 
+  name: 'Berlin' },
+{
+    id: 4,
+    name: 'Brandenburg'
+},
+{
+  id: 5,
+  name: 'Bremen'
+},
+{
+  id: 6,
+  name: 'Hamburg'
+},
+{
+  id: 7,
+  name: 'Hessen'
+},
+{
+  id: 8,
+  name: 'Mecklenburg-Vorpommern'
+},
+{
+  id: 9,
+  name: 'Niedersachsen'
+},
+{
+  id: 10,
+  name: 'Nordrhein Westfalen'
+},
+{
+  id: 11,
+  name: 'Rheinland-Pfalz'
+},
+{
+  id: 12,
+  name: 'Saarland'
+},
+{
+  id: 13,
+  name: 'Sachsen'
+},
+{
+  id: 14,
+  name: 'Sachsen-Anhalt'
+},
+{
+  id: 15,
+  name: 'Schleswig-Holstein'
+},
+{
+  id: 16,
+  name: 'Thüringen'
+},
+]
+
 export default function SignUp() {
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
@@ -117,9 +183,7 @@ export default function SignUp() {
   });
 
   const [selectedItem, setSelectedItem] = useState(null)
-
   const onSelect = (item) => { setSelectedItem(item) };
-
 
   return (
     <View
@@ -145,7 +209,8 @@ export default function SignUp() {
         All bueraucracies. One app.
       </Text>
 
-      <View style={styles.app}>
+      <View style = {styles.contianer}>
+      <View style={[styles.app, {zIndex: 20}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -163,16 +228,16 @@ export default function SignUp() {
               onSubmitEditing={() => vorname.current?.focus()}
             />
           </Col>
-          <View style={{ zIndex: 20 }}>
             <Col numRows={1}>
-              <DropDown
-                value={selectedItem}
-                data={gender}
-                onSelect={onSelect}
-              />
+            <DropDown
+              value={selectedItem}
+              data={gender}
+              onSelect={onSelect}
+            />
             </Col>
-          </View>
-        </Row>
+        </Row>  
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -207,6 +272,8 @@ export default function SignUp() {
             />
           </Col>
         </Row>
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -241,6 +308,8 @@ export default function SignUp() {
             />
           </Col>
         </Row>
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={5}>
             <TextInput
@@ -275,6 +344,8 @@ export default function SignUp() {
             />
           </Col>
         </Row>
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -309,15 +380,19 @@ export default function SignUp() {
             />
           </Col>
         </Row>
+        </View>
+        <View style = {[styles.app, {zIndex: 20, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <DropDown
               value={selectedItem}
-              data={gender}
+              data={bundeslaender}
               onSelect={onSelect}
             />
           </Col>
         </Row>
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -353,7 +428,8 @@ export default function SignUp() {
             />
           </Col>
         </Row>
-
+        </View>
+        <View style = {[styles.app, {zIndex: 0, marginTop: 60}]}>
         <Row>
           <Col numRows={1}>
             <TextInput
@@ -372,13 +448,8 @@ export default function SignUp() {
             />
           </Col>
         </Row>
+        </View>
       </View>
-
-      <DropDown
-        value={selectedItem}
-        data={gender}
-        onSelect={onSelect}
-      />
 
       <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
 

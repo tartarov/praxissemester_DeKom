@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native'
 import imagesPath from '../constants/imagesPath';
 import validationColor from './TextInput'
 
@@ -21,13 +21,14 @@ const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
             >
                 <Text style={{color: value ? 'black' : 'rgba(34, 62, 75, 0.7)', paddingHorizontal: 10}}>
                     {!!value ? value?.name : 'Choose an option'}</Text>
-                <img style={{ width: 25, height: 25, rotate: showOption ? '180deg' : '0deg'}}
-                    src={imagesPath.icDropDown} />
+                <Image style={{ width: 25, height: 25, rotate: showOption ? '180deg' : '0deg'}}
+                    source={imagesPath.icDropDown} />
             </TouchableOpacity>
             {showOption && (<View
             style={{
-                marginTop: 10,
-                marginHorizontal: 10,
+                width: '100%',
+                position: 'absolute',
+                marginTop: 55,
                 backgroundColor: 'white',
                 padding: 8,
                 borderWidth: 1,
@@ -61,6 +62,7 @@ const DropDown = ({ data = [], value = {}, onSelect = () => { } }) => {
 
 const styles = StyleSheet.create({
     dropDownStyle: {
+        zIndex: 20,
         padding: 8,
         borderRadius: 8,
         borderColor: 'black',
