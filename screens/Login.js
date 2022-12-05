@@ -10,7 +10,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 //import crypto from "crypto"
-import * as Crypto from 'expo-crypto'
+import * as Crypto from "expo-crypto";
 
 import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
@@ -51,32 +51,44 @@ export default function Login({ navigation }) {
 
   const fetchData = async () => {
     respTestdb = await fetch(
-      "http://10.1.111.32:3000/testdb.userdaten?pin=" + values.pin + "&id=" + values.id
+      "http://10.1.111.32:3000/testdb.userdaten?pin=" +
+        values.pin +
+        "&id=" +
+        values.id
     );
     dataTestdb = await respTestdb.json();
     resultTestdb = JSON.stringify(dataTestdb);
     objTestdb = JSON.parse(resultTestdb);
     console.log(objTestdb.some((item) => item.PIN === values.pin));
-    if (objTestdb.some((item) => item.PIN === values.pin) && objTestdb.some((item2) => item2.ID === values.id)) {
+    if (
+      objTestdb.some((item) => item.PIN === values.pin) &&
+      objTestdb.some((item2) => item2.ID === values.id)
+    ) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
 
       respDekomdb = await fetch(
-        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id
+        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id, //192.168.178.24 home or 10.1.111.32 work
+        {
+          credentials: "same-origin",
+        }
       );
       dataDekomdb = await respDekomdb.json();
       resultDekomdb = JSON.stringify(dataDekomdb);
+      //console.log("resp Object:" + dataDekomdb.headers);
+      //console.log("Session-ID im Frontend: " + resultDekomdb.session.id)
       objDekomdb = JSON.parse(resultDekomdb);
-      console.log("objDekomdb: " + objDekomdb)
-      if (objDekomdb != true){
-      navigation.navigate("SignUp");
-      } else{
+      console.log("objDekomdb: " + objDekomdb);
+      if (objDekomdb != true && objDekomdb != false) {
+        navigation.navigate("SignUp");
+      } else if (objDekomdb == false) {
+        navigation.navigate("Login");
+      } else if (objDekomdb == true) {
         navigation.navigate("MainScreen");
       }
-
     } else {
       alert("ID or PIN incorrect. Please try again.");
-    } 
-  }; 
+    }
+  };
 
   const pin = useRef(null);
 

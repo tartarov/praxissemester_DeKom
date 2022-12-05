@@ -2,6 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const { send } = require("process");
+const cookieParser = require("cookie-parser");
+const sessions = require("express-session");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -32,15 +36,40 @@ app.use(function (req, res, next) {
   next();
 });
 
+////////////////////////////////// EXPRESS-SESSION-OPTIONS
+// creating 24 hours from milliseconds
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+/*
+app.use(
+  sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  })
+);
+*/
+/////////////////////////////////
+
+app.use(cookieParser());
+/*
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://192.168.178.24:3000",
+    optionsSuccessStatus: 200,
+  })
+);
+*/
+
 let ourConnection;
 let hash;
-// Creating a GET route that returns data from the 'users' table.
+let session;
+
 app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
-  console.log("REQUEST 1: " + reqTestdb.query.pin);
-  console.log("REQUEST 2: " + reqTestdb.query.id);
-  // Connecting to the database.
   connectionTestdb.getConnection(function (err, ourConnection) {
-    // Executing the MySQL query (select all data from the 'users' table).
     connectionTestdb.query(
       "SELECT * FROM testdb.userdaten WHERE PIN=" +
         reqTestdb.query.pin +
@@ -48,17 +77,36 @@ app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
         reqTestdb.query.id +
         "'",
       function (error, results, fields) {
-        // If some error occurs, we throw an error.
         if (error) throw error;
-        console.log(results);
-        // Getting the 'response' from the database and sending it to our route. This is were the data is.
+        let user = results;
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+          //JWT
+          expiresIn: "1m",
+        });
+        resTestdb.cookie("token", token, {
+          httpOnly: true,
+        });
         resTestdb.send(results);
       }
     );
   });
 });
 
+let alreadySend = false;
 app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
+  const token = reqDekomdb.cookies.token; //so bekommen wir den Token
+  console.log(token);
+  try {
+    console.log("verifying user. Do you have a token?");
+    const user = jwt.verify(token, process.env.JWT_SECRET); //JWT
+    reqDekomdb.user = user;
+    console.log("You have a token. +++");
+  } catch {
+    resDekmdb.clearCookie("token");
+    resDekmdb.send(false);
+    console.log("You dont have a token. Please Login again. ---");
+    alreadySend = true;
+  }
   connectionDekomdb.getConnection(function (err, ourConnection) {
     console.log("REQUEST HASH : " + reqDekomdb.query.userId);
 
@@ -68,8 +116,6 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
       hash = createHmac("sha256", secret)
         .update(reqDekomdb.query.userId)
         .digest("hex");
-      console.log("Input String: " + reqDekomdb.query.userId);
-      console.log("Hash Value: " + hash);
     };
     createHash().then(() => {
       connectionDekomdb.query(
@@ -80,10 +126,31 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
           if (error2) {
             console.log("An error occurred:", error2.message);
           } else {
+            /*  console.log(reqDekomdb.session);
+            console.log("Session-ID / TOKEN: " + reqDekomdb.session.id);
+            session = reqDekomdb.session;
+            session.userid = hash;
+            console.log(session);
+            console.log(session.cookie.expires);
+            
+
+            connectionDekomdb.query(
+              "INSERT INTO dekomdb.sessions (TOKEN,USER_UUID,EXPIRES) VALUES ('" +
+                token +
+                "','" +
+                hash +
+                "','" +
+                reqDekomdb.session.cookie.expires +
+                "');"
+            );
+            */
+
             if (results2.length) {
               console.log("User found successfully.");
               //  console.log("HASH THERE? : " + results2);
-              resDekmdb.send(true);
+              if (alreadySend == false) {
+                resDekmdb.send(true);
+              }
             } else {
               console.log("User-------- not found.");
               connectionDekomdb.query(
@@ -92,7 +159,9 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
                   "');"
               );
               console.log("user inserted into Database!");
-              resDekmdb.send(results2);
+              if (alreadySend == false) {
+                resDekmdb.send(results2);
+              }
             }
           }
         }
@@ -106,7 +175,6 @@ app.get("/user/data", function (req, resData) {
     connectionDekomdb.query(
       "SELECT NAME FROM dekomdb.dekom_user WHERE USER_HASH='" + hash + "';",
       function (error, results, fields) {
-        console.log("results: " + results);
         if (error) {
           throw error;
         } else {
