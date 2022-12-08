@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -9,11 +9,9 @@ import {
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
-//import crypto from "crypto"
-import * as Crypto from 'expo-crypto'
-
 import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
+import { AuthContext } from "../context/AuthContext";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -37,7 +35,8 @@ export default function Login({ navigation }) {
   let resultDekomdb;
   let objDekomdb;
 
-  let hash;
+
+  const { login } = useContext(AuthContext);
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -45,38 +44,61 @@ export default function Login({ navigation }) {
       initialValues: { id: "", pin: "" },
       onSubmit: (values) => {
         fetchData({ navigation });
-        //  alert(`Id: ${values.id}, Pin: ${values.pin}`)
+        login(values.pin, values.id);
       },
     });
 
   const fetchData = async () => {
-    respTestdb = await fetch(
-      "http://localhost:3000/testdb.userdaten?pin=" + values.pin + "&id=" + values.id
-    );
+   /* respTestdb = await fetch(
+      "http://10.1.111.32:3000/testdb.userdaten?pin=" +
+        values.pin +
+        "&id=" +
+        values.id
+    ).catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+      throw error
+      });;
     dataTestdb = await respTestdb.json();
     resultTestdb = JSON.stringify(dataTestdb);
     objTestdb = JSON.parse(resultTestdb);
-    console.log(objTestdb.some((item) => item.PIN === values.pin));
-    if (objTestdb.some((item) => item.PIN === values.pin) && objTestdb.some((item2) => item2.ID === values.id)) {
+    console.log( objTestdb.body.value.some((item) => item.PIN === values.pin));
+    if (
+      objTestdb.body.value.some((item) => item.PIN === values.pin) &&
+      objTestdb.body.value.some((item2) => item2.ID === values.id)
+    ) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
-
+  */
       respDekomdb = await fetch(
-        "http://localhost:3000/dekomdb.dekom_user?userId=" + values.id
-      );
+        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id, //192.168.178.24 home or 10.1.111.32 work
+        {
+          credentials: "same-origin",
+        }
+      ).catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+        throw error
+        });
+        /*
       dataDekomdb = await respDekomdb.json();
       resultDekomdb = JSON.stringify(dataDekomdb);
-      objDekomdb = JSON.parse(resultDekomdb);
-      console.log("objDekomdb: " + objDekomdb)
-      if (objDekomdb != true){
-      navigation.navigate("SignUp");
-      } else{
+      objDekomdb = await JSON.parse(resultDekomdb);
+      console.log("objDekomdb.body.value: " + objDekomdb.body.value);
+    
+      if (objDekomdb.body.value != true && objDekomdb.body.value != false) {
+        navigation.navigate("SignUp");
+      } else if (objDekomdb.body.value == false) {
+        navigation.navigate("Login");
+      } else if (objDekomdb.body.value == true) {
         navigation.navigate("MainScreen");
       }
 
+      NOTE: HIER ÜBERPRÜFEN; OB USER ZUM SIGN-UP MUSS ODER NICHT?
+      NOTE: SERVER STOPPT NACH DEM 5 GET-REQUEST ZU ANTWORTEN.
+      
+*/ /*
     } else {
       alert("ID or PIN incorrect. Please try again.");
-    } 
-  }; 
+    } */
+  };
 
   const pin = useRef(null);
 

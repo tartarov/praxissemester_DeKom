@@ -1,6 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const { send } = require("process");
+const cookieParser = require("cookie-parser");
+const sessions = require("express-session");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const fetch = require("node-fetch");
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -18,6 +24,11 @@ const connectionDekomdb = mysql.createPool({
   database: "dekomdb",
 });
 
+function formattingResponse(token, body) {
+  let response = { token: token, body: body };
+  return response;
+}
+
 // Starting our app.
 const app = express();
 app.use(bodyParser.json({ type: "application/json" }));
@@ -31,44 +42,107 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(cookieParser());
+
 let ourConnection;
-// Creating a GET route that returns data from the 'users' table.
-app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
-  console.log("REQUEST 1: " + reqTestdb.query.pin);
-  console.log("REQUEST 2: " + reqTestdb.query.id);
-  // Connecting to the database.
+let hash;
+
+app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
+  console.log("Ich bin hier!!!!!");
   connectionTestdb.getConnection(function (err, ourConnection) {
-    // Executing the MySQL query (select all data from the 'users' table).
     connectionTestdb.query(
-      "SELECT * FROM testdb.userdaten WHERE PIN=" + reqTestdb.query.pin + " AND ID='" + reqTestdb.query.id + "'",
+      "SELECT * FROM testdb.userdaten WHERE PIN=" +
+        reqTestdb.query.pin +
+        " AND ID='" +
+        reqTestdb.query.id +
+        "'",
       function (error, results, fields) {
-        // If some error occurs, we throw an error.
+        console.log("Result of Query" + results);
         if (error) throw error;
         console.log(results);
-        // Getting the 'response' from the database and sending it to our route. This is were the data is.
-        resTestdb.send(results);
+        if (results.length) {
+          resTestdb.send(true);
+        } else {
+          resTestdb.send(false);
+        }
       }
     );
   });
 });
 
-app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
-  connectionDekomdb.getConnection(function (err, ourConnection) {
-    console.log("REQUEST HASH : " + reqDekomdb.query.userId);
+const authorized = async (id, pin) => {
+  let respond = await fetch(
+    "http://10.1.111.32:3000/auth.behoerde?pin=" + pin + "&id=" + id
+  ).catch(function (error) {
+    console.log(
+      "There has been a problem with your fetch operation: " + error.message
+    );
+    throw error;
+  });
+  let respondJSON = await respond.json();
+  let respondSTRING = JSON.stringify(respondJSON);
+  //let respondPARSED = await JSON.parse(respondSTRING);
+  return respondSTRING;
 
-    let hash;
+  /* 
+    .then((response) => {console.log(response) 
+    return response})
+    */
+};
+
+app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
+  console.log(
+    "ServerSide - reqTestDb:" +
+      reqTestdb.query.id +
+      "------------- " +
+      reqTestdb.query.pin
+  );
+  let value = await authorized(reqTestdb.query.id, reqTestdb.query.pin);
+  console.log("value: " + value);
+
+  if (value == "true") {
+    console.log("ich bin im IF STATEMENT");
+    let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
+    console.log("USER SIEHT SO AUS: " + user);
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+      //JWT
+      expiresIn: "1m",
+    });
+    resTestdb.cookie("token", token, {
+      httpOnly: true,
+    });
+    resTestdb.send(formattingResponse(token, { value: true }));
+  } else {
+    console.log("Ich bin im ELSE!!1");
+    resTestdb.send(formattingResponse(null, { value: null }));
+  }
+});
+
+let alreadySend = false;
+app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
+  const token = reqDekomdb.cookies.token; //so bekommen wir den Token
+  try {
+    console.log("verifying user. Do you have a token?");
+    const user = jwt.verify(token, process.env.JWT_SECRET); //JWT
+    reqDekomdb.user = user;
+    console.log("You have a token. +++");
+  } catch {
+    resDekmdb.clearCookie("token");
+    resDekmdb.send(false);
+    console.log("You dont have a token. Please Login again. ---");
+    alreadySend = true;
+  }
+  connectionDekomdb.getConnection(function (err, ourConnection) {
     const createHash = async () => {
       const { createHmac } = await import("crypto");
       const secret = "abcdefgahah";
       hash = createHmac("sha256", secret)
         .update(reqDekomdb.query.userId)
         .digest("hex");
-      console.log("Input String: " + reqDekomdb.query.userId);
-      console.log("Hash Value: " + hash);
     };
     createHash().then(() => {
       connectionDekomdb.query(
-        "SELECT USER_HASH FROM dekomdb.dekom_user WHERE USER_HASH='" +
+        "SELECT USER_UUID FROM dekomdb.dekom_user WHERE USER_UUID='" +
           hash +
           "';",
         function (error2, results2, fields) {
@@ -77,22 +151,42 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
           } else {
             if (results2.length) {
               console.log("User found successfully.");
-              //  console.log("HASH THERE? : " + results2);
-              resDekmdb.send(true);
+              if (alreadySend == false) {
+                resDekmdb.send(
+                  formattingResponse(token, { value: true, name: "beter" })
+                );
+              }
             } else {
               console.log("User-------- not found.");
               connectionDekomdb.query(
-                "INSERT INTO dekomdb.dekom_user (USER_HASH) VALUES ('" +
+                "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
                   hash +
                   "');"
               );
               console.log("user inserted into Database!");
-              resDekmdb.send(results2);
+              if (alreadySend == false) {
+                resDekmdb.send(results2);
+              }
             }
           }
         }
       );
     });
+  });
+});
+
+app.get("/user/data", function (req, resData) {
+  connectionDekomdb.getConnection(function (err, ourConnection) {
+    connectionDekomdb.query(
+      "SELECT NAME FROM dekomdb.dekom_user WHERE USER_HASH='" + hash + "';",
+      function (error, results, fields) {
+        if (error) {
+          throw error;
+        } else {
+          resData.send(results);
+        }
+      }
+    );
   });
 });
 
