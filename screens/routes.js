@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const fetch = require("node-fetch");
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -23,11 +24,10 @@ const connectionDekomdb = mysql.createPool({
   database: "dekomdb",
 });
 
-
-function formattingResponse(token,body) {
-  let response = {token: token, body: body};
+function formattingResponse(token, body) {
+  let response = { token: token, body: body };
   return response;
-};
+}
 
 // Starting our app.
 const app = express();
@@ -42,39 +42,13 @@ app.use(function (req, res, next) {
   next();
 });
 
-////////////////////////////////// EXPRESS-SESSION-OPTIONS
-// creating 24 hours from milliseconds
-const oneDay = 1000 * 60 * 60 * 24;
-
-//session middleware
-/*
-app.use(
-  sessions({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false,
-  })
-);
-*/
-/////////////////////////////////
-
 app.use(cookieParser());
-/*
-app.use(
-  cors({
-    credentials: true,
-    origin: "http://192.168.178.24:3000",
-    optionsSuccessStatus: 200,
-  })
-);
-*/
 
 let ourConnection;
 let hash;
-let session;
 
-app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
+app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
+  console.log("Ich bin hier!!!!!");
   connectionTestdb.getConnection(function (err, ourConnection) {
     connectionTestdb.query(
       "SELECT * FROM testdb.userdaten WHERE PIN=" +
@@ -83,25 +57,70 @@ app.get("/testdb.userdaten", function (reqTestdb, resTestdb) {
         reqTestdb.query.id +
         "'",
       function (error, results, fields) {
+        console.log("Result of Query" + results);
         if (error) throw error;
-        let user = results;
-        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-          //JWT
-          expiresIn: "1m",
-        });
-        resTestdb.cookie("token", token, {
-          httpOnly: true,
-        });
-        resTestdb.send(results);
+        console.log(results);
+        if (results.length) {
+          resTestdb.send(true);
+        } else {
+          resTestdb.send(false);
+        }
       }
     );
   });
 });
 
+const authorized = async (id, pin) => {
+  let respond = await fetch(
+    "http://10.1.111.32:3000/auth.behoerde?pin=" + pin + "&id=" + id
+  ).catch(function (error) {
+    console.log(
+      "There has been a problem with your fetch operation: " + error.message
+    );
+    throw error;
+  });
+  let respondJSON = await respond.json();
+  let respondSTRING = JSON.stringify(respondJSON);
+  //let respondPARSED = await JSON.parse(respondSTRING);
+  return respondSTRING;
+
+  /* 
+    .then((response) => {console.log(response) 
+    return response})
+    */
+};
+
+app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
+  console.log(
+    "ServerSide - reqTestDb:" +
+      reqTestdb.query.id +
+      "------------- " +
+      reqTestdb.query.pin
+  );
+  let value = await authorized(reqTestdb.query.id, reqTestdb.query.pin);
+  console.log("value: " + value);
+
+  if (value == "true") {
+    console.log("ich bin im IF STATEMENT");
+    let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
+    console.log("USER SIEHT SO AUS: " + user);
+    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+      //JWT
+      expiresIn: "1m",
+    });
+    resTestdb.cookie("token", token, {
+      httpOnly: true,
+    });
+    resTestdb.send(formattingResponse(token, { value: true }));
+  } else {
+    console.log("Ich bin im ELSE!!1");
+    resTestdb.send(formattingResponse(null, { value: null }));
+  }
+});
+
 let alreadySend = false;
 app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
   const token = reqDekomdb.cookies.token; //so bekommen wir den Token
-  console.log(token);
   try {
     console.log("verifying user. Do you have a token?");
     const user = jwt.verify(token, process.env.JWT_SECRET); //JWT
@@ -114,8 +133,6 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
     alreadySend = true;
   }
   connectionDekomdb.getConnection(function (err, ourConnection) {
-    console.log("REQUEST HASH : " + reqDekomdb.query.userId);
-
     const createHash = async () => {
       const { createHmac } = await import("crypto");
       const secret = "abcdefgahah";
@@ -132,13 +149,12 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
           if (error2) {
             console.log("An error occurred:", error2.message);
           } else {
-
-
             if (results2.length) {
               console.log("User found successfully.");
               if (alreadySend == false) {
-                console.log(formattingResponse(token, {value: true, name: "beter"}));
-                resDekmdb.send(formattingResponse(token, {value: true, name: "beter"}));
+                resDekmdb.send(
+                  formattingResponse(token, { value: true, name: "beter" })
+                );
               }
             } else {
               console.log("User-------- not found.");
