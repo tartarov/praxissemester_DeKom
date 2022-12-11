@@ -100,7 +100,7 @@ let dateTextColor = 'rgba(34, 62, 75, 0.7)';
 
 
 
-export default function SignUp() {
+export default function SignUp({navigation}) {
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
     validationSchema: SignUpSchema,
@@ -111,7 +111,9 @@ export default function SignUp() {
     },
     onSubmit: values => {
       console.log(`Titel: ${values.titel}, Vorname: ${values.vorname}, Zweitname: ${values.zweitname} Nachname: ${values.nachname},
-      Geschlecht: ${Object.values(selectedItem)[1]},Geburtsdatum: ${day + " " + month + " " + year}`)
+      Geschlecht: ${Object.values(selectedItem)[1]},Geburtsdatum: ${day + " " + month + " " + year}`);
+
+      navigation.navigate("SignUpAdress");
     }
   });
   const [selectedItem, setSelectedItem] = useState(null)

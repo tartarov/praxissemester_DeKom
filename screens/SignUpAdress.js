@@ -132,7 +132,7 @@ let bundeslaender = [{
 },
 ]
 
-export default function SignUp() {
+export default function SignUpAdress({navigation}) {
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
     validationSchema: SignUpSchema,
@@ -141,9 +141,12 @@ export default function SignUp() {
     postleitzahl: '', vorwahl: '', telefonnummer: '', email: ''
     },
     onSubmit: values => {
-      alert(`Straße: ${values.straße}, Hausnummer: ${values.hausnummer},
-      Stadt: ${values.stadt}, Postleitzahl: ${values.postleitzahl}, Vorwahl: ${values.vorwahl}, Telefonnummer: ${values.telefonnummer},
+      console.log(`Straße: ${values.straße}, Hausnummer: ${values.hausnummer},
+      Stadt: ${values.stadt}, Postleitzahl: ${values.postleitzahl}, Bundesland: ${Object.values(selectedBundesland)[1]}
+       Vorwahl: ${values.vorwahl}, Telefonnummer: ${values.telefonnummer},
       Email: ${values.email}`)
+
+      navigation.navigate("MainScreen");
     }
   });
 
