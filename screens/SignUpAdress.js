@@ -320,11 +320,21 @@ export default function SignUpAdress({navigation}) {
         </Row>
         </View>
       </View>
-      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
 
         <Button
           label="Sign Up"
           onPress={handleSubmit} />
+
+      </View>
+
+      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center', marginBottom: 80}}>
+
+        <Button
+          label="Zurück"
+          onPress={()=>{navigation.navigate("SignUp")}}
+          />
+
       </View>
     </View>
     
