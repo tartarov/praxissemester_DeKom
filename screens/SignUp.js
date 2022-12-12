@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -98,6 +98,11 @@ let gender = [{
 let dateValue = "Geburtsdatum";
 let dateTextColor = 'rgba(34, 62, 75, 0.7)';
 
+const DismissKeyboard = ({children}) => (
+  <TouchableWithoutFeedback onPress = {() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+  );
 
 
 export default function SignUp({navigation}) {
@@ -163,6 +168,7 @@ export default function SignUp({navigation}) {
 
 
   return (
+    <DismissKeyboard>
     <View
       style={{
         flex: 1,
@@ -388,5 +394,6 @@ export default function SignUp({navigation}) {
           onPress={handleSubmit} />
       </View>
     </View>
+    </DismissKeyboard>
   );
 }

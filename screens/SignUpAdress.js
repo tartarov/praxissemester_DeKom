@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Text, View, KeyboardAvoidingView } from "react-native";
+import { Text, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -132,6 +132,13 @@ let bundeslaender = [{
 },
 ]
 
+const DismissKeyboard = ({children}) => (
+  <TouchableWithoutFeedback onPress = {() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+  );
+
+
 export default function SignUpAdress({navigation}) {
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
@@ -155,6 +162,7 @@ export default function SignUpAdress({navigation}) {
   const onSelectBundesland = (item) => { setSelectedBundesland(item)};
 
   return (
+    <DismissKeyboard>
     <View
       style={{
         flex: 1,
@@ -337,7 +345,7 @@ export default function SignUpAdress({navigation}) {
 
       </View>
     </View>
-    
+    </DismissKeyboard>
   );
   
 }
