@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,13 +7,17 @@ import SignUp from "./screens/SignUp";
 import MainScreen from "./screens/MainScreen";
 import { AuthProvider } from "./context/AuthContext";
 import { AuthContext } from "./context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //const {Navigator, Screen } = createNativeStackNavigator();
 const Stack = createNativeStackNavigator();
+let alreadyCalled = false;
+
 
 const AuthHandler = () => {
-  const { isLoading, userToken } = useContext(AuthContext);
-  const { userSignedup, isSignedUp } = useContext(AuthContext);
+  const { isLoading, userToken, userSignedUp } = useContext(AuthContext);
+  const { isSignedUp } = useContext(AuthContext);
+  
 
   if (isLoading) {
     return (
@@ -22,19 +26,48 @@ const AuthHandler = () => {
       </View>
     );
   }
+  if(userToken == null){
+    console.log("USER TOKEN IS NULL! alreadyCalled is now false.") 
+      alreadyCalled = false;
+    }
 
-  console.log("App.js: USERTOKEN: " + userToken)
+  useEffect(() => {
+      console.log("USER-Token: " + userToken + ",    alreadyCalled: " + alreadyCalled);
+    if (userToken != null && alreadyCalled == false){
+      console.log("hallolöle :-)") 
+      isSignedUp();
+      console.log("CiaoCiao :-)") 
+      alreadyCalled = true
+      console.log("alreadyCalled ist auf: " + alreadyCalled)
+    }
+    /*console.log("ALREADYCOALLED:" + alreadyCalled)
+    if (alreadyCalled == false){
+    console.log("hallolöle :-)") 
+     isSignedUp();
+    console.log("CiaoCiao :-)") 
+    alreadyCalled = true;
+    } */
+  }, [])
 
-  if (userToken !== null && isSignedUp() !== false) {
+
+  //console.log("App.js: USERTOKEN: " + userToken);
+  //console.log("IsIsignedUp: " + userSignedUp);
+
+  if (userToken !== null && userSignedUp != "false") {
     return <MainScreen />;
-  } else if(userToken !== null && isSignedUp() !== true) {
-    return <SignUp /> ;
+  } else if (userToken !== null && userSignedUp == "false") {
+    return <SignUp />;
   } else {
-    return <Login/>
+    return <Login />;
   }
+
+
 };
 
+//seperater Handler für MainScreen oder SIgnUp der mit Datenbank Checkt ob Singup noch angezeigt werden muss
+
 const App = () => {
+
   return (
     <AuthProvider>
       <NavigationContainer>

@@ -1,12 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const { send } = require("process");
+const { send, allowedNodeEnvironmentFlags } = require("process");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fetch = require("node-fetch");
+const { cookieJWTAuth } = require("./middleware/cookieJWTAuth");
+const jwt_decode = require("jwt-decode");
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -45,7 +47,15 @@ app.use(function (req, res, next) {
 app.use(cookieParser());
 
 let ourConnection;
-let hash;
+
+const getHash = async (value) => {
+  const { createHmac } = await import("crypto");
+  const secret = "abcdefgahah";
+ let hash = createHmac("sha256", secret)
+    .update(value)
+    .digest("hex");
+    return hash
+};
 
 app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
   console.log("Ich bin hier!!!!!");
@@ -81,13 +91,7 @@ const authorized = async (id, pin) => {
   });
   let respondJSON = await respond.json();
   let respondSTRING = JSON.stringify(respondJSON);
-  //let respondPARSED = await JSON.parse(respondSTRING);
   return respondSTRING;
-
-  /* 
-    .then((response) => {console.log(response) 
-    return response})
-    */
 };
 
 app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
@@ -98,15 +102,12 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
       reqTestdb.query.pin
   );
   let value = await authorized(reqTestdb.query.id, reqTestdb.query.pin);
-  console.log("value: " + value);
 
   if (value == "true") {
-    console.log("ich bin im IF STATEMENT");
     let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
-    console.log("USER SIEHT SO AUS: " + user);
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       //JWT
-      expiresIn: "1m",
+      expiresIn: "10m",
     });
     resTestdb.cookie("token", token, {
       httpOnly: true,
@@ -118,29 +119,14 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
   }
 });
 
-let alreadySend = false;
-app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
+app.get("/dekomdb.dekom_user", cookieJWTAuth, function (reqDekomdb, resDekmdb) {
   const token = reqDekomdb.cookies.token; //so bekommen wir den Token
-  try {
-    console.log("verifying user. Do you have a token?");
-    const user = jwt.verify(token, process.env.JWT_SECRET); //JWT
-    reqDekomdb.user = user;
-    console.log("You have a token. +++");
-  } catch {
-    resDekmdb.clearCookie("token");
-    resDekmdb.send(false);
-    console.log("You dont have a token. Please Login again. ---");
-    alreadySend = true;
-  }
+  let decoded = jwt_decode(reqDekomdb.query.token);
+  let decodedJSON = JSON.stringify(decoded)
+  let decodedParseToken = JSON.parse(decodedJSON);
   connectionDekomdb.getConnection(function (err, ourConnection) {
-    const createHash = async () => {
-      const { createHmac } = await import("crypto");
-      const secret = "abcdefgahah";
-      hash = createHmac("sha256", secret)
-        .update(reqDekomdb.query.userId)
-        .digest("hex");
-    };
-    createHash().then(() => {
+    getHash(decodedParseToken.user.id).then((hash) => { 
+      console.log(hash)
       connectionDekomdb.query(
         "SELECT USER_UUID FROM dekomdb.dekom_user WHERE USER_UUID='" +
           hash +
@@ -151,22 +137,10 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
           } else {
             if (results2.length) {
               console.log("User found successfully.");
-              if (alreadySend == false) {
-                resDekmdb.send(
-                  formattingResponse(token, { value: true, name: "beter" })
-                );
-              }
+              resDekmdb.send(formattingResponse(token, { value: "true" }));
             } else {
               console.log("User-------- not found.");
-              connectionDekomdb.query(
-                "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
-                  hash +
-                  "');"
-              );
-              console.log("user inserted into Database!");
-              if (alreadySend == false) {
-                resDekmdb.send(results2);
-              }
+              resDekmdb.send(formattingResponse(token, { value: "false" }));
             }
           }
         }
@@ -174,6 +148,30 @@ app.get("/dekomdb.dekom_user", function (reqDekomdb, resDekmdb) {
     });
   });
 });
+
+
+app.get("insert/userData",cookieJWTAuth, function (req, resData) {
+  let decoded = jwt_decode(req.query.token);
+  let decodedJSON = JSON.stringify(decoded)
+  let decodedParseToken = JSON.parse(decodedJSON);
+  connectionDekomdb.getConnection(function (err, ourConnection) {
+      getHash(decodedParseToken.user.id).then((hash) => {
+        connectionDekomdb.query(
+        "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
+        hash +
+        "');"
+        );
+      })
+  })
+})
+
+/*
+    connectionDekomdb.query(
+                "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
+                  hash +
+                  "');"
+              );
+*/
 
 app.get("/user/data", function (req, resData) {
   connectionDekomdb.getConnection(function (err, ourConnection) {

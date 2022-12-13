@@ -36,7 +36,7 @@ export default function Login({ navigation }) {
   let objDekomdb;
 
 
-  const { login } = useContext(AuthContext);
+  const { login, isSignedUp } = useContext(AuthContext);
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -44,6 +44,7 @@ export default function Login({ navigation }) {
       initialValues: { id: "", pin: "" },
       onSubmit: (values) => {
         fetchData({ navigation });
+       // isSignedUp();
         login(values.pin, values.id);
       },
     });
@@ -67,10 +68,11 @@ export default function Login({ navigation }) {
       objTestdb.body.value.some((item2) => item2.ID === values.id)
     ) {
       alert("You are authorized!" + "\n" + "Welcome to deKom!");
-  */
+  
       respDekomdb = await fetch(
-        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id, //192.168.178.24 home or 10.1.111.32 work
+        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id, //192.168.178.24 home or 10.1.111.32 w
         {
+          method: 'POST',
           credentials: "same-origin",
         }
       ).catch(function(error) {

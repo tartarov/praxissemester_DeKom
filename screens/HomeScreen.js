@@ -15,10 +15,11 @@ import { dataSample } from "../data/DataSample.js";
 import WalletHandler from "../components/WalletHandler.js";
 import PrimaryButton from "../components/PrimaryButton.js";
 import NotificationButton from "../components/NotificationButton";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import Paginator from "../components/Paginator.js";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { AuthContext } from "../context/AuthContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -29,8 +30,9 @@ const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
 const valuesid = "qwertzui";
+let isVerifiedVar;
 
-async function addAntrag({navigation}) {
+async function addAntrag() {
   console.log("Antrag hinzufügen");
   let respAddAntrag = await fetch(
     "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + valuesid, //192.168.178.24 home or 10.1.111.32 work
@@ -39,19 +41,28 @@ async function addAntrag({navigation}) {
     }
   );
 
+  console.log("Mein Fetch is durch. Result: " + respAddAntrag)
+  let verified = await isVerifiedVar(respAddAntrag);
+  console.log("Im Add Antrag ---> " + verified);
+  if (verified == "verified")
+ { 
   let dataDekomdb = await respAddAntrag.json();
   let resultDekomdb = JSON.stringify(dataDekomdb);
   console.log("HOMESCREENDATA:" + resultDekomdb);
- // console.log(resultDekomdb.cookies.token)
-  if (resultDekomdb === "false") {
-    console.log("BACK TO LOGIN, FREUNDCHEN!");
-  }
+ } 
+  // console.log(resultDekomdb.cookies.token)
+ //   console.log("BACK TO LOGIN, FREUNDCHEN!");
 }
-function HomeScreen({navigation}) {
+
+
+function HomeScreen() {
   const data = dataSample;
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { isVerified } = useContext(AuthContext);
+
+  isVerifiedVar = isVerified
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
