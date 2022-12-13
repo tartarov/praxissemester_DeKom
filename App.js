@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
+import SignUpAdress from "./screens/SignUpAdress";
 import MainScreen from "./screens/MainScreen";
 import { AuthProvider } from "./context/AuthContext";
 import { AuthContext } from "./context/AuthContext";
@@ -85,6 +86,11 @@ const App = () => {
           <Stack.Screen
             name="SignUp"
             component={SignUp}
+            options={{ headerShown: false }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="SignUpAdress"
+            component={SignUpAdress}
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen

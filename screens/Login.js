@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -23,6 +25,12 @@ const LoginSchema = Yup.object().shape({
     .max(6, "Too Long!")
     .required("Required"),
 });
+
+const DismissKeyboard = ({children}) => (
+<TouchableWithoutFeedback onPress = {() => Keyboard.dismiss()}>
+  {children}
+</TouchableWithoutFeedback>
+);
 
 export default function Login({ navigation }) {
   let respTestdb;
@@ -105,6 +113,7 @@ export default function Login({ navigation }) {
   const pin = useRef(null);
 
   return (
+    <DismissKeyboard>
     <View
       style={{
         flex: 1,
@@ -163,5 +172,6 @@ export default function Login({ navigation }) {
       </View>
       <Button label="Login" onPress={handleSubmit} />
     </View>
+  </DismissKeyboard>
   );
 }
