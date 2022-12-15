@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { Text, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import Button from "../components/Button.js";
 import TextInput from "../components/TextInput.js";
 import DropDown from "../components/DropDown.js";
+import { AuthContext } from "../context/AuthContext";
+
 
 const SignUpSchema = Yup.object().shape({
   straße: Yup.string()
@@ -139,20 +141,25 @@ const DismissKeyboard = ({children}) => (
   );
 
 
-export default function SignUpAdress({navigation}) {
+export default function SignUpAdress({route, navigation}) {
+  const { signup } = useContext(AuthContext);
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } = useFormik({
     validationSchema: SignUpSchema,
     initialValues: {
     straße: '', hausnummer: '', stadt: '',
-    postleitzahl: '', vorwahl: '', telefonnummer: '', email: ''
+    postleitzahl: '', vorwahl: '', telefonnummer: '', email: '', bundesland: ""
     },
     onSubmit: values => {
       console.log(`Straße: ${values.straße}, Hausnummer: ${values.hausnummer},
       Stadt: ${values.stadt}, Postleitzahl: ${values.postleitzahl}, Bundesland: ${Object.values(selectedBundesland)[1]}
        Vorwahl: ${values.vorwahl}, Telefonnummer: ${values.telefonnummer},
       Email: ${values.email}`)
-
+      values.bundesland = Object.values(selectedBundesland)[1];
+    
+      let userData = {...route.params.values,...values}
+      console.log("UserData: " + JSON.stringify(userData))
+      signup(userData);
       navigation.navigate("MainScreen");
     }
   });

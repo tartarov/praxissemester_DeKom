@@ -51,10 +51,8 @@ let ourConnection;
 const getHash = async (value) => {
   const { createHmac } = await import("crypto");
   const secret = "abcdefgahah";
- let hash = createHmac("sha256", secret)
-    .update(value)
-    .digest("hex");
-    return hash
+  let hash = createHmac("sha256", secret).update(value).digest("hex");
+  return hash;
 };
 
 app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
@@ -107,7 +105,7 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
     let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       //JWT
-      expiresIn: "10m",
+      expiresIn: "20m",
     });
     resTestdb.cookie("token", token, {
       httpOnly: true,
@@ -122,13 +120,13 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
 app.get("/dekomdb.dekom_user", cookieJWTAuth, function (reqDekomdb, resDekmdb) {
   const token = reqDekomdb.cookies.token; //so bekommen wir den Token
   let decoded = jwt_decode(reqDekomdb.query.token);
-  let decodedJSON = JSON.stringify(decoded)
+  let decodedJSON = JSON.stringify(decoded);
   let decodedParseToken = JSON.parse(decodedJSON);
   connectionDekomdb.getConnection(function (err, ourConnection) {
-    getHash(decodedParseToken.user.id).then((hash) => { 
-      console.log(hash)
+    getHash(decodedParseToken.user.id).then((hash) => {
+      console.log(hash);
       connectionDekomdb.query(
-        "SELECT USER_UUID FROM dekomdb.dekom_user WHERE USER_UUID='" +
+        "SELECT USER_ID_HASH FROM dekomdb.dekom_user WHERE USER_ID_HASH='" +
           hash +
           "';",
         function (error2, results2, fields) {
@@ -149,43 +147,61 @@ app.get("/dekomdb.dekom_user", cookieJWTAuth, function (reqDekomdb, resDekmdb) {
   });
 });
 
-
-app.get("insert/userData",cookieJWTAuth, function (req, resData) {
-  let decoded = jwt_decode(req.query.token);
-  let decodedJSON = JSON.stringify(decoded)
+app.post("/user/save", cookieJWTAuth, function (req, resData) {
+  console.log("Request triggered");
+  console.log("USERDATA IN ROUTES: " + req.body.geschlecht);
+  let userData =  req.body;
+  console.log("UserData beim Server: " + JSON.stringify(userData));
+  let token = req.cookies.token
+  let decoded = jwt_decode(token);
+  let decodedJSON = JSON.stringify(decoded);
   let decodedParseToken = JSON.parse(decodedJSON);
   connectionDekomdb.getConnection(function (err, ourConnection) {
-      getHash(decodedParseToken.user.id).then((hash) => {
-        connectionDekomdb.query(
-        "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
-        hash +
-        "');"
-        );
-      })
-  })
-})
-
-/*
-    connectionDekomdb.query(
-                "INSERT INTO dekomdb.dekom_user (USER_UUID) VALUES ('" +
-                  hash +
-                  "');"
-              );
-*/
-
-app.get("/user/data", function (req, resData) {
-  connectionDekomdb.getConnection(function (err, ourConnection) {
-    connectionDekomdb.query(
-      "SELECT NAME FROM dekomdb.dekom_user WHERE USER_HASH='" + hash + "';",
-      function (error, results, fields) {
-        if (error) {
-          throw error;
-        } else {
-          resData.send(results);
-        }
-      }
-    );
+    getHash(decodedParseToken.user.id).then((hash) => {
+      connectionDekomdb.query(
+        "INSERT INTO dekomdb.dekom_user (USER_ID_HASH,TITEL,NAME,VORNAME,ZWEITNAME, GESCHLECHT,GEBURTSDATUM,AUGENFARBE,GROESSE,VORWAHL,TELEONNUMMER,BUNDESLAND,GEBURTSORT,STADT,BEHOERDE,PLZ,STRASSE,HAUSNUMMER,E_MAIL) VALUES ('" +
+          hash +
+          "','" +
+          userData.titel +
+          "','" +
+          userData.nachname +
+          "','" +
+          userData.vorname +
+          "','" +
+          userData.zweitname +
+          "','" +
+          userData.geschlecht +
+          "','" +
+          userData.geburtsdatum +
+          "','" +
+          userData.augenfarbe +
+          "','" +
+          userData.groesse +
+          "','" +
+          userData.vorwahl +
+          "','" +
+          userData.telefonnummer +
+          "','" +
+          userData.bundesland +
+          "','" +
+          userData.geburtsort +
+          "','" +
+          userData.stadt +
+          "','" +
+          userData.behoerde +
+          "','" +
+          userData.postleitzahl +
+          "','" +
+          userData.strasse +
+          "','" +
+          userData.hausnummer +
+          "','" +
+          userData.email +
+          "');"
+      );
+    });
   });
+  resData.send(formattingResponse(token, { value: true }));
 });
 
 // Starting our server.

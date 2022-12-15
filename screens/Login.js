@@ -33,26 +33,16 @@ const DismissKeyboard = ({children}) => (
 );
 
 export default function Login({ navigation }) {
-  let respTestdb;
-  let dataTestdb;
-  let resultTestdb;
-  let objTestdb;
 
-  let respDekomdb;
-  let dataDekomdb;
-  let resultDekomdb;
-  let objDekomdb;
-
-
-  const { login, isSignedUp } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
       initialValues: { id: "", pin: "" },
       onSubmit: (values) => {
+        //navigation.navigate("HomeScreen")  DAS KLAPPT HIER AUCH NICHT MEHR
         fetchData({ navigation });
-       // isSignedUp();
         login(values.pin, values.id);
       },
     });
@@ -100,8 +90,6 @@ export default function Login({ navigation }) {
       } else if (objDekomdb.body.value == true) {
         navigation.navigate("MainScreen");
       }
-
-      NOTE: HIER ÜBERPRÜFEN; OB USER ZUM SIGN-UP MUSS ODER NICHT?
       NOTE: SERVER STOPPT NACH DEM 5 GET-REQUEST ZU ANTWORTEN.
       
 */ /*

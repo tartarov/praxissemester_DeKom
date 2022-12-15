@@ -39,14 +39,32 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
-  const signup = () => {
+  const signup = async (userData) => {
     console.log(
       "SignUp Process pressed. No function implemented yet. SetUserSignUp stll false."
     );
     setIsLoading(true);
-    // setUserSignedUp("true");
-    //  AsyncStorage.setItem("isSignedUp", userSignedUp);
-    //  console.log("uSU: " + userSignedUp);
+    let response = await fetch("http://10.1.111.32:3000/user/save", 
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      credentials: "same-origin",
+      body: JSON.stringify(userData)
+    })
+
+    let responseJSON = await response.json();
+    let responseStringy = JSON.stringify(responseJSON);
+    let responseParsed = JSON.parse(responseStringy);
+
+    if ((await isVerified(responseParsed)) == "verified") {
+      if(responseParsed.body.value == true) {
+        console.log("respond contains true => success")
+        setUserSignedUp("true");
+      }
+    }
     setIsLoading(false);
   };
 
