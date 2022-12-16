@@ -15,11 +15,11 @@ import { dataSample } from "../data/DataSample.js";
 import WalletHandler from "../components/WalletHandler.js";
 import PrimaryButton from "../components/PrimaryButton.js";
 import NotificationButton from "../components/NotificationButton";
-import { useRef, useState, useContext } from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../components/Paginator.js";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthContext";
+import { DataContext } from "../context/DataContext";
+import LottieView from 'lottie-react-native';
 
 const { width } = Dimensions.get("screen");
 
@@ -31,6 +31,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
 const valuesid = "qwertzui";
 let isVerifiedVar;
+let dataVar;
 
 async function addAntrag() {
   console.log("Antrag hinzufügen");
@@ -41,40 +42,41 @@ async function addAntrag() {
     }
   );
 
-  console.log("Mein Fetch is durch. Result: " + respAddAntrag)
+  console.log("Mein Fetch is durch. Result: " + respAddAntrag);
   let verified = await isVerifiedVar(respAddAntrag);
   console.log("Im Add Antrag ---> " + verified);
-  if (verified == "verified")
- { 
-  let dataDekomdb = await respAddAntrag.json();
-  let resultDekomdb = JSON.stringify(dataDekomdb);
-  console.log("HOMESCREENDATA:" + resultDekomdb);
- } 
-  // console.log(resultDekomdb.cookies.token)
- //   console.log("BACK TO LOGIN, FREUNDCHEN!");
+  if (verified == "verified") {
+    let dataDekomdb = await respAddAntrag.json();
+    let resultDekomdb = JSON.stringify(dataDekomdb);
+    console.log("HOMESCREENDATA:" + resultDekomdb);
+  }
 }
 
 
 function HomeScreen() {
-  const data = dataSample;
+  //const data = dataSample;
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { isVerified } = useContext(AuthContext);
-
-  isVerifiedVar = isVerified
+  const { data , getWalletData } = useContext(DataContext);
+  
+  useEffect(() => {
+   setIsLoading(true);
+   getWalletData();
+   setIsLoading(false);
+  }, []);
+  isVerifiedVar = isVerified;
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar />
-      <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom </Text>
-        <NotificationButton />
-      </View>
+
+  function DocumentList() {
+    return (
+    <>
       <View style={styles.flatListContainer}>
         <FlatList
           horizontal
@@ -96,7 +98,38 @@ function HomeScreen() {
           )}
         />
       </View>
-      <Paginator data={data} scrollX={scrollX} />
+     {/* <Paginator data={data} scrollX={scrollX} /> */}
+    </>
+    );
+  }
+
+  function DocumentLoader() {
+    return (
+    <View style={styles.animationContainer}>
+      <LottieView
+        autoPlay
+        //ref={animation}
+        style={{
+          width: 50,
+          height: 50,
+          backgroundColor: '#eee',
+        }}
+        // Find more Lottie files at https://lottiefiles.com/featured
+        source={require('../assets/loader.json')}
+      />
+    </View>
+    );
+  }
+  
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar />
+      <View style={styles.headerContainer}>
+        <Text style={styles.logo}>|DeKom </Text>
+        <NotificationButton />
+      </View>
+      {isLoading == true ? <DocumentLoader/> : <DocumentList/>}
       <View style={styles.buttonContainer}>
         <PrimaryButton children={"Antrag hinzufügen"} onPress={addAntrag} />
         <PrimaryButton children={"Ausweis hinzufügen"} onPress={addAntrag} />
@@ -141,5 +174,10 @@ const styles = StyleSheet.create({
   flatListContainer: {
     height: ITEM_WIDTH * 0.8,
     marginTop: 50,
+  },
+  animationContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 60,
   },
 });

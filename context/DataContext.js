@@ -1,0 +1,96 @@
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { AuthContext } from "./AuthContext";
+
+export const DataContext = createContext();
+
+export const DataProvider = ({ children }) => {
+  const [data, setData] = useState(currentData);
+  const { isVerified } = useContext(AuthContext);
+
+  let currentData = [
+    {
+      title: "Personalausweis",
+      //location: 'Max, Mustermann',
+      // date: 'Nov 17th, 2020',
+      poster:
+        "https://images.unsplash.com/photo-1561016444-14f747499547?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80",
+      document: {
+        name: "Mustermann",
+        vorname: "Max",
+        geburtstag: "01.01.1999",
+        staatsangehoerigkeit: "DEUTSCH",
+        geburtsort: "KÖLN",
+        gueltigBis: "10.12.2030",
+        nummer: "K591MLO6G",
+      },
+    },
+    {
+      title: "Führerschein",
+      //location: 'Max, Mustermann',
+      // date: 'Sept 3rd, 2020',
+      poster:
+        "https://images.unsplash.com/photo-1588421357574-87938a86fa28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      document: {
+        name: "Mustermann",
+        vorname: "Max",
+        geburtstag: "01.01.1999",
+        ausstellungsdatum: "17.04.18",
+        geburtsort: "KÖLN",
+        ablaufdatum: "12.03.32",
+        nummer: "K591MLO6G",
+        ausstellungsbehoerde: "Kreis Köln",
+        type: "AM/B/L",
+      },
+    },
+  ];
+
+  const getWalletData = async () => {
+    let respond = await fetch(
+      "http://10.1.111.32:3000/dekomdb.dekom_user/identify",
+      {
+        credentials: "same-origin",
+      }
+    );
+
+    let respJson = await respond.json();
+    let respStringy = JSON.stringify(respJson);
+    console.log("respStringy" + respStringy);
+    let respParsed = JSON.parse(respStringy);
+    console.log("respParsed: " + respParsed.body.value);
+
+    if (respParsed.body.value == true) {
+      if ((await isVerified(respParsed)) == "verified") {
+        //Data of Personalausweis
+        currentData[0].document.name = respParsed.body.result[0].NAME;
+        currentData[0].document.vorname = respParsed.body.result[0].VORNAME;
+        currentData[0].document.geburtstag =
+          respParsed.body.result[0].GEBURTSDATUM;
+        currentData[0].document.geburtsort =
+          respParsed.body.result[0].GEBURTSORT;
+
+        //Data of Fuehrerschein
+        currentData[1].document.name = respParsed.body.result[0].NAME;
+        currentData[1].document.vorname = respParsed.body.result[0].VORNAME;
+        currentData[1].document.geburtstag =
+          respParsed.body.result[0].GEBURTSDATUM;
+        currentData[1].document.geburtsort =
+          respParsed.body.result[0].GEBURTSORT;
+
+        setData(currentData);
+
+        console.log("data : " + currentData[0].document.name);
+      }
+    }
+  };
+
+  return (
+    <DataContext.Provider
+      value={{
+        getWalletData,
+        data,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
+};

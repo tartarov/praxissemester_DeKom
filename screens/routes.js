@@ -105,54 +105,59 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
     let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       //JWT
-      expiresIn: "20m",
+      expiresIn: "2m",
     });
     resTestdb.cookie("token", token, {
       httpOnly: true,
     });
     resTestdb.send(formattingResponse(token, { value: true }));
   } else {
-    console.log("Ich bin im ELSE!!1");
     resTestdb.send(formattingResponse(null, { value: null }));
   }
 });
 
-app.get("/dekomdb.dekom_user", cookieJWTAuth, function (reqDekomdb, resDekmdb) {
-  const token = reqDekomdb.cookies.token; //so bekommen wir den Token
-  let decoded = jwt_decode(reqDekomdb.query.token);
-  let decodedJSON = JSON.stringify(decoded);
-  let decodedParseToken = JSON.parse(decodedJSON);
-  connectionDekomdb.getConnection(function (err, ourConnection) {
-    getHash(decodedParseToken.user.id).then((hash) => {
-      console.log(hash);
-      connectionDekomdb.query(
-        "SELECT USER_ID_HASH FROM dekomdb.dekom_user WHERE USER_ID_HASH='" +
-          hash +
-          "';",
-        function (error2, results2, fields) {
-          if (error2) {
-            console.log("An error occurred:", error2.message);
-          } else {
-            if (results2.length) {
-              console.log("User found successfully.");
-              resDekmdb.send(formattingResponse(token, { value: "true" }));
+app.get(
+  "/dekomdb.dekom_user/identify",
+  cookieJWTAuth,
+  function (reqDekomdb, resDekmdb) {
+    const token = reqDekomdb.cookies.token; //so bekommen wir den Token
+    let decoded = jwt_decode(token);
+    let decodedJSON = JSON.stringify(decoded);
+    let decodedParseToken = JSON.parse(decodedJSON);
+    connectionDekomdb.getConnection(function (err, ourConnection) {
+      getHash(decodedParseToken.user.id).then((hash) => {
+        console.log(hash);
+        connectionDekomdb.query(
+          "SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='" + hash + "';",
+          function (error2, results2, fields) {
+            if (error2) {
+              console.log("An error occurred:", error2.message);
             } else {
-              console.log("User-------- not found.");
-              resDekmdb.send(formattingResponse(token, { value: "false" }));
+
+              if (results2.length) {
+                console.log("User found successfully.");
+              //  console.log("results2 IS: " + JSON.stringify(results2));
+                resDekmdb.send(
+                  formattingResponse(token, { value: true, result: results2 })
+                );
+              } else {
+                console.log("User-------- not found.");
+                resDekmdb.send(formattingResponse(token, { value: false }));
+              }
             }
           }
-        }
-      );
+        );
+      });
     });
-  });
-});
+  }
+);
 
 app.post("/user/save", cookieJWTAuth, function (req, resData) {
   console.log("Request triggered");
   console.log("USERDATA IN ROUTES: " + req.body.geschlecht);
-  let userData =  req.body;
+  let userData = req.body;
   console.log("UserData beim Server: " + JSON.stringify(userData));
-  let token = req.cookies.token
+  let token = req.cookies.token;
   let decoded = jwt_decode(token);
   let decodedJSON = JSON.stringify(decoded);
   let decodedParseToken = JSON.parse(decodedJSON);

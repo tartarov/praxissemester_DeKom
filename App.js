@@ -7,9 +7,9 @@ import SignUp from "./screens/SignUp";
 import SignUpAdress from "./screens/SignUpAdress";
 import SignUpNav from "./screens/SignUpNav";
 import MainScreen from "./screens/MainScreen";
-import { AuthProvider } from "./context/AuthContext";
-import { AuthContext } from "./context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { DataProvider } from "./context/DataContext";
+import LottieView from 'lottie-react-native';
 
 const Stack = createNativeStackNavigator();
 let alreadyCalled = false;
@@ -21,7 +21,18 @@ const AuthHandler = () => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} />
+         <LottieView
+        autoPlay
+        //ref={animation}
+        style={{
+          width: 100,
+          height: 100,
+          backgroundColor: '#eee',
+        }}
+        // Find more Lottie files at https://lottiefiles.com/featured
+        source={require('./assets/loader.json')}
+      />
+      {/* <ActivityIndicator size={"large"} /> */}
       </View>
     );
   }
@@ -41,13 +52,6 @@ const AuthHandler = () => {
       alreadyCalled = true;
       console.log("alreadyCalled ist auf: " + alreadyCalled);
     }
-    /*console.log("ALREADYCOALLED:" + alreadyCalled)
-    if (alreadyCalled == false){
-    console.log("hallolöle :-)") 
-     isSignedUp();
-    console.log("CiaoCiao :-)") 
-    alreadyCalled = true;
-    } */
   }, []);
 
   if (userToken !== null && userSignedUp != "false") {
@@ -62,6 +66,7 @@ const AuthHandler = () => {
 const App = () => {
   return (
     <AuthProvider>
+      <DataProvider>
       <NavigationContainer>
         <Stack.Navigator headerMode="none" initialRouteName="AuthFlow">
           <Stack.Screen
@@ -91,6 +96,7 @@ const App = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </DataProvider>
     </AuthProvider>
   );
 };

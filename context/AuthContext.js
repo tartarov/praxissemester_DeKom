@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const AuthContext = createContext();
 
@@ -6,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userSignedUp, setUserSignedUp] = useState("false");
+  let greetingsName;
 
   const login = async (userPin, userId) => {
     setIsLoading(true);
@@ -34,7 +36,10 @@ export const AuthProvider = ({ children }) => {
       console.log("login Token inserterted into AsyncStorage!");
       AsyncStorage.setItem("userToken", objTestdb.token);
     } else {
-      alert("UserToken is null.");
+      Alert.alert(
+        "Etwas ist schiefgelaufen.",
+        "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
+      );
     }
     setIsLoading(false);
   };
@@ -44,24 +49,23 @@ export const AuthProvider = ({ children }) => {
       "SignUp Process pressed. No function implemented yet. SetUserSignUp stll false."
     );
     setIsLoading(true);
-    let response = await fetch("http://10.1.111.32:3000/user/save", 
-    {
-      method: 'POST',
+    let response = await fetch("http://10.1.111.32:3000/user/save", {
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       credentials: "same-origin",
-      body: JSON.stringify(userData)
-    })
+      body: JSON.stringify(userData),
+    });
 
     let responseJSON = await response.json();
     let responseStringy = JSON.stringify(responseJSON);
     let responseParsed = JSON.parse(responseStringy);
 
     if ((await isVerified(responseParsed)) == "verified") {
-      if(responseParsed.body.value == true) {
-        console.log("respond contains true => success")
+      if (responseParsed.body.value == true) {
+        console.log("respond contains true => success");
         setUserSignedUp("true");
       }
     }
@@ -87,20 +91,25 @@ export const AuthProvider = ({ children }) => {
     );
     try {
       let userIsInDataBank = await fetch(
-        "http://10.1.111.32:3000/dekomdb.dekom_user?token=" + userToken
+        "http://10.1.111.32:3000/dekomdb.dekom_user/identify?token=" +
+          userToken
       );
 
       console.log("isSignedUp data fetched. Verifying if Token still Valid.");
       let userSignedUpJSON = await userIsInDataBank.json();
-      let userSignedUpStringy = JSON.stringify(userSignedUpJSON)
-      let userSignedUpPARSED = JSON.parse(userSignedUpStringy)
+      let userSignedUpStringy = JSON.stringify(userSignedUpJSON);
+      let userSignedUpPARSED = JSON.parse(userSignedUpStringy);
       if ((await isVerified(userSignedUpPARSED)) == "verified") {
         console.log("Bin in if Abfrage");
-        if (userSignedUpPARSED.body.value != "false") {
+        if (userSignedUpPARSED.body.value != false) {
           console.log("userIsSignedUp: " + userSignedUpPARSED.body.value);
           console.log("isSignedUp: " + true);
           setUserSignedUp("true");
           setIsLoading(false);
+        if (userSignedUpPARSED.body.value == true){
+          greetingsName = userSignedUpPARSED.body.result[0].VORNAME;
+          Alert.alert("Willkommen, " + greetingsName + "!");
+        }
           return true;
         } else {
           console.log("userIsSignedUp: " + userSignedUpPARSED.body.value);
@@ -135,12 +144,12 @@ export const AuthProvider = ({ children }) => {
     try {
       /*let resultJSON = await result.json();
       let resultStringy = JSON.stringify(resultJSON)
-      let resultPARSE = JSON.parse(resultStringy)*/ 
+      let resultPARSE = JSON.parse(resultStringy)*/
       console.log("resultStringy:" + result.body.value);
       if (result.body.value == "logout") {
         console.log("ich bin im logout");
         logout();
-        alert("Session ended. Please Login again.");
+        Alert.alert("Session wurde beendet. Bitte logge dich nochmal ein.");
       } else {
         return "verified";
       }

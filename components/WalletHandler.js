@@ -3,6 +3,8 @@ import Fuehrerschein from "./Fuehrerschein";
 import getUserDataByHash from '../data/dataTransfer';
 
 
+
+
 function WalletHandler ({data}){
     // getUserDataByHash();
 
