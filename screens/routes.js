@@ -66,13 +66,14 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
         "'",
       function (error, results, fields) {
         console.log("Result of Query" + results);
-        if (error) throw error;
         console.log(results);
         if (results.length) {
           resTestdb.send(true);
         } else {
           resTestdb.send(false);
         }
+        ourConnection.release();
+        if (error) throw error;
       }
     );
   });
@@ -80,7 +81,7 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
 
 const authorized = async (id, pin) => {
   let respond = await fetch(
-    "http://10.1.111.32:3000/auth.behoerde?pin=" + pin + "&id=" + id
+    "http://192.168.178.163:3000/auth.behoerde?pin=" + pin + "&id=" + id
   ).catch(function (error) {
     console.log(
       "There has been a problem with your fetch operation: " + error.message
@@ -132,6 +133,7 @@ app.get(
           function (error2, results2, fields) {
             if (error2) {
               console.log("An error occurred:", error2.message);
+              throw error2
             } else {
 
               if (results2.length) {
@@ -145,6 +147,7 @@ app.get(
                 resDekmdb.send(formattingResponse(token, { value: false }));
               }
             }
+            ourConnection.release();
           }
         );
       });
@@ -205,6 +208,7 @@ app.post("/user/save", cookieJWTAuth, function (req, resData) {
           "');"
       );
     });
+    ourConnection.release();
   });
   resData.send(formattingResponse(token, { value: true }));
 });
