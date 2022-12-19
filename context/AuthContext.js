@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     console.log("login going into fetch...");
     let response = await fetch(
-      "http://10.1.111.32:3000/testdb.userdaten?pin=" +
+      "http://192.168.178.164:3000/testdb.userdaten?pin=" +
         userPin +
         "&id=" +
         userId
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       "SignUp Process pressed. No function implemented yet. SetUserSignUp stll false."
     );
     setIsLoading(true);
-    let response = await fetch("http://10.1.111.32:3000/user/save", {
+    let response = await fetch("http://192.168.178.164:3000/user/save", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
     );
     try {
       let userIsInDataBank = await fetch(
-        "http://10.1.111.32:3000/dekomdb.dekom_user/identify?token=" +
+        "http://192.168.178.164:3000/dekomdb.dekom_user/identify?token=" +
           userToken
       );
 

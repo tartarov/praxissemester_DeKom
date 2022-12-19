@@ -53,7 +53,7 @@ async function addAntrag() {
 }
 
 
-function HomeScreen() {
+function HomeScreen({navigation}) {
   //const data = dataSample;
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -126,7 +126,7 @@ function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom </Text>
+        <Text style={styles.logo}>|DeKom. </Text>
         <NotificationButton />
       </View>
       {isLoading == true ? <DocumentLoader/> : <DocumentList/>}
