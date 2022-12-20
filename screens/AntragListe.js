@@ -9,9 +9,55 @@ const DATA = [
   },
   {
     id: "2",
-    title: "In Arbeit",
+    title: "Geburtsurkunde",
     navigator: "Home"
   },
+  {
+  id: "3",
+  title: "Wohnsitz-Ummeldung",
+  navigator: "Home"
+},
+{
+    id: "4",
+    title: "Kirchenaustritt",
+    navigator: "Menu"
+  },
+  {
+    id: "5",
+    title: "Kindergeld",
+    navigator: "Menu"
+  },
+  {
+    id: "6",
+    title: "Wohngeld",
+    navigator: "Home"
+  },
+  {
+  id: "7",
+  title: "Arbeitslosengeld",
+  navigator: "Home"
+},
+{
+    id: "8",
+    title: "In Arbeit 2",
+    navigator: "Menu"
+  },
+  {
+    id: "9",
+    title: "In Arbeit 2",
+    navigator: "Menu"
+  },
+  {
+    id: "10",
+    title: "In Arbeit 2",
+    navigator: "Menu"
+  },
+  {
+    id: "11",
+    title: "In Arbeit 2",
+    navigator: "ScreenDoesNotExist"
+  },
+
 ];
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -30,13 +76,15 @@ const Antragmenue = ({navigation}) => {
 
     const getToNav = ({item}) => {
       setSelectedId(item.id)
-      
+      navigation.navigate(item.navigator)
     }
 
     return (
       <Item
         item={item}
-        onPress={() => navigation.navigate(item.navigator)}
+        onPress={() => {setSelectedId(item.id), setTimeout(() => {
+            navigation.navigate("ScreenDoesNotExist")
+          }, 250)}}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />

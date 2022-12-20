@@ -48,54 +48,6 @@ export default function Login({ navigation }) {
     });
 
   const fetchData = async () => {
-   /* respTestdb = await fetch(
-      "http://10.1.111.32:3000/testdb.userdaten?pin=" +
-        values.pin +
-        "&id=" +
-        values.id
-    ).catch(function(error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
-      throw error
-      });;
-    dataTestdb = await respTestdb.json();
-    resultTestdb = JSON.stringify(dataTestdb);
-    objTestdb = JSON.parse(resultTestdb);
-    console.log( objTestdb.body.value.some((item) => item.PIN === values.pin));
-    if (
-      objTestdb.body.value.some((item) => item.PIN === values.pin) &&
-      objTestdb.body.value.some((item2) => item2.ID === values.id)
-    ) {
-      alert("You are authorized!" + "\n" + "Welcome to deKom!");
-  
-      respDekomdb = await fetch(
-        "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + values.id, //192.168.178.24 home or 10.1.111.32 w
-        {
-          method: 'POST',
-          credentials: "same-origin",
-        }
-      ).catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
-        throw error
-        });
-        /*
-      dataDekomdb = await respDekomdb.json();
-      resultDekomdb = JSON.stringify(dataDekomdb);
-      objDekomdb = await JSON.parse(resultDekomdb);
-      console.log("objDekomdb.body.value: " + objDekomdb.body.value);
-    
-      if (objDekomdb.body.value != true && objDekomdb.body.value != false) {
-        navigation.navigate("SignUp");
-      } else if (objDekomdb.body.value == false) {
-        navigation.navigate("Login");
-      } else if (objDekomdb.body.value == true) {
-        navigation.navigate("MainScreen");
-      }
-      NOTE: SERVER STOPPT NACH DEM 5 GET-REQUEST ZU ANTWORTEN.
-      
-*/ /*
-    } else {
-      alert("ID or PIN incorrect. Please try again.");
-    } */
   };
 
   const pin = useRef(null);

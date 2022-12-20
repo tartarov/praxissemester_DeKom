@@ -131,7 +131,7 @@ function HomeScreen({navigation}) {
       </View>
       {isLoading == true ? <DocumentLoader/> : <DocumentList/>}
       <View style={styles.buttonContainer}>
-        <PrimaryButton children={"Antrag hinzufügen"} onPress={addAntrag} />
+        <PrimaryButton children={"Antrag hinzufügen"} onPress={() => navigation.navigate("Dokumente")} />
         <PrimaryButton children={"Ausweis hinzufügen"} onPress={addAntrag} />
       </View>
     </SafeAreaView>
