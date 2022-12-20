@@ -9,7 +9,7 @@ const DATA = [
   },
   {
     id: "2",
-    title: "Geburtsurkunde",
+    title: "erweitertes Führungszeugnis",
     navigator: "Home"
   },
   {
@@ -39,22 +39,22 @@ const DATA = [
 },
 {
     id: "8",
-    title: "In Arbeit 2",
+    title: "neuer Personalausweiß",
     navigator: "Menu"
   },
   {
     id: "9",
-    title: "In Arbeit 2",
+    title: "neuer Führerschein",
     navigator: "Menu"
   },
   {
     id: "10",
-    title: "In Arbeit 2",
+    title: "BAFöG",
     navigator: "Menu"
   },
   {
     id: "11",
-    title: "In Arbeit 2",
+    title: "Geburtsurkunde",
     navigator: "ScreenDoesNotExist"
   },
 
@@ -103,9 +103,6 @@ const Antragmenue = ({navigation}) => {
         keyExtractor={(item) => item.id}
         extraData={selectedId}
       />
-      <View>
-      <Text  style={{alignItems: 'center'}}>...</Text>
-      </View>
     </SafeAreaView>
   );
 };
@@ -117,7 +114,7 @@ const styles = StyleSheet.create({
       },
       logo: {
         marginTop: 10,
-        marginBottom: StatusBar.currentHeight || 0,
+        marginBottom: StatusBar.currentHeight ,
         fontWeight: "bold",
         fontSize: 38,
         marginLeft: 20,

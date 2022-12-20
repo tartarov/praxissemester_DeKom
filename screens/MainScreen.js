@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 function MainScreen(){
     return (
         <>
-            <Tab.Navigator initialRouteName='Home'>
+            <Tab.Navigator initialRouteName='Home'screenOptions={{swipeEnabled: true}}>
             <Tab.Screen name='Dokumente' component={Antragmenue} options={{ 
                  headerShown: false , //change HomeScreen to DokumenteScreen
                 tabBarIcon: ({color, size}) => <Ionicons name='document' color={color} size={size} /> }} />
@@ -22,7 +22,8 @@ function MainScreen(){
                 headerShown: false,
                 tabBarIcon: ({color, size}) => <Ionicons name='home' color={color} size={size} /> ,
               }} />
-              <Tab.Screen name='Menü' component={Menu} options={{ //change HomeScreen to MenuScreen
+              <Tab.Screen name='Menü' component={Menu} options={{
+                 headerShown: false , //change HomeScreen to MenuScreen
                 tabBarIcon: ({color, size}) => <Ionicons name='menu' color={color} size={size} /> }} />
                  <Tab.Screen name='ScreenDoesNotExist' component={ScreenDoesNotExist} options={{  tabBarButton: () => (
             <View style={{width:0, height:0}}></View>
