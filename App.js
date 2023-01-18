@@ -6,6 +6,7 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import SignUpAdress from "./screens/SignUpAdress";
 import MainScreen from "./screens/MainScreen";
+import ExportPDFTestScreen from "./screens/ExportPDFTestScreen";
 import { AuthProvider } from "./context/AuthContext";
 import { AuthContext } from "./context/AuthContext";
 
@@ -39,10 +40,10 @@ const App = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator headerMode="none" initialRouteName="AuthFlow">
+        <Stack.Navigator headerMode="none" initialRouteName="ExportPDFTestScreen">
           <Stack.Screen
-            name="AuthFlow"
-            component={AuthHandler}
+            name="ExportPDFTestScreen"
+            component={ExportPDFTestScreen}
             options={{ headerShown: false }}
           ></Stack.Screen>
           <Stack.Screen
