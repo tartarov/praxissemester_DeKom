@@ -9,6 +9,7 @@ import ErteilungScreen from "./Antrag/ErteilungScreen";
 import FragenScreen from "./Antrag/FragenScreen";
 import { ScreenDoesNotExist } from "./ScreenDoesNotExist";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ExportPDFTestScreen from "./ExportPDFTestScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,9 +58,16 @@ function MainScreen() {
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
-          <Tab.Screen
+        <Tab.Screen
           name="ErteilungsScreen"
           component={FragenScreen}
+          options={{
+            tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          }}
+        />
+        <Tab.Screen
+          name="ExportPDFTestScreen"
+          component={ExportPDFTestScreen}
           options={{
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
