@@ -15,27 +15,28 @@ const Stack = createNativeStackNavigator();
 let alreadyCalled = false;
 
 const AuthHandler = () => {
-  const { isLoading, userToken, userSignedUp } = useContext(AuthContext);
+  const { isLoading, userToken, userSignedUp} = useContext(AuthContext);
   const { isSignedUp } = useContext(AuthContext);
+
+ 
 
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
          <LottieView
         autoPlay
-        //ref={animation}
         style={{
           width: 100,
           height: 100,
-          backgroundColor: '#eee',
+          backgroundColor: '#eee1',
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
-        source={require('./assets/loader.json')}
+        source={require('./assets/loader2.json')}
       />
-      {/* <ActivityIndicator size={"large"} /> */}
       </View>
     );
-  }
+  } 
+
   if (userToken == null) {
     console.log("USER TOKEN IS NULL! alreadyCalled is now false.");
     alreadyCalled = false;
@@ -55,7 +56,7 @@ const AuthHandler = () => {
   }, []);
 
   if (userToken !== null && userSignedUp != "false") {
-    return <MainScreen />;
+    return <MainScreen/>;
   } else if (userToken !== null && userSignedUp == "false") {
     return <SignUpNav />;
   } else {

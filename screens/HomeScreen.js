@@ -19,7 +19,7 @@ import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../components/Paginator.js";
 import { AuthContext } from "../context/AuthContext";
 import { DataContext } from "../context/DataContext";
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
 
 const { width } = Dimensions.get("screen");
 
@@ -52,20 +52,19 @@ async function addAntrag() {
   }
 }
 
-
-function HomeScreen({navigation}) {
+function HomeScreen({ navigation }) {
   //const data = dataSample;
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const { isVerified } = useContext(AuthContext);
-  const { data , getWalletData } = useContext(DataContext);
-  
+  const { data, getWalletData } = useContext(DataContext);
+
   useEffect(() => {
-   setIsLoading(true);
-   getWalletData();
-   setIsLoading(false);
+    setIsLoading(true);
+    getWalletData();
+    setIsLoading(false);
   }, []);
   isVerifiedVar = isVerified;
 
@@ -73,54 +72,55 @@ function HomeScreen({navigation}) {
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
+  console.log("data ist currently------>: " + data);
 
   function DocumentList() {
     return (
-    <>
-      <View style={styles.flatListContainer}>
-        <FlatList
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          data={data}
-          renderItem={({ item, index }) => (
-            <View style={styles.documentContainer}>
-              <WalletHandler data={item} />
-            </View>
-          )}
-          keyExtractor={(data) => data.title}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            {
-              useNativeDriver: false,
-            }
-          )}
-        />
-      </View>
-     {/* <Paginator data={data} scrollX={scrollX} /> */}
-    </>
+      <>
+        <View style={styles.flatListContainer}>
+          
+          <FlatList
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            bounces={false}
+            data={data}
+            renderItem={({ item, index }) => (
+              <View style={styles.documentContainer}>
+                <WalletHandler data={item} />
+              </View>
+            )}
+            keyExtractor={(data) => data.title}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              {
+                useNativeDriver: false,
+              }
+            )}
+          />
+        </View>
+        <Paginator data={data} scrollX={scrollX} /> 
+      </>
     );
   }
 
   function DocumentLoader() {
     return (
-    <View style={styles.animationContainer}>
-      <LottieView
-        autoPlay
-        //ref={animation}
-        style={{
-          width: 50,
-          height: 50,
-          backgroundColor: '#eee',
-        }}
-        // Find more Lottie files at https://lottiefiles.com/featured
-        source={require('../assets/loader.json')}
-      />
-    </View>
+      <View style={styles.animationContainer}>
+        <LottieView
+          autoPlay
+          //ref={animation}
+          style={{
+            width: 50,
+            height: 50,
+            backgroundColor: "#eee1",
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require("../assets/loader2.json")}
+        />
+      </View>
     );
   }
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -129,10 +129,16 @@ function HomeScreen({navigation}) {
         <Text style={styles.logo}>|DeKom. </Text>
         <NotificationButton />
       </View>
-      {isLoading == true ? <DocumentLoader/> : <DocumentList/>}
+      {isLoading == true ? <DocumentLoader /> : <DocumentList />}
       <View style={styles.buttonContainer}>
-        <PrimaryButton children={"Antrag hinzufügen"} onPress={() => navigation.navigate("Dokumente")} />
-        <PrimaryButton children={"Ausweis hinzufügen"} onPress={addAntrag} />
+        <PrimaryButton
+          children={"Antrag hinzufügen"}
+          onPress={() => navigation.navigate("Dokumente")}
+        />
+        <PrimaryButton
+          children={"Ausweis hinzufügen"}
+          onPress={() => navigation.navigate("ScreenDoesNotExist")}
+        />
       </View>
     </SafeAreaView>
   );
@@ -178,6 +184,6 @@ const styles = StyleSheet.create({
   animationContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 160,
   },
 });

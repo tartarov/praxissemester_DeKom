@@ -5,52 +5,52 @@ const DATA = [
   {
     id: "1",
     title: "Führungszeugnis",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "2",
     title: "erweitertes Führungszeugnis",
-    navigator: "Home"
+    navigator: "ScreenDoesNotExist"
   },
   {
   id: "3",
   title: "Wohnsitz-Ummeldung",
-  navigator: "Home"
+  navigator: "ScreenDoesNotExist"
 },
 {
     id: "4",
     title: "Kirchenaustritt",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "5",
     title: "Kindergeld",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "6",
     title: "Wohngeld",
-    navigator: "Home"
+    navigator: "ScreenDoesNotExist"
   },
   {
   id: "7",
   title: "Arbeitslosengeld",
-  navigator: "Home"
+  navigator: "ScreenDoesNotExist"
 },
 {
     id: "8",
     title: "neuer Personalausweiß",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "9",
     title: "neuer Führerschein",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "10",
     title: "BAFöG",
-    navigator: "Menu"
+    navigator: "ScreenDoesNotExist"
   },
   {
     id: "11",
@@ -72,18 +72,13 @@ const Antragmenue = ({navigation}) => {
 
   const renderItem = ({ item }) => {
     const backgroundColor = item.id === selectedId ? "#e94832" : "#f8c8c1";
-    const color = item.id === selectedId ? 'white' : 'black';
-
-    const getToNav = ({item}) => {
-      setSelectedId(item.id)
-      navigation.navigate(item.navigator)
-    }
+    const color = item.id === selectedId ? 'white' : '#223e4b';
 
     return (
       <Item
         item={item}
         onPress={() => {setSelectedId(item.id), setTimeout(() => {
-            navigation.navigate("ScreenDoesNotExist")
+            navigation.navigate(item.navigator)
           }, 250)}}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}

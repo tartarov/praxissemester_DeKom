@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthContext";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState(currentData);
+  const [data, setData] = useState([]);
   const { isVerified } = useContext(AuthContext);
 
   let currentData = [
@@ -46,7 +46,7 @@ export const DataProvider = ({ children }) => {
 
   const getWalletData = async () => {
     let respond = await fetch(
-      "http://192.168.178.164:3000/dekomdb.dekom_user/identify",
+      "http://10.1.111.32:3000/dekomdb.dekom_user/identify",
       {
         credentials: "same-origin",
       }

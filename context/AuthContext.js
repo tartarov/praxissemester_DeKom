@@ -1,10 +1,13 @@
 import React, { createContext, useState, useEffect } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LottieView from 'lottie-react-native';
+import checkmark from '../components/animations/checkmark.js'
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }, {navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCorrect, setIsLoadingCorrect] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userSignedUp, setUserSignedUp] = useState("false");
   let greetingsName;
@@ -13,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     console.log("login going into fetch...");
     let response = await fetch(
-      "http://192.168.178.164:3000/testdb.userdaten?pin=" +
+      "http://10.1.111.32:3000/testdb.userdaten?pin=" +
         userPin +
         "&id=" +
         userId
@@ -31,6 +34,7 @@ export const AuthProvider = ({ children }) => {
     console.log("TOKEN AFTER LOGIN: " + objTestdb.token);
 
     if (objTestdb.token !== null) {
+      setIsLoadingCorrect(true)
       console.log("login Token is not null.");
       setUserToken(objTestdb.token);
       console.log("login Token inserterted into AsyncStorage!");
@@ -41,7 +45,8 @@ export const AuthProvider = ({ children }) => {
         "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
       );
     }
-    setIsLoading(false);
+     setIsLoading(false)
+     setIsLoadingCorrect(false)
   };
 
   const signup = async (userData) => {
@@ -49,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       "SignUp Process pressed. No function implemented yet. SetUserSignUp stll false."
     );
     setIsLoading(true);
-    let response = await fetch("http://192.168.178.164:3000/user/save", {
+    let response = await fetch("http://10.1.111.32:3000/user/save", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -91,7 +96,7 @@ export const AuthProvider = ({ children }) => {
     );
     try {
       let userIsInDataBank = await fetch(
-        "http://192.168.178.164:3000/dekomdb.dekom_user/identify?token=" +
+        "http://10.1.111.32:3000/dekomdb.dekom_user/identify?token=" +
           userToken
       );
 
@@ -172,6 +177,7 @@ export const AuthProvider = ({ children }) => {
         isSignedUp,
         isVerified,
         isLoading,
+        isLoadingCorrect,
         userToken,
         userSignedUp,
       }}
@@ -180,3 +186,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+

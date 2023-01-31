@@ -5,20 +5,14 @@ import {
     StyleSheet,
     Text
   } from "react-native";
-import Button from "../components/Button.js"
 
+export default function checkmark({navigation}) {
 
-export function ScreenDoesNotExist({navigation}) {
-    const [finish, setFinish] = useState(false);
-
-const handleFinish = () => {
-  setFinish(true);
-};
     return (
     <View style={styles.animationContainer}>
       <LottieView
         loop={true}
-        onAnimationFinish={() => handleFinish()}
+        onAnimationFinish={() => navigation.navigate("MainScreen")}
         autoPlay
         //ref={animation}
         style={{
@@ -27,7 +21,7 @@ const handleFinish = () => {
           backgroundColor: '#eee1',
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
-        source={require('../assets/ScreenDoesNotExist.json')}
+        source={require('../../assets/checkmark.json')}
       />
       <View >
         <Text style= {{fontSize: 18, fontWeight: "light", color: "#223e4b", marginTop: 40}}>Tut uns leid, wir arbeiten daran.</Text>
@@ -40,7 +34,6 @@ const handleFinish = () => {
          marginTop: 80
        }}
      >
-       <Button title='Back to home' label="Zurück zu Home"  onPress={() => {navigation.navigate("Home"), setFinish(false)}} />
      </View>
     </View>
     );
