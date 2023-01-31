@@ -1,14 +1,12 @@
 import { StyleSheet, View, Text } from "react-native";
-import React from 'react';
-import NumericInput from 'react-native-numeric-input'
-import { Colors } from "react-native/Libraries/NewAppScreen";
-
+import React,{setState} from 'react';
+import NumericInput from 'react-native-numeric-input';
 
 
 
 function ZahlAuswahl (props){
-    console.log("Done");
-    if(isNaN(props.text) || !isNaN(props.minNumber) || !isNaN(props.maxNumber)){
+    const [state, setState] = React.useState(1);
+    if(!isNaN(props.text) || isNaN(props.minNumber) || isNaN(props.maxNumber)){
         return(
             <View style={styles.mainContainer}>
                 <View>
@@ -18,11 +16,12 @@ function ZahlAuswahl (props){
         );
     }
     return(
+
             <View style={styles.questionContainer}>
                     <Text style={styles.questionText}>{props.text}</Text>
                     <View>
                     <NumericInput 
-                        value={1} 
+                        value={state} 
                         onChange={value => setState({value})} 
                         minValue={props.minNumber}
                         maxValue={props.maxNumber}
@@ -47,8 +46,14 @@ function ZahlAuswahl (props){
 
 styles = StyleSheet.create({
     questionContainer : {
+        flexDirection:"wrap",
+
     },
     questionText : {
+        fontSize:50,
+        backgroundColor: '#ffffff',
+        color:"#ffffff",
+
     },
     mainContainer : {
         flex: 1,

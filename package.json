@@ -1,22 +1,30 @@
 {
   "name": "projectlaunch_dekom",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "description": "",
+  "main": "App.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "(cd android/ && ./gradlew assembleDebug)",
+    "bundle-android": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --sourcemap-output android/app/src/main/assets/index.android.map --assets-dest android/app/src/main/res/",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://git.coco.study/mgrund3/projectlaunch_dekom.git"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "expo": "~46.0.16",
-    "expo-status-bar": "~1.4.0",
-    "react": "18.0.0",
-    "react-native": "0.69.6",
-    "react-native-gesture-handler": "^2.8.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.12.9"
-  },
-  "private": true
+    "expo": "^47.0.8",
+    "expo-cli": "^6.0.8",
+    "react": "^18.1.0",
+    "react-native": "^0.70.5",
+    "react-native-bouncy-checkbox": "^3.0.6",
+    "react-native-numeric-input": "^1.9.1",
+    "react-native-pixel-perfect": "^1.0.2"
+  }
 }

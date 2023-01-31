@@ -1,54 +1,22 @@
 import {StyleSheet, TextInput, View, CheckBox, Text} from 'react-native';
 import PrimaryButton from './PrimaryButton';
 import React, {useState, useDebugValue} from 'react';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 //add all Navigation later
-let editableValue = false;
 
-function InputFeld(){
+function InputFeld(props){
+
     const [text,onChangeText] = React.useState("Useless Text");
-    let [isSelected, setSelected] = useState(false);
-
-    const combineMethods = () =>{
-        editableValue = !editableValue;
-        console.log(editableValue);
-        return(setSelected(!isSelected));
-    }
 
     return(
         <View>
-            <View style={styles.ViewRow}>
-                {/**Text and Checkbox(if sent, and other adress) and Stuff */}
-                <BouncyCheckbox
-                text='Dokument per Post verschicken lassen'
-                textStyle={{textDecorationLine: "none"}}
-                fillColor='#014381'
-                unfillColor='#FFFFFF'
-                isChecked={isSelected}
-                onPress={()=> setSelected(!isSelected)}
-                style={styles.bouncyCheckboxStyle}
-                />
-            </View>
-            <View style={styles.ViewRow}>
-                <BouncyCheckbox
-                text='Dokument an abweisende Adresse Schicken'
-                textStyle={{textDecorationLine: "none"}}
-                fillColor='#014381'
-                unfillColor='#FFFFFF'
-                isChecked={isSelected}
-                onPress={() => combineMethods()}
-                style={styles.bouncyCheckboxStyle}
-                />
                 <View style={styles.shownElement}>
                     <TextInput
-                    editable={editableValue}
-                    style={[styles.inputField, editableValue ? styles.editInput : styles.staticInput]}
+                    editable={props.editableBoolean}
+                    style={[styles.inputField, props.editableBoolean ? styles.editInput : styles.staticInput]}
                     onChangeText={onChangeText}
-                    placeholder="Adresse der Erteilung"
+                    placeholder={props.placeholderText}
                     />
-                    <PrimaryButton children={'Absenden'}/>
-                </View>
             </View>
         </View>
     );
