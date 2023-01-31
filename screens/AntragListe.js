@@ -5,7 +5,7 @@ const DATA = [
   {
     id: "1",
     title: "Führungszeugnis",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ExportPDFTestScreen"
   },
   {
     id: "2",

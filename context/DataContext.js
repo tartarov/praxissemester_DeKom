@@ -82,11 +82,49 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const getUserData = async () => {
+    let respond = await fetch(
+      "http://10.1.111.32:3000/dekomdb.dekom_user/identify",
+      {
+        credentials: "same-origin",
+      }
+    );
+
+    let respJson = await respond.json();
+    let respStringy = JSON.stringify(respJson);
+    console.log("respStringy" + respStringy);
+    let respParsed = JSON.parse(respStringy);
+    console.log("respParsed: " + respParsed.body.value);
+
+    if (respParsed.body.value == true) {
+      if ((await isVerified(respParsed)) == "verified") {
+
+        let data = {
+          name: respParsed.body.result[0].NAME,
+          vorname: respParsed.body.result[0].VORNAME,
+          geburtstag: respParsed.body.result[0].GEBURTSDATUM,
+          geburtsort: respParsed.body.result[0].GEBURTSORT,
+          staatsangehoerigkeit: respParsed.body.result[0].STAATSANGEHOERIGKEIT,
+          strasse: respParsed.body.result[0].STRASSE,
+          hausnummer: respParsed.body.result[0].HAUSNUMMER,
+          plz: respParsed.body.result[0].PLZ,
+          stadt: respParsed.body.result[0].STADT,
+        }
+
+
+        console.log("data : " + data);
+
+        return (data);
+      }
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
         getWalletData,
         data,
+        getUserData,
       }}
     >
       {children}
