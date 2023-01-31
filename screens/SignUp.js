@@ -65,6 +65,12 @@ const SignUpSchema = Yup.object().shape({
     .matches(/^\d+$/, "Only numbers")
     .min(1, "Too short!")
     .max(3, "Too long!"),
+  staatsangehoerigkeit: Yup.string()
+    .min(1, "Too Short!")
+    .matches(
+      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
+      "Only alphabets are allowed for this field "
+    ),
 });
 
 const styles = {
@@ -152,6 +158,7 @@ export default function SignUp({ navigation }) {
         augenfarbe: "",
         groesse: "",
         geschlecht: "",
+        staatsangehoerigkeit: "",
       },
       onSubmit: (values) => {
         console.log("Unser Values sieht so aus: " + JSON.stringify(values));
@@ -212,6 +219,7 @@ export default function SignUp({ navigation }) {
   const geburtsort = useRef(null);
   const augenfarbe = useRef(null);
   const groesse = useRef(null);
+  const staatsangehoerigkeit = useRef(null);
 
   return (
     <DismissKeyboard>
@@ -436,6 +444,29 @@ export default function SignUp({ navigation }) {
               </Col>
             </Row>
           </View>
+
+          <View style={[styles.app, { zIndex: 0, marginTop: 60 }]}>
+            <Row>
+              <Col numRows={1}>
+                <TextInput
+                  ref={staatsangehoerigkeit}
+                  placeholder="Staatsangehörigkeit"
+                  autoCompleteType="text"
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  keyboardAppearance="dark"
+                  returnKeyType="go"
+                  returnKeyLabel="go"
+                  onChangeText={handleChange("staatsangehoerigkeit")}
+                  onBlur={handleBlur("staatsangehoerigkeit")}
+                  error={errors.staatsangehoerigkeit}
+                  touched={touched.staatsangehoerigkeit}
+                  onSubmitEditing={() => handleSubmit()}
+                />
+              </Col>
+            </Row>
+          </View>
+
         </View>
         <View>
           <Text style={[styles.text, { marginTop: 50 }]}>

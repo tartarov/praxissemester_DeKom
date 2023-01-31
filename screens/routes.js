@@ -167,7 +167,7 @@ app.post("/user/save", cookieJWTAuth, function (req, resData) {
   connectionDekomdb.getConnection(function (err, ourConnection) {
     getHash(decodedParseToken.user.id).then((hash) => {
       connectionDekomdb.query(
-        "INSERT INTO dekomdb.dekom_user (USER_ID_HASH,TITEL,NAME,VORNAME,ZWEITNAME, GESCHLECHT,GEBURTSDATUM,AUGENFARBE,GROESSE,VORWAHL,TELEONNUMMER,BUNDESLAND,GEBURTSORT,STADT,BEHOERDE,PLZ,STRASSE,HAUSNUMMER,E_MAIL) VALUES ('" +
+        "INSERT INTO dekomdb.dekom_user (USER_ID_HASH,TITEL,NAME,VORNAME,ZWEITNAME, GESCHLECHT,GEBURTSDATUM,AUGENFARBE,GROESSE,VORWAHL,TELEONNUMMER,BUNDESLAND,GEBURTSORT,STADT,BEHOERDE,PLZ,STRASSE,HAUSNUMMER,E_MAIL,STAATSANGEHOERIGKEIT) VALUES ('" +
           hash +
           "','" +
           userData.titel +
@@ -205,6 +205,8 @@ app.post("/user/save", cookieJWTAuth, function (req, resData) {
           userData.hausnummer +
           "','" +
           userData.email +
+          "','" +
+          userData.staatsangehoerigkeit +
           "');"
       );
     });

@@ -63,10 +63,9 @@ export const DataProvider = ({ children }) => {
         //Data of Personalausweis
         currentData[0].document.name = respParsed.body.result[0].NAME;
         currentData[0].document.vorname = respParsed.body.result[0].VORNAME;
-        currentData[0].document.geburtstag =
-          respParsed.body.result[0].GEBURTSDATUM;
-        currentData[0].document.geburtsort =
-          respParsed.body.result[0].GEBURTSORT;
+        currentData[0].document.geburtstag = respParsed.body.result[0].GEBURTSDATUM;
+        currentData[0].document.geburtsort = respParsed.body.result[0].GEBURTSORT;
+        currentData[0].document.staatsangehoerigkeit = respParsed.body.result[0].STAATSANGEHOERIGKEIT;
 
         //Data of Fuehrerschein
         currentData[1].document.name = respParsed.body.result[0].NAME;
