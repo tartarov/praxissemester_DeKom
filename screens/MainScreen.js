@@ -8,6 +8,7 @@ import Antragmenue from "./AntragListe";
 import ErteilungScreen from "./Antrag/ErteilungScreen";
 import FragenScreen from "./Antrag/FragenScreen";
 import { ScreenDoesNotExist } from "./ScreenDoesNotExist";
+import SignatureCaptures from "./SignatureScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Tab = createBottomTabNavigator();
@@ -57,13 +58,21 @@ function MainScreen() {
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
-          <Tab.Screen
+        <Tab.Screen
           name="ErteilungsScreen"
           component={FragenScreen}
           options={{
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
+        <Tab.Screen
+          name="SignatureScreen"
+          component={SignatureCaptures}
+          options={{
+            tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          }}
+        />
+
       </Tab.Navigator>
     </>
   );
