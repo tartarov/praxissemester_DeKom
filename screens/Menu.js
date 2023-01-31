@@ -3,7 +3,7 @@ import { View, Text, StatusBar } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import Button from "../components/Button";
 
-export default function Menu() {
+export default function Menu({navigation}) {
   const { logout } = useContext(AuthContext);
 
   return (
@@ -36,6 +36,18 @@ export default function Menu() {
           {" "}
           logout{" "}
         </Button>
+
+        <View style={{ marginTop: 20 }}>
+        <Button
+          title="signate"
+          label="SIGNATE"
+            onPress={() => {navigation.navigate("SignatureScreen");
+          }}
+        >
+          {" "}
+          signate{" "}
+        </Button>
+        </View>
       </View>
     </View>
   );
