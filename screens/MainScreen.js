@@ -11,6 +11,8 @@ import { ScreenDoesNotExist } from "./ScreenDoesNotExist";
 import SignatureCaptures from "./SignatureScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExportPDFTestScreen from "./ExportPDFTestScreen";
+import StaatsangehoerigkeitsScreen from "./Antrag/StaatsangehoerigkeitScreens";
+import ZahlungsScreen from "./Antrag/ZahlungsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -61,7 +63,7 @@ function MainScreen() {
         />
         <Tab.Screen
           name="ErteilungsScreen"
-          component={FragenScreen}
+          component={ErteilungScreen}
           options={{
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
@@ -76,6 +78,27 @@ function MainScreen() {
         <Tab.Screen
           name="SignatureScreen"
           component={SignatureCaptures}
+          options={{
+            tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          }}
+        />
+        <Tab.Screen
+          name="FragenScreen"
+          component={FragenScreen}
+          options={{
+            tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          }}
+        />
+        <Tab.Screen
+          name="StaatsangehoerigkeitsScreen"
+          component={StaatsangehoerigkeitsScreen}
+          options={{
+            tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          }}
+        />
+         <Tab.Screen
+          name="ZahlungsScreen"
+          component={ZahlungsScreen}
           options={{
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}

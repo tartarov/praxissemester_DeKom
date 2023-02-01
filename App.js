@@ -14,7 +14,7 @@ import LottieView from 'lottie-react-native';
 const Stack = createNativeStackNavigator();
 let alreadyCalled = false;
 
-const AuthHandler = () => {
+  const AuthHandler = () => {
   const { isLoading, userToken, userSignedUp} = useContext(AuthContext);
   const { isSignedUp } = useContext(AuthContext);
 
@@ -62,10 +62,11 @@ const AuthHandler = () => {
   } else {
     return <Login />;
   }
-};
+}; 
 
 const App = () => {
-  return (
+
+ return (
     <AuthProvider>
       <DataProvider>
       <NavigationContainer>

@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { Button, View, Text, StyleSheet, FlatList } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-
+import WeiterButton from '../../components/WeiterButton';
 //import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
 import Select2 from "react-native-select-two";
 import countries from '../../assets/countries.json';
@@ -15,7 +14,7 @@ const mockData = [
   { id: 3, name: "iOS Developer" }
 ]
 
-export default function StaatsangehoerigkeitsScreen() {
+export default function StaatsangehoerigkeitsScreen({navigation}) {
 
     const countriesList = countries;
     const [selected, setSelected] = React.useState([]);
@@ -69,6 +68,7 @@ export default function StaatsangehoerigkeitsScreen() {
         <View>
           <View style={styles.headerContainer}>
             <Text style={styles.logo}>|DeKom </Text>
+            <WeiterButton onPress={() => {navigation.navigate("ZahlungsScreen");}}>weiter</WeiterButton>
           </View>
           <View style={styles.bodyContainer}>
             <Text style={styles.logo}>Ergänzende Daten - {"\n"}Weitere Staatsangehörigkeiten</Text>
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 10,
       },
       bodyContainer: {
         height: 700,

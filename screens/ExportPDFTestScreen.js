@@ -3,6 +3,7 @@ import { printToFileAsync } from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import { DataContext } from '../context/DataContext';
 import {useContext} from 'react';
+import { StyleSheet, View } from 'react-native';
 
 let html;
 
@@ -331,8 +332,19 @@ const generatePdf = async () => {
 
 
       return(
-    <Button
-    label="ExportPDF"
-    onPress={generatePdf}/>
-      );
+    <View style={styles.buttonContainer}>
+        <Button
+         label="ExportPDF"
+         onPress={generatePdf}/>     
+    </View> 
+    );
 }
+
+const styles = StyleSheet.create({
+    buttonContainer : {
+      margin: 10,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+})

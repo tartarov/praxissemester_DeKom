@@ -1,11 +1,12 @@
 import * as React from 'react';
-import {View, StyleSheet, Text } from 'react-native';
+import {View, StyleSheet, Text, ScrollView } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import NumericInput from 'react-native-numeric-input'
+import WeiterButton from '../../components/WeiterButton';
 
 
 
-export default function FragenScreen() {
+export default function FragenScreen({navigation}) {
 
     const [state, setState] = React.useState(1);
     console.log(state);
@@ -15,7 +16,9 @@ export default function FragenScreen() {
         <View>
             <View style={styles.headerContainer}>
                 <Text style={styles.logo}>|DeKom </Text>
+                <WeiterButton onPress={() => {navigation.navigate("StaatsangehoerigkeitsScreen");}}>weiter</WeiterButton>
             </View>
+           <ScrollView>
             <View style={styles.bodyContainer}>
                 <Text style={styles.logo}>Ergänzende Daten - Angaben zum Führung</Text>
                 <View style={[styles.questionContainer, styles.white]}>
@@ -83,6 +86,7 @@ export default function FragenScreen() {
                     </View>
                 </View>
             </View>
+            </ScrollView>
             
         
         </View>
@@ -91,13 +95,14 @@ export default function FragenScreen() {
 
 const styles = StyleSheet.create({
     headerContainer: {
+        marginTop: 10,
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
       },
       bodyContainer: {
         height: 700,
-        marginTop: 100,
+        marginTop: 5,
         backgroundColor: '#9AA6D2',
         flexDirection: 'column',
         maxHeight: 660

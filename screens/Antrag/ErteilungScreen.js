@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     headerContainer : {
         height: 50,
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 30,
+       // justifyContent: 'space-between',
+        marginTop: 10,
     },
     logo : {
         fontWeight: 'bold',
