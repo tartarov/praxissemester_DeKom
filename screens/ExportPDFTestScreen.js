@@ -7,7 +7,9 @@ import { StyleSheet, View } from 'react-native';
 
 let html;
 
-export default function ExportPDFTestScreen({navigation}) {
+export default function ExportPDFTestScreen({route, navigation}) {
+let antragData = route.params.antragData;
+
 const { getUserData } = useContext(DataContext);
 
 async function loadUserData() {

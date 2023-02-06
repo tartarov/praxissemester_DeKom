@@ -14,7 +14,8 @@ const mockData = [
   { id: 3, name: "iOS Developer" }
 ]
 
-export default function StaatsangehoerigkeitsScreen({navigation}) {
+export default function StaatsangehoerigkeitsScreen({route, navigation}) {
+    let antragData = route.params.antragData;
 
     const countriesList = countries;
     const [selected, setSelected] = React.useState([]);
@@ -37,6 +38,8 @@ export default function StaatsangehoerigkeitsScreen({navigation}) {
           ]);
         }
       });
+
+      antragData = {...antragData,...nationalities};
     }
     
     updateNationalities();
@@ -68,7 +71,7 @@ export default function StaatsangehoerigkeitsScreen({navigation}) {
         <View>
           <View style={styles.headerContainer}>
             <Text style={styles.logo}>|DeKom </Text>
-            <WeiterButton onPress={() => {navigation.navigate("ZahlungsScreen");}}>weiter</WeiterButton>
+            <WeiterButton onPress={() => {navigation.navigate("ZahlungsScreen", {antragData});}}>weiter</WeiterButton>
           </View>
           <View style={styles.bodyContainer}>
             <Text style={styles.logo}>Ergänzende Daten - {"\n"}Weitere Staatsangehörigkeiten</Text>
@@ -142,7 +145,8 @@ const styles = StyleSheet.create({
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 50,
+        marginBottom: 10,
       },
       bodyContainer: {
         height: 700,

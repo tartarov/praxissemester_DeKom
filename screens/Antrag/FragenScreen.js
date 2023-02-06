@@ -9,14 +9,22 @@ import WeiterButton from '../../components/WeiterButton';
 export default function FragenScreen({navigation}) {
 
     const [state, setState] = React.useState(1);
-    console.log(state);
+    const [VorlageCheckboxState, setVorlageCheckboxState] = React.useState(false);
+    const [AuslandCheckboxState, setAuslandCheckboxState] = React.useState(false);
+    const [ErweitertesCheckboxState, setErweitertesCheckboxState] = React.useState(false);
 
+    const antragData = {
+      anzahlExemplare: state,
+      zurVorlage: VorlageCheckboxState,
+      zurVerwendungImAusland: AuslandCheckboxState,
+      erweitertes: ErweitertesCheckboxState,
+    }
     return (
         
         <View>
             <View style={styles.headerContainer}>
                 <Text style={styles.logo}>|DeKom </Text>
-                <WeiterButton onPress={() => {navigation.navigate("StaatsangehoerigkeitsScreen");}}>weiter</WeiterButton>
+                <WeiterButton onPress={() => {navigation.navigate("StaatsangehoerigkeitsScreen", {antragData});}}>weiter</WeiterButton>
             </View>
            <ScrollView>
             <View style={styles.bodyContainer}>
@@ -26,12 +34,14 @@ export default function FragenScreen({navigation}) {
                     <View style={styles.checkbox}>
                     <BouncyCheckbox
                         disableText={false}
+                        isChecked={VorlageCheckboxState}
                         size={25}
                         fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
                         textStyle={{ textDecorationLine: "none", fontFamily: "JosefinSans-Regular" }}
+                        onPress={() => setVorlageCheckboxState(!VorlageCheckboxState)}
                     />
                     </View>
                 </View>
@@ -40,12 +50,14 @@ export default function FragenScreen({navigation}) {
                     <View style={styles.checkbox}>
                     <BouncyCheckbox
                         disableText={false}
+                        isChecked={AuslandCheckboxState}
                         size={25}
                         fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
                         textStyle={{ textDecorationLine: "none", fontFamily: "JosefinSans-Regular" }}
+                        onPress={() => setAuslandCheckboxState(!AuslandCheckboxState)}
                     />
                     </View>
                 </View>
@@ -54,12 +66,14 @@ export default function FragenScreen({navigation}) {
                     <View style={styles.checkbox}>
                     <BouncyCheckbox
                         disableText={false}
+                        isChecked={ErweitertesCheckboxState}
                         size={25}
                         fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
                         textStyle={{ textDecorationLine: "none", fontFamily: "JosefinSans-Regular" }}
+                        onPress={() => setErweitertesCheckboxState(!ErweitertesCheckboxState)}
                     />
                     </View>
                 </View>
@@ -95,7 +109,8 @@ export default function FragenScreen({navigation}) {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        marginTop: 10,
+        marginTop: 50,
+        marginBottom: 10,
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
