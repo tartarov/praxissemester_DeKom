@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import Button from "../components/Button";
 
@@ -28,7 +28,7 @@ export default function Menu({navigation}) {
         <Text style={{ marginBottom: 20, fontSize: 20 }}> Menü </Text>
         <Button
           title="logout"
-          label="LOGOUT"
+          label="abmelden"
           onPress={() => {
             logout();
           }}
@@ -40,8 +40,8 @@ export default function Menu({navigation}) {
         <View style={{ marginTop: 20 }}>
         <Button
           title="signate"
-          label="SIGNATE"
-            onPress={() => {navigation.navigate("SignatureScreen");
+          label="signieren"
+            onPress={() => {navigation.navigate("SignatureScreen"); Alert.alert("Hey!","Erstelle deine Signatur, ändere sie zu jeder Zeit!")
           }}
         >
           {" "}

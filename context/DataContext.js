@@ -10,6 +10,7 @@ export const DataProvider = ({ children }) => {
   let currentData = [
     {
       title: "Personalausweis",
+      color: 'green',
       //location: 'Max, Mustermann',
       // date: 'Nov 17th, 2020',
       poster:
@@ -26,6 +27,7 @@ export const DataProvider = ({ children }) => {
     },
     {
       title: "Führerschein",
+      color: 'blue',
       //location: 'Max, Mustermann',
       // date: 'Sept 3rd, 2020',
       poster:
@@ -46,7 +48,7 @@ export const DataProvider = ({ children }) => {
 
   const getWalletData = async () => {
     let respond = await fetch(
-      "http://10.1.111.32:3000/dekomdb.dekom_user/identify",
+      "http://192.168.178.24:3000/dekomdb.dekom_user/identify",
       {
         credentials: "same-origin",
       }
@@ -84,7 +86,7 @@ export const DataProvider = ({ children }) => {
 
   const getUserData = async () => {
     let respond = await fetch(
-      "http://10.1.111.32:3000/dekomdb.dekom_user/identify",
+      "http://192.168.178.24:3000/dekomdb.dekom_user/identify",
       {
         credentials: "same-origin",
       }

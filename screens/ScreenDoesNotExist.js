@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text
   } from "react-native";
-import Button from "../components/Button.js"
+import ButtonGhost from "../components/ButtonGhost"
 
 
 export function ScreenDoesNotExist({navigation}) {
@@ -40,7 +40,7 @@ const handleFinish = () => {
          marginTop: 80
        }}
      >
-       <Button title='Back to home' label="Zurück zu Home"  onPress={() => {navigation.navigate("Home"), setFinish(false)}} />
+       <ButtonGhost title='Back to home' label="Zurück zu Home"  onPress={() => {navigation.navigate("Home"), setFinish(false)}} />
      </View>
     </View>
     );

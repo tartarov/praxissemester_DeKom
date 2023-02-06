@@ -1,6 +1,7 @@
 export const dataSample = [
     {
       title: 'Personalausweis',
+      color: 'green',
       location: 'Max, Mustermann',
       date: 'Nov 17th, 2020',
       poster:
@@ -17,6 +18,7 @@ export const dataSample = [
     },
     {
       title: 'Führerschein',
+      color: 'blue',
       location: 'Max, Mustermann',
       date: 'Sept 3rd, 2020',
       poster:

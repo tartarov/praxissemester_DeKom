@@ -5,9 +5,10 @@ import {
   Animated,
   useWindowDimensions,
 } from "react-native";
-
+let ei
 function Paginator({data, scrollX }) {
   console.log("data current State:" + data);
+  console.log("data current scrollx:" + scrollX);
   const { width } = useWindowDimensions();
 
   return (
@@ -15,10 +16,9 @@ function Paginator({data, scrollX }) {
       <View style={{ flexDirection: "row", height: 64 }}>
         {data.map((_, i) => {
           const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
-
           const dotWidth = scrollX.interpolate({
             inputRange,
-            outputRange: [10, 20, 10],
+            outputRange: [10, 200, 10],
             extrapolate: "clamp",
           });
 
@@ -28,9 +28,15 @@ function Paginator({data, scrollX }) {
             extrapolate: "clamp",
           });
 
+          const color = scrollX.interpolate({
+            inputRange,
+            outputRange: [ "#e94832", "#223e4b", "#e94832"],
+            extrapolate: "clamp",
+          });
+
           return (
             <Animated.View
-              style={[styles.dot, { width: dotWidth, opacity }]}
+              style={[styles.dot, { width: dotWidth, opacity, backgroundColor: color }]}
               key={i.toString()}
             />
           );
@@ -49,9 +55,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dot: {
-    height: 10,
+    height: 6,
     borderRadius: 5,
-    backgroundColor: "gray",
+    backgroundColor: "blue",
     marginHorizontal: 8,
   },
 });

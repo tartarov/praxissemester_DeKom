@@ -29,14 +29,13 @@ const SPACING = 10;
 const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
-const valuesid = "qwertzui";
 let isVerifiedVar;
-let dataVar;
+let colors;
 
 async function addAntrag() {
   console.log("Antrag hinzufügen");
   let respAddAntrag = await fetch(
-    "http://10.1.111.32:3000/dekomdb.dekom_user?userId=" + valuesid, //192.168.178.24 home or 10.1.111.32 work
+    "http://192.168.178.24:3000/dekomdb.dekom_user?userId=" + valuesid, //192.168.178.24 home or 10.1.111.32 work
     {
       credentials: "same-origin",
     }
@@ -68,9 +67,18 @@ function HomeScreen({ navigation }) {
   }, []);
   isVerifiedVar = isVerified;
 
+  /*
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
+
+  const onViewableItemsChanged = ({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      const backgroundColor = viewableItems[0].item.backgroundColor;
+      this.setState({ backgroundColor });
+    }
+  };
+  */
 
   console.log("data ist currently------>: " + data);
 
@@ -95,6 +103,8 @@ function HomeScreen({ navigation }) {
               [{ nativeEvent: { contentOffset: { x: scrollX } } }],
               {
                 useNativeDriver: false,
+               // listener: onViewableItemsChanged
+
               }
             )}
           />
@@ -113,7 +123,7 @@ function HomeScreen({ navigation }) {
           style={{
             width: 50,
             height: 50,
-            backgroundColor: "#eee1",
+            backgroundColor: "#dddddd",
           }}
           // Find more Lottie files at https://lottiefiles.com/featured
           source={require("../assets/loader2.json")}
@@ -153,7 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(224, 230, 228, 0.9)",
   },
   buttonContainer: {
     flex: 1,

@@ -12,7 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 const SignUpSchema = Yup.object().shape({
   straße: Yup.string()
   .min(1, "Too Short!")
-    .matches(/^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field "),
+  .matches(/^[aA-zZ]+[\u00C0-\u017Fa-zA-Z']+$/, "Only alphabets are allowed for this field "),
   hausnummer: Yup.string()
   .min(1, "Too Short!"),
   stadt: Yup.string()
@@ -265,7 +265,7 @@ export default function SignUpAdress({route, navigation}) {
           </Col>
         </Row>
         </View>
-        <View style = {[styles.app, {zIndex: 20, marginTop: 60}]}>
+        <View style = {[styles.app, {zIndex: 20, marginTop: 60, overflowY: 'scroll' }]}>
         <Row>
           <Col numRows={1}>
             <DropDown

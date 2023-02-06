@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
       bodyContainer: {
         height: 700,
         marginTop: 100,
-        backgroundColor: '#9AA6D2'
+        backgroundColor: '#f8c8c1'
       },
       h2: {
         fontSize: 20

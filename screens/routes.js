@@ -81,7 +81,7 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
 
 const authorized = async (id, pin) => {
   let respond = await fetch(
-    "http://10.1.111.32:3000/auth.behoerde?pin=" + pin + "&id=" + id
+    "http://192.168.178.24:3000/auth.behoerde?pin=" + pin + "&id=" + id
   ).catch(function (error) {
     console.log(
       "There has been a problem with your fetch operation: " + error.message
@@ -106,7 +106,7 @@ app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
     let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       //JWT
-      expiresIn: "2m",
+      expiresIn: "10m",
     });
     resTestdb.cookie("token", token, {
       httpOnly: true,

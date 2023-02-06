@@ -58,6 +58,7 @@ function MainScreen() {
           name="ScreenDoesNotExist"
           component={ScreenDoesNotExist}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -65,6 +66,7 @@ function MainScreen() {
           name="ErteilungsScreen"
           component={ErteilungScreen}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -72,6 +74,7 @@ function MainScreen() {
           name="ExportPDFTestScreen"
           component={ExportPDFTestScreen}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -79,6 +82,7 @@ function MainScreen() {
           name="SignatureScreen"
           component={SignatureCaptures}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -86,6 +90,7 @@ function MainScreen() {
           name="FragenScreen"
           component={FragenScreen}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -93,6 +98,7 @@ function MainScreen() {
           name="StaatsangehoerigkeitsScreen"
           component={StaatsangehoerigkeitsScreen}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
@@ -100,6 +106,7 @@ function MainScreen() {
           name="ZahlungsScreen"
           component={ZahlungsScreen}
           options={{
+            headerShown: false,
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />

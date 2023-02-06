@@ -20,14 +20,14 @@ export default function FragenScreen({navigation}) {
             </View>
            <ScrollView>
             <View style={styles.bodyContainer}>
-                <Text style={styles.logo}>Ergänzende Daten - Angaben zum Führung</Text>
+                <Text style={styles.logo}>Ergänzende Daten - Angaben zum Führungszeugnis</Text>
                 <View style={[styles.questionContainer, styles.white]}>
                     <Text style={styles.questionText}>Benötigen Sie das Führungszeugnis zur Vorlage bei einer deutschen Behörde?</Text>
                     <View style={styles.checkbox}>
                     <BouncyCheckbox
                         disableText={false}
                         size={25}
-                        fillColor="grey"
+                        fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
@@ -41,7 +41,7 @@ export default function FragenScreen({navigation}) {
                     <BouncyCheckbox
                         disableText={false}
                         size={25}
-                        fillColor="grey"
+                        fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
@@ -55,7 +55,7 @@ export default function FragenScreen({navigation}) {
                     <BouncyCheckbox
                         disableText={false}
                         size={25}
-                        fillColor="grey"
+                        fillColor="#e94832"
                         unfillColor="#FFFFFF"
                         iconStyle={{ borderColor: "green" }}
                         innerIconStyle={{ borderWidth: 2 }}
@@ -73,7 +73,7 @@ export default function FragenScreen({navigation}) {
                         maxValue={10}
                         onLimitReached={(isMax,msg) => console.log(isMax,msg)}
                         totalWidth={100} 
-                        totalHeight={40} 
+                        totalHeight={30} 
                         iconSize={20}
                         step={1}
                         valueType='real'
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
       bodyContainer: {
         height: 700,
         marginTop: 5,
-        backgroundColor: '#9AA6D2',
+        backgroundColor: '#eeeeee',
         flexDirection: 'column',
         maxHeight: 660
 
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
       },
       white: {
-        backgroundColor: '#C0C0C0'
+        backgroundColor: '#f8c8c1'
       }
 });
 
