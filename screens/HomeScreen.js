@@ -94,8 +94,13 @@ function HomeScreen({ navigation }) {
             bounces={false}
             data={data}
             renderItem={({ item, index }) => (
+              <View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>{item.title}</Text> 
+                </View>
               <View style={styles.documentContainer}>
                 <WalletHandler data={item} />
+              </View>
               </View>
             )}
             keyExtractor={(data) => data.title}
@@ -188,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flatListContainer: {
-    height: ITEM_WIDTH * 0.8,
+    height: ITEM_WIDTH * 1,
     marginTop: 50,
   },
   animationContainer: {
@@ -196,4 +201,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 160,
   },
+  textContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  text: {
+    fontWeight: '500',
+    fontSize: 24,
+  }
 });

@@ -62,7 +62,7 @@ let alreadyCalled = false;
   } else {
     return <Login />;
   }
-}; 
+};
 
 const App = () => {
 
