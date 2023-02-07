@@ -30,7 +30,7 @@ function MainScreen() {
           options={{
             headerShown: false, //change HomeScreen to DokumenteScreen
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="document" color={color} size={size} />
+              <Ionicons name="document" color="#223e4b" size={size} />
             ),
           }}
         />
@@ -40,7 +40,7 @@ function MainScreen() {
           options={{
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size={size} />
+              <Ionicons name="home" color="#223e4b" size={size} />
             ),
           }}
         />
@@ -50,7 +50,7 @@ function MainScreen() {
           options={{
             headerShown: false, //change HomeScreen to MenuScreen
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="menu" color={color} size={size} />
+              <Ionicons name="menu" color="#223e4b" size={size} />
             ),
           }}
         />

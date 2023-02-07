@@ -239,7 +239,7 @@ connectionDekomdb.getConnection(function (err, ourConnection) {
   console.log("ich setze jetzt ein!")
   getHash(decodedParseToken.user.id).then((hash) => {
     connectionDekomdb.query(
-      "UPDATE dekomdb.dekom_user SET SIGNATUR = '" + blob + "' WHERE USER_ID_HASH='" + hash + "';"
+      "UPDATE dekomdb.dekom_user SET SIGNATUR = '" + JSON.stringify(blob) + "' WHERE USER_ID_HASH='" + hash + "';"
     );
   });
   ourConnection.release();
