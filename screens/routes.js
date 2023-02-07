@@ -9,6 +9,8 @@ require("dotenv").config();
 const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("./middleware/cookieJWTAuth");
 const jwt_decode = require("jwt-decode");
+global.atob = require("atob");
+global.Blob = require('node-blob');
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -81,7 +83,7 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
 
 const authorized = async (id, pin) => {
   let respond = await fetch(
-    "http://78.48.16.170:3000/auth.behoerde?pin=" + pin + "&id=" + id
+    "http://93.133.109.105:3000/auth.behoerde?pin=" + pin + "&id=" + id
   ).catch(function (error) {
     console.log(
       "There has been a problem with your fetch operation: " + error.message
@@ -213,6 +215,36 @@ app.post("/user/save", cookieJWTAuth, function (req, resData) {
     ourConnection.release();
   });
   resData.send(formattingResponse(token, { value: true }));
+});
+
+app.post("/user/save/signature", cookieJWTAuth, function (req, resData) { 
+console.log("hello!!!!!!")
+let token = req.cookies.token;
+let decoded = jwt_decode(token);
+let decodedJSON = JSON.stringify(decoded);
+let decodedParseToken = JSON.parse(decodedJSON);
+
+let ret = req.body;
+console.log("RET: " + JSON.stringify(ret))
+const byteCharacters = global.atob(JSON.stringify(ret));
+const byteNumbers = new Array(byteCharacters.length);
+for (let i = 0; i < byteCharacters.length; i++) {
+  byteNumbers[i] = byteCharacters.charCodeAt(i);
+}
+const byteArray = new Uint8Array(byteNumbers);
+const blob = new global.Blob([byteArray]);
+console.log('blob of signature is :' + JSON.stringify(blob))
+
+connectionDekomdb.getConnection(function (err, ourConnection) {
+  console.log("ich setze jetzt ein!")
+  getHash(decodedParseToken.user.id).then((hash) => {
+    connectionDekomdb.query(
+      "UPDATE dekomdb.dekom_user SET SIGNATUR = '" + blob + "' WHERE USER_ID_HASH='" + hash + "';"
+    );
+  });
+  ourConnection.release();
+});
+resData.send(formattingResponse(token, { value: true }));
 });
 
 // Starting our server.
