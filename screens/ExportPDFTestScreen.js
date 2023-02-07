@@ -7,7 +7,9 @@ import { StyleSheet, View } from 'react-native';
 
 let html;
 
-export default function ExportPDFTestScreen({navigation}) {
+export default function ExportPDFTestScreen({route, navigation}) {
+let antragData = route.params.antragData;
+
 const { getUserData } = useContext(DataContext);
 
 async function loadUserData() {
@@ -37,8 +39,8 @@ const userData = {
   bezeichung: 'Kein Ahnung Bro',
   anschrift: 'Hier bla, 12355 Bielefeld',
 
-  checkbox1: '',
-  checkbox2: '',
+  checkbox1: '',  //Führungszeugnis
+  checkbox2: '',  //erweitertes Führungszeugnis
   checkbox3: '',
   checkbox4: '',
   checkbox5: '',
