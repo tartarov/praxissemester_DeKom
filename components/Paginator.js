@@ -30,7 +30,7 @@ function Paginator({data, scrollX }) {
 
           const color = scrollX.interpolate({
             inputRange,
-            outputRange: [ "#e94832", "#223e4b", "#e94832"],
+            outputRange: [ "#e94832", "#fce9e6", "#e94832"],
             extrapolate: "clamp",
           });
 

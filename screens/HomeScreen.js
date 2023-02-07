@@ -91,7 +91,7 @@ function HomeScreen({ navigation }) {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            bounces={false}
+            bounces={true}
             data={data}
             renderItem={({ item, index }) => (
               <View>
@@ -163,12 +163,12 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   screen: {
-    color: "#1CA352",
+    color: "#223e4b",
   },
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "rgba(224, 230, 228, 0.9)",
+    backgroundColor: "#fce9e6",
   },
   buttonContainer: {
     flex: 1,
@@ -209,5 +209,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '500',
     fontSize: 24,
+    color: "#223e4b"
   }
 });

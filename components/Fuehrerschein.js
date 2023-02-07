@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: Platform.OS === 'android' ? 10 : 12, //Platform.OS === 'android' ? 10 : 12,
         fontStyle: 'italic',
-        color: 'white',
+        color: '#223e4b',
         paddingHorizontal: 10,
     },
     text: {
-        color: 'white',
+        color: '#223e4b',
         fontSize: Platform.OS === 'android' ? 16 : 18,
         fontWeight: 'bold',
         paddingHorizontal: 10,

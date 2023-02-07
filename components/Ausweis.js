@@ -73,11 +73,11 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 12,
         fontStyle: 'italic',
-        color: 'white',
+        color: '#223e4b',
         paddingHorizontal: 10,
     },
     text: {
-        color: 'white',
+        color: '#223e4b',
         fontSize: 18,
         fontWeight: 'bold',
         paddingHorizontal: 10,
