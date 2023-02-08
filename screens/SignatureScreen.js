@@ -13,6 +13,7 @@ import { FileWatcherEventKind } from "typescript";
 import ButtonGhost from "../components/ButtonGhost";
 import { AuthContext } from "../context/AuthContext";
 import FormData from 'form-data'
+import { atob } from "js-base64";
 let isVarifiedVar;
 let form;
 
@@ -24,9 +25,10 @@ const SignatureCaptures = ({ navigation }) => {
 
   const fetcher = async (stringBase) => {
     console.log("ich bin im fetcher")
-    console.log("das form  ist hier: " + form.getAll("signature_base64"))
+    console.log("das form  ist hier: " + stringBase)
+
     let respond = await fetch(
-      "http://93.133.109.105:3000/user/save/signature",
+      "http://93.133.25.152:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -68,13 +70,10 @@ const SignatureCaptures = ({ navigation }) => {
           onSave={(val) => {
             //  a base64 encoded image
             console.log("saved signature");
-            var ret = val.replace("data:image/png;base64,", "");
+            var base64raw = val.replace("data:image/png;base64,", "");
             console.log(val);
-            console.log("ret: " + ret);
             setText(val);
-            form = new FormData();
-            form.append("signature_base64", ret);
-            fetcher(ret)
+            fetcher(base64raw)
           }}
           onClear={() => {
             console.log("cleared signature");
