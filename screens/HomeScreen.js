@@ -92,6 +92,8 @@ function HomeScreen({ navigation }) {
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             bounces={true}
+            snapToAlignment='start'
+            decelerationRate={'fast'}
             data={data}
             renderItem={({ item, index }) => (
               <View>
