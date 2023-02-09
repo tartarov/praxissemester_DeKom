@@ -73,7 +73,7 @@ const SignatureCaptures = ({ navigation }) => {
       if (verified == "verified") {
         if (responseParsed.body.value == true) {
           console.log("respond contains true => success... YUHU");
-          Alert.alert("Gespeichert!", "Deine Signatur wurde gepeichert.");
+          Alert.alert("Gespeichert!", "Deine Änderungen wurden gepeichert.");
         }
       }
       setIsLoading(false);
@@ -95,15 +95,32 @@ const SignatureCaptures = ({ navigation }) => {
             console.log("saved signature");
             var base64raw = val.replace("data:image/png;base64,", "");
             console.log(val);
-            setText(val);
-            fetcher(base64raw)
+            Alert.alert("Sicher?" , "Bist du sicher, dass du diese Signatur speichern willst?",  [
+              {
+                text: 'Ja, speichere ',
+                onPress: () => {fetcher(base64raw), setText(val)},
+              },
+              {
+                text: 'Nein, nochmal'},
+              ])
           }}
           onClear={() => {
             console.log("cleared signature");
-            setText("");
-            fetcher("")
+            Alert.alert("Sicher?" , "Bist du sicher, dass du diese Signatur löschen willst?",  [
+              {
+                text: 'Ja, lösche ',
+                onPress: () => {fetcher(""), setText("")},
+              },
+              {
+                text: 'Nein, behalte'},
+              ])
           }}
-        />
+        /> 
+         <Text style = {{
+           fontSize: 10,
+           alignItems:'center',
+           paddingLeft: 40
+          }}>Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.</Text>
         <View
           style={{ flexDirection: "row", justifyContent: "center", height: 50 }}
         >
@@ -111,7 +128,6 @@ const SignatureCaptures = ({ navigation }) => {
             style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
             onPress={() => {
               signatureRef.current.clearSignature();
-              Alert.alert("Gelöscht.", "Deine Signatur wurde gelöscht.");
             }}
           >
             <Text>Löschen</Text>
