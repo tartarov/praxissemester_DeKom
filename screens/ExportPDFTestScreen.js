@@ -50,16 +50,16 @@ const userData = {
   bezeichung: 'Kein Ahnung Bro',
   anschrift: 'Hier bla, 12355 Bielefeld',
 
-  checkbox1: getCheckBoxValue(antragData.zurVorlage),  //Führungszeugnis
-  checkbox2: '',  //erweitertes Führungszeugnis
-  checkbox3: '',
-  checkbox4: '',
-  checkbox5: '',
-  checkbox6: '',
-  checkbox7: '',
-  checkbox8: '',
-  checkbox9: '',
-  checkbox10: '',
+  checkbox1: 'checked',  //Führungszeugnis
+  checkbox2: getCheckBoxValue(antragData.erweitertes),  //erweitertes Führungszeugnis
+  checkbox3: '', //Übersendung an PrivatAnschrift
+  checkbox4: getCheckBoxValue(antragData.zurVorlage), //Vorlage bei Behörde
+  checkbox5: '', //Übersendung an PrivatAnschrift
+  checkbox6: '', //Im Falle von Eintargungen Übersendung an:
+  checkbox7: '', //Deutsche Botschaft
+  checkbox8: '', //Deutsches Konsulat in Land zur Einsichtnahme
+  checkbox9: 'checked', //Gebühr bereits bezahlt
+  checkbox10: '', //überwiesen an Datum auf das Bundesamt für Justiz Konto
 }
 
  html = `
