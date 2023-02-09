@@ -9,8 +9,19 @@ let html;
 
 export default function ExportPDFTestScreen({route, navigation}) {
 let antragData = route.params.antragData;
+let antragDataStringy = JSON.stringify(antragData);
+console.log("Antrag Data:  " + antragDataStringy);
+
 
 const { getUserData } = useContext(DataContext);
+
+function getCheckBoxValue(boolean){
+    if(boolean == true) {
+        return "checked";
+    } else {
+        return "";
+    };
+};
 
 async function loadUserData() {
    data = await getUserData();
@@ -39,7 +50,7 @@ const userData = {
   bezeichung: 'Kein Ahnung Bro',
   anschrift: 'Hier bla, 12355 Bielefeld',
 
-  checkbox1: '',  //Führungszeugnis
+  checkbox1: getCheckBoxValue(antragData.zurVorlage),  //Führungszeugnis
   checkbox2: '',  //erweitertes Führungszeugnis
   checkbox3: '',
   checkbox4: '',
