@@ -1,43 +1,3 @@
-import Button from '../components/Button';
-import { printToFileAsync } from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-
-
-const data = {
-  vorname: 'Marcel',
-  name: 'Grund',
-  geburtsname: 'Grund',
-
-  straße: 'Rezagstraße',
-  hausnummer: '23',
-
-  postleitzahl: '51143',
-  stadt: 'Köln',
-
-  geburtsdatum: '16.05.2001',
-  geburtsort: 'Köln',
-  staatsangehörigkeit: 'deutsch',
-
-  einsichtsland: 'Deutschland',
-  bezahlungsdatum: '01.01.2023',
-
-  verwendungszweck: 'bewerbung',
-  bezeichung: 'Kein Ahnung Bro',
-  anschrift: 'Hier bla, 12355 Bielefeld',
-
-  checkbox1: '',
-  checkbox2: '',
-  checkbox3: '',
-  checkbox4: '',
-  checkbox5: '',
-  checkbox6: '',
-  checkbox7: '',
-  checkbox8: '',
-  checkbox9: '',
-  checkbox10: '',
-}
-
-const html = `
 <!doctype html>
 <html id="Test">
 
@@ -126,7 +86,7 @@ const html = `
         <input type="checkbox" id="checkBox4" style="margin-left: 26pt;" ${data.checkbox4}>
         <label> bitte um Übersendung des
             Führungszeugnisses zur Vorlage bei einer Behörde an die unten bezeichnete <b>deutsche
-            Behörde</b></label><br>
+                Behörde</b>.</label><br>
 
         <p style="margin-left: 26pt;"> Eine Übersendung an ausländische Behörden ist nicht möglich. </p>
         <p style="text-indent: 0pt;text-align: left;" />
@@ -137,7 +97,7 @@ const html = `
         <input type="checkbox" id="checkBox6" style="margin-left: 26pt;" ${data.checkbox6}>
         <label> Für den Fall, dass das
             Führungszeugnis Eintragungen enthält, bitte ich um Übersendung an: <b>(nur eine Auswahl
-              ankreuzen)</b></label><br>
+                ankreuzen)</b></label><br>
         <input type="checkbox" id="checkBox7" style="margin-left: 52pt;" ${data.checkbox7}>
         <label> Deutsche Botschaft / </label><br>
         <input type="checkbox" id="checkBox8" style="margin-left: 52pt;" ${data.checkbox8}>
@@ -170,7 +130,6 @@ const html = `
             BIC: MARKDEF1370 <br>
             IBAN-Nr.: DE49370000000038001005.
         </p>
-        <br>
         <br>
         <div style="margin-left: 26pt;">
             <h2 style="color: black;
@@ -394,6 +353,7 @@ const html = `
         font-weight: bold;
         text-decoration: none;
         font-size: 11pt;">Merkblatt</h3>
+            <br>
             <p style="text-indent: 0pt;text-align: left; color: black;
             font-family: Arial, sans-serif;
             font-style: normal;
@@ -410,7 +370,7 @@ const html = `
                 text-decoration: none;
                 font-size: 11pt;">Örtliche Zuständigkeit und Form des
                         Antrags</h3>
-                    <p style="padding-top: 4pt;padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-top: 4pt;padding-left: 27pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -424,10 +384,6 @@ const html = `
                         Der
                         Antrag kann unmittelbar bei der Registerbehörde unter folgender Anschrift gestellt werden:
                     </p>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
                     <h3 style="padding-top: 5pt;padding-left: 182pt;text-indent: 0pt;text-align: left; color: black;
                 font-family: Arial, sans-serif;
                 font-style: normal;
@@ -448,7 +404,7 @@ const html = `
                 font-weight: bold;
                 text-decoration: none;
                 font-size: 11pt;">53094 Bonn</h3>
-                    <p style="padding-top: 6pt;padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-top: 6pt;padding-left: 26pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -474,7 +430,7 @@ const html = `
                         Namen
                         zu vermerken.
                     </p>
-                    <p style="padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-left: 26pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -506,7 +462,7 @@ const html = `
                 font-weight: bold;
                 text-decoration: none;
                 font-size: 11pt;">Gebühren</h3>
-                    <p style="padding-top: 6pt;padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-top: 6pt;padding-left: 27pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -518,14 +474,14 @@ const html = `
                         Konto
                         des
                         Bundesamts für Justiz zu erfolgen:</p>
-                    <h3 style="padding-top: 5pt;padding-left: 40pt;text-indent: 0pt;text-align: left; color: black;
+                    <h3 style="padding-top: 5pt;padding-left: 90pt;text-indent: 0pt;text-align: left; color: black;
                 font-family: Arial, sans-serif;
                 font-style: normal;
                 font-weight: bold;
                 text-decoration: none;
                 font-size: 11pt;">Deutsche Bundesbank -
                         Filiale Köln -IBAN-Nr.: DE49370000000038001005 BIC/swift-Nr.: MARKDEF1370</h3>
-                    <h3 style="padding-left: 40pt;text-indent: 0pt;line-height: 13pt;text-align: left; color: black;
+                    <h3 style="padding-left: 90pt;text-indent: 0pt;line-height: 13pt;text-align: left; color: black;
                 font-family: Arial, sans-serif;
                 font-style: normal;
                 font-weight: bold;
@@ -547,7 +503,7 @@ const html = `
                     text-decoration: none;
                     font-size: 10pt;
                     margin: 0pt;"><br /></p>
-                    <p style="padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-left: 26pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -558,7 +514,7 @@ const html = `
                         ist - sofern möglich - mit dem Antrag auf Erteilung des Führungszeugnisses an das Bundesamt für
                         Justiz
                         zu senden.</p>
-                    <h4 style="padding-top: 5pt;padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <h4 style="padding-top: 5pt;padding-left: 26pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: bold;
@@ -567,7 +523,7 @@ const html = `
                         Sie,
                         dass
                         die Gebühr nicht mehr per Scheck entrichtet werden kann.</h4>
-                    <p style="padding-top: 5pt;padding-left: 0pt;text-indent: 0pt;text-align: left; color: black;
+                    <p style="padding-top: 5pt;padding-left: 26pt;text-indent: 0pt;text-align: left; color: black;
                     font-family: Arial, sans-serif;
                     font-style: normal;
                     font-weight: normal;
@@ -641,27 +597,3 @@ const html = `
 </body>
 
 </html>
-`;
-
-const generatePdf = async () => {
-  const file = await printToFileAsync({
-      html: html,
-      base64: false,
-      margins: {
-        left: 20,
-        top: 50,
-        right: 20,
-        bottom: 50,
-      },
-  });
-  await shareAsync(file.uri);
-}
-
-
-export default function ExportPDFTestScreen({navigation}) {
-      return(
-    <Button
-    label="ExportPDF"
-    onPress={generatePdf}/>
-      );
-}
