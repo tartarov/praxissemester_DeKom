@@ -48,7 +48,7 @@ export const DataProvider = ({ children }) => {
 
   const getWalletData = async () => {
     let respond = await fetch(
-      "http://93.133.25.152:3000/dekomdb.dekom_user/identify",
+      "http://192.168.169.116:3000/dekomdb.dekom_user/identify",
       {
         credentials: "same-origin",
       }
@@ -86,7 +86,7 @@ export const DataProvider = ({ children }) => {
 
   const getUserData = async () => {
     let respond = await fetch(
-      "http://93.133.25.152:3000/dekomdb.dekom_user/identify",
+      "http://192.168.169.116:3000/dekomdb.dekom_user/identify",
       {
         credentials: "same-origin",
       }
@@ -111,11 +111,11 @@ export const DataProvider = ({ children }) => {
           hausnummer: respParsed.body.result[0].HAUSNUMMER,
           plz: respParsed.body.result[0].PLZ,
           stadt: respParsed.body.result[0].STADT,
+          signatur: respParsed.body.signature
         }
 
 
         console.log("data : " + data);
-
         return (data);
       }
     }

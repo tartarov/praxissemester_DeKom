@@ -50,7 +50,7 @@ const SignatureCaptures = ({ navigation }) => {
     console.log("das form  ist hier: " + stringBase)
     setIsLoading(true);
     let respond = await fetch(
-      "http://93.133.25.152:3000/user/save/signature",
+      "http://192.168.169.116:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -73,7 +73,7 @@ const SignatureCaptures = ({ navigation }) => {
       if (verified == "verified") {
         if (responseParsed.body.value == true) {
           console.log("respond contains true => success... YUHU");
-          Alert.alert("Gespeichert!", "Deine Änderungen wurden gepeichert.");
+          Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
         }
       }
       setIsLoading(false);
@@ -160,9 +160,9 @@ const SignatureCaptures = ({ navigation }) => {
         </View>
 
         <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
-        {isLoading == true ? loader() :  <Text numberOfLines={10} ellipsizeMode="tail">
-            {text}
-        
+        {isLoading == true ? loader() :  <Text numberOfLines={10} ellipsizeMode="tail" style={{alignItems: 'center'}}>
+            {text} 
+        {/*  GESPEICHERT! */}
           </Text>
         }
         </ScrollView>
