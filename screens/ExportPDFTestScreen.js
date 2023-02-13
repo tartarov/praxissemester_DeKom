@@ -1,43 +1,55 @@
-import Button from '../components/Button';
-import { printToFileAsync } from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-import { DataContext } from '../context/DataContext';
-import {useContext} from 'react';
-import { StyleSheet, View } from 'react-native';
+import Button from "../components/Button";
+import { printToFileAsync } from "expo-print";
+import { shareAsync } from "expo-sharing";
+import { DataContext } from "../context/DataContext";
+import { useContext } from "react";
+import { StyleSheet, View, Image } from "react-native";
 
 let html;
 
-export default function ExportPDFTestScreen({route, navigation}) {
-let antragData = route.params.antragData;
+export default function ExportPDFTestScreen({ route, navigation }) {
+  let antragData = route.params.antragData;
 
 const { getUserData } = useContext(DataContext);
 
-async function loadUserData() {
-   data = await getUserData();
-   
+  async function loadUserData() {
+    data = await getUserData();
+    console.log("DIE SIGNATUR IN DER HTML:" + data.signatur)
 
+    const userData = {
+      vorname: data.vorname,
+      name: data.name,
+      geburtsname: data.name,
 
-const userData = {
-  vorname: data.vorname,
-  name: data.name,
-  geburtsname: data.name,
+      straße: data.strasse,
+      hausnummer: data.hausnummer,
 
-  straße: data.strasse,
-  hausnummer: data.hausnummer,
+      postleitzahl: data.plz,
+      stadt: data.stadt,
 
-  postleitzahl: data.plz,
-  stadt: data.stadt,
+      geburtsdatum: data.geburtstag,
+      geburtsort: data.geburtsort,
+      staatsangehörigkeit: data.staatsangehoerigkeit,
+      signatur: data.signatur,
 
-  geburtsdatum: data.geburtstag,
-  geburtsort: data.geburtsort,
-  staatsangehörigkeit: data.staatsangehoerigkeit,
+      einsichtsland: "Deutschland",
+      bezahlungsdatum: "01.01.2023",
 
-  einsichtsland: 'Deutschland',
-  bezahlungsdatum: '01.01.2023',
+      verwendungszweck: "bewerbung",
+      bezeichung: "Kein Ahnung Bro",
+      anschrift: "Hier bla, 12355 Bielefeld",
 
-  verwendungszweck: 'bewerbung',
-  bezeichung: 'Kein Ahnung Bro',
-  anschrift: 'Hier bla, 12355 Bielefeld',
+      checkbox1: "",
+      checkbox2: "",
+      checkbox3: "",
+      checkbox4: "",
+      checkbox5: "",
+      checkbox6: "",
+      checkbox7: "",
+      checkbox8: "",
+      checkbox9: "",
+      checkbox10: "",
+    };
 
   checkbox1: '',  //Führungszeugnis
   checkbox2: '',  //erweitertes Führungszeugnis
@@ -68,9 +80,15 @@ const userData = {
         <p class="s1"
             style="padding: 10pt; margin-left: 300pt;display:inline-block ;text-indent: 0pt;line-height: 12pt;text-align: left;border-radius: 10px ;border:black solid 1px;">
             <span class="h3">Absender: </span>(<u>Bitte aktuelle Privatanschrift eintragen</u>)<br><br>
-            <span id= "nameHolder" class="p">${userData.vorname+ " " + userData.name}</span><br>
-            <span id= "adresseHolder" class="p">${userData.straße+ " " + userData.hausnummer}</span><br>
-            <span id= "ortHolder" class="p">${userData.postleitzahl+ " " + userData.stadt}</span>
+            <span id= "nameHolder" class="p">${
+              userData.vorname + " " + userData.name
+            }</span><br>
+            <span id= "adresseHolder" class="p">${
+              userData.straße + " " + userData.hausnummer
+            }</span><br>
+            <span id= "ortHolder" class="p">${
+              userData.postleitzahl + " " + userData.stadt
+            }</span>
         </p>
         <p style="text-indent: 0pt;text-align: left;" />
         <p
@@ -87,10 +105,14 @@ const userData = {
             </b></p>
         <br>
         <p style="text-indent: 0pt;text-align: left;" />
-        <input type="checkbox" id="checkBox1" style="margin-left: 26pt;" ${userData.checkbox1}>
+        <input type="checkbox" id="checkBox1" style="margin-left: 26pt;" ${
+          userData.checkbox1
+        }>
         <label> Führungszeugnisses und (bitte
             ankreuzen)</label><br><br>
-        <input type="checkbox" id="checkBox2" style="margin-left: 26pt;" ${userData.checkbox2}>
+        <input type="checkbox" id="checkBox2" style="margin-left: 26pt;" ${
+          userData.checkbox2
+        }>
         <label> erweiterten
             Führungszeugnisses und (bitte ankreuzen) </label><br>
         <p style="margin-left: 26pt;">Eine <b>schriftliche
@@ -98,28 +120,40 @@ const userData = {
             dass die Voraussetzungen zur Beantragung eines erweiterten Führungszeugnisses vorliegen, <b>ist zwingend
                 beizufügen.</b></p> <br>
         <p style="text-indent: 0pt;text-align: left;" />
-        <input type="checkbox" id="checkBox3" style="margin-left: 26pt;" ${userData.checkbox3}>
+        <input type="checkbox" id="checkBox3" style="margin-left: 26pt;" ${
+          userData.checkbox3
+        }>
         <label> bitte um Übersendung an meine oben
             genannte private Anschrift </label><br><br>
 
-        <input type="checkbox" id="checkBox4" style="margin-left: 26pt;" ${userData.checkbox4}>
+        <input type="checkbox" id="checkBox4" style="margin-left: 26pt;" ${
+          userData.checkbox4
+        }>
         <label> bitte um Übersendung des
             Führungszeugnisses zur Vorlage bei einer Behörde an die unten bezeichnete <b>deutsche
                 Behörde</b>.</label><br>
 
         <p style="margin-left: 26pt;"> Eine Übersendung an ausländische Behörden ist nicht möglich. </p> <br>
         <p style="text-indent: 0pt;text-align: left;" />
-        <input type="checkbox" id="checkBox5" style="margin-left: 26pt;" ${userData.checkbox5}>
+        <input type="checkbox" id="checkBox5" style="margin-left: 26pt;" ${
+          userData.checkbox5
+        }>
         <label> bitte um Übersendung an meine oben
             genannte private Anschrift </label><br><br>
 
-        <input type="checkbox" id="checkBox6" style="margin-left: 26pt;" ${userData.checkbox6}>
+        <input type="checkbox" id="checkBox6" style="margin-left: 26pt;" ${
+          userData.checkbox6
+        }>
         <label> Für den Fall, dass das
             Führungszeugnis Eintragungen enthält, bitte ich um Übersendung an: <b>(nur eine Auswahl
                 ankreuzen)</b></label><br>
-        <input type="checkbox" id="checkBox7" style="margin-left: 52pt;" ${userData.checkbox7}>
+        <input type="checkbox" id="checkBox7" style="margin-left: 52pt;" ${
+          userData.checkbox7
+        }>
         <label> Deutsche Botschaft / </label><br>
-        <input type="checkbox" id="checkBox8" style="margin-left: 52pt;" ${userData.checkbox8}>
+        <input type="checkbox" id="checkBox8" style="margin-left: 52pt;" ${
+          userData.checkbox8
+        }>
         <label id="einsichtLandHolder"> Deutsches Konsulat in <b>LAND</b> zur Einsichtnahme. (Bitte Hinweise auf Seite 2 dieses Vordrucks
             beachten!) </label><br>
         <br>
@@ -127,10 +161,16 @@ const userData = {
             Führungszeugnis in Höhe von 13 € habe ich (bitte ankreuzen)</p>
 
         <p style="text-indent: 0pt;text-align: left;" />
-        <input type="checkbox" id="checkBox9" style="margin-left: 52pt;" ${userData.checkbox9}>
+        <input type="checkbox" id="checkBox9" style="margin-left: 52pt;" ${
+          userData.checkbox9
+        }>
         <label> Bereits bezahlt </label><br>
-        <input type="checkbox" id="checkBox10" style="margin-left: 52pt;" ${userData.checkbox10}>
-        <label id="bezahlungDatumHolder" value="${userData.bezahlungsdatum}"> überwiesen am <b>DATUM</b>
+        <input type="checkbox" id="checkBox10" style="margin-left: 52pt;" ${
+          userData.checkbox10
+        }>
+        <label id="bezahlungDatumHolder" value="${
+          userData.bezahlungsdatum
+        }"> überwiesen am <b>DATUM</b>
             auf das Konto des Bundesamts für Justiz</label><br> <br>
         <p class="s3" style="padding-left: 199pt;text-indent: 0pt;line-height: 10pt;text-align: left;">Deutsche
             Bundesbank <br>
@@ -141,12 +181,24 @@ const userData = {
         <br>
         <div style="margin-left: 26pt;">
             <h2> Meine Personaldaten lauten:</h2>
-            <p id="geburtsnameHolder"style="margin-top: 10pt"> Geburtsname (Pflichtfeld): ${userData.geburtsname}</p>
-            <p id="familiennameHolder"style="margin-top: 10pt"> Familienname: ${userData.name}</p>
-            <p id="vornameHolder"style="margin-top: 10pt"> Vorname(n): ${userData.vorname}</p>
-            <p id="geburtsdatumHolder"style="margin-top: 10pt"> Geburtsdatum: ${userData.geburtsdatum}</p>
-            <p id="geburtsortHolder" style="margin-top: 10pt"> Geburtsort: ${userData.geburtsort}</p>
-            <p id="staatsangehörigkeitHolder" style="margin-top: 10pt"> Staatsangehörigkeit: ${userData.staatsangehörigkeit}</p>
+            <p id="geburtsnameHolder"style="margin-top: 10pt"> Geburtsname (Pflichtfeld): ${
+              userData.geburtsname
+            }</p>
+            <p id="familiennameHolder"style="margin-top: 10pt"> Familienname: ${
+              userData.name
+            }</p>
+            <p id="vornameHolder"style="margin-top: 10pt"> Vorname(n): ${
+              userData.vorname
+            }</p>
+            <p id="geburtsdatumHolder"style="margin-top: 10pt"> Geburtsdatum: ${
+              userData.geburtsdatum
+            }</p>
+            <p id="geburtsortHolder" style="margin-top: 10pt"> Geburtsort: ${
+              userData.geburtsort
+            }</p>
+            <p id="staatsangehörigkeitHolder" style="margin-top: 10pt"> Staatsangehörigkeit: ${
+              userData.staatsangehörigkeit
+            }</p>
         </div>
 
         <h3 style="padding-top: 12pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Die Verwendung dieses
@@ -154,7 +206,10 @@ const userData = {
             ist nur zulässig, wenn sich der/die Antrag-steller/-in im Ausland befindet!</h3>
         <p style="text-indent: 0pt;text-align: left;"></p>
         <h3 style="padding-top: 4pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Unterschrift der Antrag
-            stellenden Person<span class="s9">: </span><span
+            stellenden Person<span class="s9">: <br>
+            <img src= "data:image/png;base64,${userData.signatur}" style="width:20%; height:20%; paddingLeft:50%"/>
+            <br>
+            </span><span
                 class="s3">..........................................................................................</span>
         </h3>
         <br>
@@ -186,9 +241,15 @@ const userData = {
         <h3 style="padding-top: 5pt;text-indent: 0pt;text-align: left;">Bei Übersendung an eine
             deutsche Behörde sind zusätzlich folgende Angaben nötig:</h3>
 
-            <p id="verwendungszweckHolder" style="margin-top: 10pt"> Verwendungszweck, ggf. Aktenzeichen: ${userData.verwendungszweck}</p>
-            <p id="bezeichnungHolder" style="margin-top: 10pt"> Bezeichnung der Behörde: ${userData.bezeichung}</p>
-            <p id="anschriftHolder" style="margin-top: 10pt"> Anschrift der Behörde: ${userData.anschrift}</p>
+            <p id="verwendungszweckHolder" style="margin-top: 10pt"> Verwendungszweck, ggf. Aktenzeichen: ${
+              userData.verwendungszweck
+            }</p>
+            <p id="bezeichnungHolder" style="margin-top: 10pt"> Bezeichnung der Behörde: ${
+              userData.bezeichung
+            }</p>
+            <p id="anschriftHolder" style="margin-top: 10pt"> Anschrift der Behörde: ${
+              userData.anschrift
+            }</p>
             <p>__________________________________________________________________________________________________</p>
         </div>
         <p class="s10" style="padding-left: 26pt;text-indent: 0pt;line-height: 9pt;text-align: left;">
@@ -313,40 +374,39 @@ const userData = {
 
 </html>
 `;
+  }
 
-};
+  const generatePdf = async () => {
 
-const generatePdf = async () => { 
-  await loadUserData();
-  const file = await printToFileAsync({
+
+    await loadUserData();
+    const file = await printToFileAsync({
       html: html,
-      base64: false,
+      base64: true,
       margins: {
         left: 20,
         top: 50,
         right: 20,
         bottom: 50,
       },
-  });
-  await shareAsync(file.uri);
-}
+    });
+    await shareAsync(file.uri);
+  };
 
-
-
-      return(
-    <View style={styles.buttonContainer}>
-        <Button
-         label="ExportPDF"
-         onPress={generatePdf}/>     
-    </View> 
-    );
+  return (
+    <>
+      <View style={styles.buttonContainer}>
+        <Button label="Export PDF" onPress={generatePdf} />
+      </View>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
-    buttonContainer : {
-      margin: 10,
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-})
+  buttonContainer: {
+    margin: 10,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

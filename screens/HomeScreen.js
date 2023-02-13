@@ -35,7 +35,7 @@ let colors;
 async function addAntrag() {
   console.log("Antrag hinzufügen");
   let respAddAntrag = await fetch(
-    "http://78.48.16.170:3000/dekomdb.dekom_user?userId=" + valuesid, //192.168.178.24 home or 10.1.111.32 work
+    "http://93.133.109.105:3000/dekomdb.dekom_user?userId=" + valuesid, //192.168.178.24 home or 10.1.111.32 work
     {
       credentials: "same-origin",
     }

@@ -110,7 +110,7 @@ export default function Login({ navigation }) {
           onSubmitEditing={() => handleSubmit()}
         />
       </View>
-      <Button label="Login" onPress={handleSubmit} />
+      <Button label="Authentifizieren" onPress={handleSubmit} />
     </View>
   </DismissKeyboard>
   );

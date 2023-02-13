@@ -111,11 +111,11 @@ export const DataProvider = ({ children }) => {
           hausnummer: respParsed.body.result[0].HAUSNUMMER,
           plz: respParsed.body.result[0].PLZ,
           stadt: respParsed.body.result[0].STADT,
+          signatur: respParsed.body.signature
         }
 
 
         console.log("data : " + data);
-
         return (data);
       }
     }

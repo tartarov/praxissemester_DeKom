@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }, {navigation}) => {
         "Content-Type": "application/json",
       },
       credentials: "same-origin",
-      body: JSON.stringify(userData),
+      body: JSON.stringify(userData)
     });
 
     let responseJSON = await response.json();
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }, {navigation}) => {
   const isSignedUp = async () => {
     setIsLoading(true);
     console.log(
-      "isSignedUp initiated. preparing fetch with Token from AsyncStorage..."
+      "isSignedUp initiated. preparing fetch with Token from AsyncStorage..."+ process.env.IP_ADRESS
     );
     try {
       let userIsInDataBank = await fetch(

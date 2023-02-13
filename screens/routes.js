@@ -9,6 +9,9 @@ require("dotenv").config();
 const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("./middleware/cookieJWTAuth");
 const jwt_decode = require("jwt-decode");
+global.atob = require("atob");
+global.Blob = require('node-blob');
+const url = require('url');
 
 const connectionTestdb = mysql.createPool({
   host: "localhost",
@@ -138,9 +141,11 @@ app.get(
 
               if (results2.length) {
                 console.log("User found successfully.");
-              //  console.log("results2 IS: " + JSON.stringify(results2));
+                console.log("results2 : " + results2[0].SIGNATUR)
+                const buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
+               console.log("buf: " + buf);
                 resDekmdb.send(
-                  formattingResponse(token, { value: true, result: results2 })
+                  formattingResponse(token, { value: true, result: results2, signature: buf })
                 );
               } else {
                 console.log("User-------- not found.");
@@ -213,6 +218,28 @@ app.post("/user/save", cookieJWTAuth, function (req, resData) {
     ourConnection.release();
   });
   resData.send(formattingResponse(token, { value: true }));
+});
+
+app.post("/user/save/signature", cookieJWTAuth, function (req, resData) { 
+console.log("hello!!!!!!")
+let token = req.cookies.token;
+let decoded = jwt_decode(token);
+let decodedJSON = JSON.stringify(decoded);
+let decodedParseToken = JSON.parse(decodedJSON);
+connectionDekomdb.getConnection(function (err, ourConnection) {
+  console.log("ich setze jetzt ein!")
+  getHash(decodedParseToken.user.id).then((hash) => {
+    connectionDekomdb.query(
+    "UPDATE dekomdb.dekom_user SET SIGNATUR = ? WHERE USER_ID_HASH= ? ;", values = [new Buffer.from(req.body.base, 'base64'), hash], function(err,res){
+        if(err){
+          throw err
+        }
+      }
+    );
+  });
+  ourConnection.release();
+});
+resData.send(formattingResponse(token, { value: true }));
 });
 
 // Starting our server.

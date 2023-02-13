@@ -4,7 +4,7 @@ export async function getUserDataByHash() {
   let resultData;
   let objData;
   console.log("ich bin im getUserDataByHash!");
-  respUserData = await fetch("http://192.168.178.24:3000/user/data");
+  respUserData = await fetch("http://93.133.25.152:3000/user/data");
   respUserData = await respUserData.json();
   let respUserData2 = JSON.stringify(respUserData);
   objData = JSON.parse(respUserData2);
