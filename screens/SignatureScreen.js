@@ -50,7 +50,7 @@ const SignatureCaptures = ({ navigation }) => {
     console.log("das form  ist hier: " + stringBase)
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.169.116:3000/user/save/signature",
+      "http://192.168.178.173:3000/user/save/signature",
       {
         method: "POST",
         headers: {

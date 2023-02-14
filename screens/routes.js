@@ -84,7 +84,7 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
 
 const authorized = async (id, pin) => {
   let respond = await fetch(
-    "http://93.133.109.105:3000/auth.behoerde?pin=" + pin + "&id=" + id
+    "http://192.168.178.173:3000/auth.behoerde?pin=" + pin + "&id=" + id
   ).catch(function (error) {
     console.log(
       "There has been a problem with your fetch operation: " + error.message
@@ -141,9 +141,14 @@ app.get(
 
               if (results2.length) {
                 console.log("User found successfully.");
+                let buf="";
+                if(results2[0].SIGNATUR !== null){
+                    buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
+                 console.log("buf: " + buf);
+                  } else{
+                     buf = "";
+                  }
                 console.log("results2 : " + results2[0].SIGNATUR)
-                const buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
-               console.log("buf: " + buf);
                 resDekmdb.send(
                   formattingResponse(token, { value: true, result: results2, signature: buf })
                 );
