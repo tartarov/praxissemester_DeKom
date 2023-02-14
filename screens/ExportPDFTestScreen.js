@@ -51,18 +51,6 @@ const { getUserData } = useContext(DataContext);
       checkbox10: "",
     };
 
-  checkbox1: '',  //Führungszeugnis
-  checkbox2: '',  //erweitertes Führungszeugnis
-  checkbox3: '',
-  checkbox4: '',
-  checkbox5: '',
-  checkbox6: '',
-  checkbox7: '',
-  checkbox8: '',
-  checkbox9: '',
-  checkbox10: '',
-}
-
  html = `
 <!doctype html>
 <html id="Test">
