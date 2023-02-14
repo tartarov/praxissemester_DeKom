@@ -52,6 +52,8 @@ export default function FragenScreen({ navigation }) {
     übersendungPrivat: ÜbersendungPrivatCheckboxState,
     übersendungBehörde: ÜbersendungBehördeCheckboxState,
     einsichtÜbersendungKonsulat: EinsichtÜbersendungKonsulatCheckboxState,
+    bezahlungDeKom: bezahlungDeKomCheckboxState,
+    bezahlungBereitsGemacht: bezahlungBereitsGemachtCheckboxState,
   }
   return (
 
