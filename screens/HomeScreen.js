@@ -20,6 +20,7 @@ import Paginator from "../components/Paginator.js";
 import { AuthContext } from "../context/AuthContext";
 import { DataContext } from "../context/DataContext";
 import LottieView from "lottie-react-native";
+import ModalTester from "./GeertingsModal.js";
 
 const { width } = Dimensions.get("screen");
 
@@ -31,6 +32,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
 let isVerifiedVar;
 let colors;
+let ichBinDurch = false
 
 async function addAntrag() {
   console.log("Antrag hinzufügen");
@@ -64,7 +66,7 @@ function HomeScreen({ navigation }) {
     setIsLoading(true);
     getWalletData();
     setIsLoading(false);
-  }, []);
+  }, [2]);
   isVerifiedVar = isVerified;
 
   /*
@@ -83,26 +85,26 @@ function HomeScreen({ navigation }) {
   console.log("data ist currently------>: " + data);
 
   function DocumentList() {
+    ichBinDurch = true
     return (
       <>
         <View style={styles.flatListContainer}>
-          
           <FlatList
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             bounces={true}
-            snapToAlignment='start'
-            decelerationRate={'fast'}
+            snapToAlignment="start"
+            decelerationRate={"fast"}
             data={data}
             renderItem={({ item, index }) => (
               <View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>{item.title}</Text> 
+                  <Text style={styles.text}>{item.title}</Text>
                 </View>
-              <View style={styles.documentContainer}>
-                <WalletHandler data={item} />
-              </View>
+                <View style={styles.documentContainer}>
+                  <WalletHandler data={item} />
+                </View>
               </View>
             )}
             keyExtractor={(data) => data.title}
@@ -110,13 +112,12 @@ function HomeScreen({ navigation }) {
               [{ nativeEvent: { contentOffset: { x: scrollX } } }],
               {
                 useNativeDriver: false,
-               // listener: onViewableItemsChanged
-
+                // listener: onViewableItemsChanged
               }
             )}
           />
         </View>
-        <Paginator data={data} scrollX={scrollX} /> 
+        <Paginator data={data} scrollX={scrollX} />
       </>
     );
   }
@@ -156,7 +157,8 @@ function HomeScreen({ navigation }) {
           children={"Ausweis hinzufügen"}
           onPress={() => navigation.navigate("ScreenDoesNotExist")}
         />
-      </View>
+      </View> 
+      <ModalTester data={data[0]} />
     </SafeAreaView>
   );
 }
@@ -209,8 +211,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   text: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 24,
-    color: "#223e4b"
-  }
+    color: "#223e4b",
+  },
 });

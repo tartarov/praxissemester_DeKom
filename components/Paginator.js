@@ -5,6 +5,7 @@ import {
   Animated,
   useWindowDimensions,
 } from "react-native";
+import ModalTester from "../screens/GeertingsModal.js";
 let ei
 function Paginator({data, scrollX }) {
   console.log("data current State:" + data);
