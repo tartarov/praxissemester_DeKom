@@ -50,16 +50,16 @@ const userData = {
   bezeichung: 'Kein Ahnung Bro',
   anschrift: 'Hier bla, 12355 Bielefeld',
 
-  checkbox1: 'checked',  //Führungszeugnis
+  checkbox1: getCheckBoxValue(antragData.normales),  //Führungszeugnis
   checkbox2: getCheckBoxValue(antragData.erweitertes),  //erweitertes Führungszeugnis
-  checkbox3: '', //Übersendung an PrivatAnschrift
+  checkbox3: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift
   checkbox4: getCheckBoxValue(antragData.zurVorlage), //Vorlage bei Behörde
-  checkbox5: '', //Übersendung an PrivatAnschrift
+  checkbox5: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift  ---doppelt--- ?
   checkbox6: '', //Im Falle von Eintargungen Übersendung an:
   checkbox7: '', //Deutsche Botschaft
-  checkbox8: '', //Deutsches Konsulat in Land zur Einsichtnahme
-  checkbox9: 'checked', //Gebühr bereits bezahlt
-  checkbox10: '', //überwiesen an Datum auf das Bundesamt für Justiz Konto
+  checkbox8: getCheckBoxValue(antragData.einsichtÜbersendungKonsulat), //Deutsches Konsulat in Land zur Einsichtnahme
+  checkbox9: getCheckBoxValue(antragData.bezahlungBereitsGemacht), //Gebühr bereits bezahlt
+  checkbox10: getCheckBoxValue(antragData.zahlungsDatum), //überwiesen an Datum auf das Bundesamt für Justiz Konto
 }
 
  html = `

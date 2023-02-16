@@ -13,20 +13,6 @@ import { useFormik } from "formik";
 
 export default function FragenScreen({ navigation }) {
 
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      initialValues: {
-        verwendungszweck: "",
-        behörde: "",
-        anschriftBehörde: "",
-        land: "",
-      },
-      onSubmit: (values) => {
-        console.log("Unser Values sieht so aus: " + JSON.stringify(values));
-        console.log(`Verwendungszweck: ${values.verwendungszweck},Behörde: ${values.behörde
-          }, Anschrift der Behörde: ${values.anschriftBehörde} Land: ${values.land}`);
-      },
-    });
 
   const [state, setState] = React.useState(1);
   const [VorlageCheckboxState, setVorlageCheckboxState] = React.useState(false);
@@ -52,16 +38,40 @@ export default function FragenScreen({ navigation }) {
     übersendungPrivat: ÜbersendungPrivatCheckboxState,
     übersendungBehörde: ÜbersendungBehördeCheckboxState,
     einsichtÜbersendungKonsulat: EinsichtÜbersendungKonsulatCheckboxState,
-    bezahlungDeKom: bezahlungDeKomCheckboxState,
-    bezahlungBereitsGemacht: bezahlungBereitsGemachtCheckboxState,
+    bezahlungDeKom: false,
+    bezahlungBereitsGemacht: false,
+    zahlungsDatum: "/",
+    verwendungszweck: "/",
+    behörde: "/",
   }
+
+  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
+    useFormik({
+      initialValues: {
+        verwendungszweck: "",
+        behörde: "",
+        anschriftBehörde: "",
+        land: "",
+      },
+      onSubmit: (values) => {
+        antragData.verwendungszweck = values.verwendungszweck;
+        antragData.behörde = values.behörde;
+        navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
+        
+        console.log("Unser Values sieht so aus: " + JSON.stringify(values));
+        console.log(`Verwendungszweck: ${values.verwendungszweck},Behörde: ${values.behörde
+          }, Anschrift der Behörde: ${values.anschriftBehörde} Land: ${values.land}`);
+      },
+  });
+
   return (
 
     <View>
       <View style={styles.headerContainer}>
         <Text style={styles.logo}>|DeKom </Text>
-        <WeiterButton onPress={() => { navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
-        handleSubmit }}>weiter</WeiterButton>
+        <WeiterButton onPress={() => { 
+          handleSubmit();
+        }}>weiter</WeiterButton>
       </View>
       <ScrollView>
         <View style={styles.bodyContainer}>

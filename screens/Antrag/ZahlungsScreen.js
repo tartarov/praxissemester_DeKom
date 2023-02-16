@@ -7,13 +7,19 @@ import validationColor from "../../components/TextInput";
 import { useFormik } from "formik";
 
 function ZahlungsScreen({ route, navigation }) {
-    //let antragData = route.params.antragData;
+    let antragData = route.params.antragData;
     let dateValue = "Bezahldatum";
     let dateTextColor = "rgba(34, 62, 75, 0.7)";
 
     const [BezahlungDeKomCheckboxState, setBezahlungDeKomCheckboxState] = React.useState(false);
     const [BezahlungBereitsGemachtCheckboxState, setBezahlungBereitsGemachtCheckboxState] = React.useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    function updateAntragData(){
+        antragData.bezahlungDekom = BezahlungDeKomCheckboxState;
+        antragData.bezahlungBereitsGemacht = BezahlungBereitsGemachtCheckboxState;
+        antragData.zahlungsDatum = checkString(dateValue);
+    }
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -61,7 +67,9 @@ function ZahlungsScreen({ route, navigation }) {
         <View style={styles.screen}>
             <View style={styles.headerContainer}>
                 <Text style={styles.logo}>|DeKom </Text>
-                <WeiterButton onPress={() => { navigation.navigate("ExportPDFTestScreen", { antragData }); }}>weiter</WeiterButton>
+                <WeiterButton onPress={() => { 
+                    updateAntragData();
+                    navigation.navigate("ExportPDFTestScreen", { antragData }); }}>weiter</WeiterButton>
             </View>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={require('../../assets/images/paypal-logo.jpeg')} />

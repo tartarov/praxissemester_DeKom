@@ -81,7 +81,7 @@ app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
 
 const authorized = async (id, pin) => {
   let respond = await fetch(
-    "http://93.135.158.184:3000/auth.behoerde?pin=" + pin + "&id=" + id
+    "http://92.116.13.45:3000/auth.behoerde?pin=" + pin + "&id=" + id
   ).catch(function (error) {
     console.log(
       "There has been a problem with your fetch operation: " + error.message
