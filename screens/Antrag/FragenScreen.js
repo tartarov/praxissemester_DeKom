@@ -43,6 +43,8 @@ export default function FragenScreen({ navigation }) {
     zahlungsDatum: "/",
     verwendungszweck: "/",
     behörde: "/",
+    anschriftBehörde: "/",
+    konsulatLand: "/",
   }
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
