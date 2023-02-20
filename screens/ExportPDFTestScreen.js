@@ -69,14 +69,10 @@ function getCheckBoxValue(boolean){
      <meta name="description" content="Our first page">
  </head>
  
- <body style=" background: rgb(204,204,204);">
+ <body>
      <page id="AntragPageOne" style="background: white;
      display: block;
-     margin: 0 auto;
-     margin-bottom: 0.5cm;
-     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-     width: 21cm;
-     height: 29.7cm; 
+     width: auto;
      ">
          <div style="padding-left: 26pt; padding-right: 26pt;">
  
@@ -84,14 +80,14 @@ function getCheckBoxValue(boolean){
              <div class="row">
                  <div class="column" style="float: left; width: 50%;">
                      <p
-                         style="padding-top: 50pt;padding-left: 50pt;text-indent: 0pt;line-height: 11pt;text-align: left;">
+                         style="padding-top: 20pt;padding-left: 50pt;text-indent: 0pt;line-height: 11pt;text-align: left;">
                          Bundesamt für Justiz</p>
                      <p style="padding-left: 50pt;text-indent: 0pt;text-align: left;">- Bundeszentralregister -</p>
                      <p style="padding-left: 50pt;text-indent: 0pt;text-align: left;">Referat IV 2</p>
                      <p style="padding-left: 50pt;text-indent: 0pt;text-align: left;">53094 Bonn</p>
                      <p style="text-indent: 0pt;text-align: left;"><br></p>
                  </div>
-                 <div class="column" style="padding-top: 20pt;">
+                 <div class="column" style="padding-top: 0pt; padding-left: 280pt;">
                      <p class="s1"
                          style="padding: 10pt; margin-left: 0pt;display:inline-block ;text-indent: 0pt;line-height: 12pt;text-align: left;border-radius: 10px ;border:black solid 1px;">
                          <span class="h3">Absender: </span>(<u>Bitte aktuelle Privatanschrift eintragen</u>)<br><br>
@@ -102,7 +98,7 @@ function getCheckBoxValue(boolean){
                  </div>
              </div>
  
-             <p class="s3" style="text-indent: 0pt;text-align: left; padding-top: 50pt;"><b>Ich beantrage die Erteilung
+             <p class="s3" style="text-indent: 0pt;text-align: left; padding-top: 35pt;"><b>Ich beantrage die Erteilung
                      eines
                  </b></p>
              <input type="checkbox" id="checkBox1" ${userData.checkbox1}>
@@ -115,8 +111,6 @@ function getCheckBoxValue(boolean){
                      Bestätigung</b>,
                  dass die Voraussetzungen zur Beantragung eines erweiterten Führungszeugnisses vorliegen, <b>ist zwingend
                      beizufügen.</b></p>
- 
-             <br>
  
              <input type="checkbox" id="checkBox3" ${userData.checkbox3}>
              <label> bitte um Übersendung an meine oben
@@ -138,8 +132,6 @@ function getCheckBoxValue(boolean){
                  ${userData.anschrift}</p>
  
              <p style="margin-top: -10pt;"><i> Übersendung an ausländische Behörden ist nicht möglich. </i></p>
- 
-             <br>
              <div style="margin-left: 40pt;">
                  <p style=" margin-bottom: 0pt;"> Für den Fall, dass das
                      Führungszeugnis Eintragungen enthält, bitte ich um Übersendung an: <b>(nur eine Auswahl
@@ -150,10 +142,8 @@ function getCheckBoxValue(boolean){
                  <label id="einsichtLandHolder"> Deutsches Konsulat in <b>${userData.einsichtsland}</b> zur Einsichtnahme. (Bitte Hinweise auf
                      Seite 2
                      dieses Vordrucks
-                     beachten!) </label><br>
+                     beachten!) </label>
              </div>
-             <br>
- 
              <p class="s3" style="padding-top: 10pt;text-indent: 0pt;text-align: left; margin-bottom: 0pt;">Die Gebühr
                  für
                  das
@@ -171,47 +161,10 @@ function getCheckBoxValue(boolean){
                  BIC: MARKDEF1370 <br>
                  IBAN-Nr.: DE49370000000038001005.
              </p>
-             <div style="margin-left: 26pt; margin-top: 6pt;">
-                 <p>___________________________________________________________________________________</p>
-             </div>
-             <p class="s10"
-                 style="padding-left: 26pt;text-indent: 0pt;line-height: 9pt;text-align: left; margin-bottom: -10pt;">
-                 <b>Hausanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
-                 <b>Postanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
-                 <b>Telefon: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 &nbsp;
-                 <b>Sprechzeiten: </b>
-             </p>
-             <p class="s8"
-                 style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
-                 Adenauerallee 99-103 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 53094 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
-                 +49 228 99 410-5668 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 Di - Do 09:00 – 12:00 Uhr
-             </p>
-             <p class="s8"
-                 style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
-                 53113 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 &nbsp; &nbsp;
-                 &nbsp; &nbsp;
-                 Germany
-             </p>
-             <p class="s8" style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt;">
-                 <a href="http://www.bundesjustizamt.de/" target="_blank">www.bundesjustizamt.de</a>
-             </p>
-         </div>
      </page>
-     <br>
      <page id="AntragPageTwo" style="background: white;
      display: block;
-     margin: 0 auto;
-     margin-bottom: 0.5cm;
-     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-     width: 21cm;
-     height: 29.7cm; 
+     width: auto; 
      ">
          <div style="padding-left: 26pt; padding-right: 26pt;">
  
@@ -262,14 +215,13 @@ function getCheckBoxValue(boolean){
  
                  </div>
  
-                 <br>
+                 <br> <br> <br> <br> <br> <br> <br>
+                 <h3 style="padding-top: 3pt;padding-left: 200pt;text-indent: 0pt;text-align: left;">Merkblatt</h3>
  
-                 <h3 style="padding-top: 3pt;padding-left: 240pt;text-indent: 0pt;text-align: left;">Merkblatt</h3>
- 
-                 <h3 style="padding-left: 36pt;text-indent: -21pt;text-align: left;">1. Örtliche Zuständigkeit und Form
+                 <h3 style="padding-left: 0pt;text-indent: -21pt;text-align: left;">1. Örtliche Zuständigkeit und Form
                      des
                      Antrags</h3>
-                 <p style="padding-top: 4pt;padding-left: 27pt;text-indent: 0pt;text-align: left;">Jede Person, die
+                 <p style="padding-top: 4pt;padding-left: 0pt;text-indent: 0pt;text-align: left;">Jede Person, die
                      <u><b>außerhalb der Bundesrepublik Deutschland wohnt</b></u><b> </b>und das 14. Lebensjahr
                      vollendet
                      hat, kann einen <u><b>schriftlichen</b></u><b> </b>Antrag auf Erteilung eines
@@ -278,65 +230,23 @@ function getCheckBoxValue(boolean){
                      Antrag kann unmittelbar bei der Registerbehörde unter folgender Anschrift gestellt werden:
                  </p>
                  <h3
-                     style="padding-top: 5pt;padding-left: 182pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">
+                     style="padding-top: 5pt;padding-left: 142pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">
                      Bundesamt für
                      Justiz
                  </h3>
-                 <h3 style="padding-left: 182pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">-
+                 <h3 style="padding-left: 142pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">-
                      Bundeszentralregister -Referat
                      IV 2
                  </h3>
-                 <h3 style="padding-left: 182pt;text-indent: 0pt;line-height: 13pt;text-align: left;">53094 Bonn</h3>
- 
-                 <br> <br> <br> <br>
- 
-                 <div style="margin-left: 26pt; margin-top: 6pt;">
-                     <p>___________________________________________________________________________________</p>
-                 </div>
-                 <p class="s10"
-                     style="padding-left: 26pt;text-indent: 0pt;line-height: 9pt;text-align: left; margin-bottom: -10pt;">
-                     <b>Hausanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
-                     <b>Postanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
-                     <b>Telefon: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                     &nbsp;
-                     <b>Sprechzeiten: </b>
-                 </p>
-                 <p class="s8"
-                     style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
-                     Adenauerallee 99-103 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                     53094 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-                     &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
-                     +49 228 99 410-5668 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                     Di - Do 09:00 – 12:00 Uhr
-                 </p>
-                 <p class="s8"
-                     style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
-                     53113 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                     &nbsp; &nbsp;
-                     &nbsp; &nbsp;
-                     Germany
-                 </p>
-                 <p class="s8" style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt;">
-                     <a href="http://www.bundesjustizamt.de/" target="_blank">www.bundesjustizamt.de</a>
-                 </p>
-         </div>
-     </page>
- 
-     <br>
- 
+                 <h3 style="padding-left: 142pt;text-indent: 0pt;line-height: 13pt;text-align: left;">53094 Bonn</h3>
+     </page> 
      <page id="AntragPageThree" style="background: white;
      display: block;
-     margin: 0 auto;
-     margin-bottom: 0.5cm;
-     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-     width: 21cm;
-     height: 29.7cm; 
+     width: auto;
      ">
-         <div style="padding-left: 26pt; padding-right:26pt; padding-top: 26pt;">
+         <div style="padding-left: 0pt; padding-right:26pt; padding-top: 26pt;">
  
-             <p style="padding-top: 6pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Die Antrag
+             <p style="padding-top: 6pt;padding-left: 0pt;text-indent: 0pt;text-align: left;">Die Antrag
                  stellende
                  Person hat ihre Identität und - wenn sie als gesetzliche Vertretung handelt - ihre
                  Ver-tretungsmacht
@@ -356,7 +266,7 @@ function getCheckBoxValue(boolean){
                  Namen
                  zu vermerken.
              </p>
-             <p style="padding-left: 26pt;text-indent: 0pt;text-align: left;">Bei Beantragung eines
+             <p style="padding-left: 0pt;text-indent: 0pt;text-align: left;">Bei Beantragung eines
                  <b>erweiterten
                      Führungszeugnisses </b>ist zudem eine schriftliche Aufforderung der Stelle vorzulegen, die
                  das
@@ -366,41 +276,41 @@ function getCheckBoxValue(boolean){
                  1 BZRG vorliegen. Zur Erteilung eines erweiterten Führungszeugnisses für private Zwecke ist eine
                  entsprechende Bestätigung vorzulegen.
              </p>
- 
-             <h3 style="padding-left: 36pt;text-indent: -21pt;text-align: left;">2. Gebühren</h3>
-             <p style="padding-top: 6pt;padding-left: 27pt;text-indent: 0pt;text-align: left;">Die Gebühr für
+                    <br>
+             <h3 style="padding-left: 0pt;text-indent: -21pt;text-align: left;">2. Gebühren</h3>
+             <p style="padding-top: 6pt;padding-left: 0pt;text-indent: 0pt;text-align: left;">Die Gebühr für
                  jedes
                  Führungszeugnis beträgt <b>13 €. </b>Die Zahlung hat durch Überweisung auf das nachstehende
                  Konto
                  des
                  Bundesamts für Justiz zu erfolgen:</p>
-             <h4 style="padding-top: 5pt;padding-left: 30pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">
+             <h4 style="padding-top: 5pt;padding-left: 0pt;text-indent: 0pt;text-align: left; margin-bottom: -15pt;">
                  Deutsche
                  Bundesbank -
                  Filiale Köln - <br> IBAN-Nr.: DE49370000000038001005 <br> BIC/swift-Nr.: MARKDEF1370</h4>
-             <h4 style="padding-left: 30pt;text-indent: 0pt;line-height: 13pt;text-align: left;">
+             <h4 style="padding-left: 0pt;text-indent: 0pt;line-height: 13pt;text-align: left;">
                  Verwendungszweck:
                  (Aktenzeichen des Vorgangs - falls vorhanden - oder Vor- und Nachname der Antrag
                  stellenden Person)</h4>
-             <p style="padding-left: 26pt;text-indent: 0pt;text-align: left;">Die Durchschrift des
+             <p style="padding-left: 0pt;text-indent: 0pt;text-align: left;">Die Durchschrift des
                  Überweisungsantrags
                  ist - sofern möglich - mit dem Antrag auf Erteilung des Führungszeugnisses an das Bundesamt für
                  Justiz
                  zu senden.</p>
-             <h4 style="padding-top: 5pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Bitte beachten
+             <h4 style="padding-top: 0pt;padding-left: 0pt;text-indent: 0pt;text-align: left;margin-top: -10pt;">Bitte beachten
                  Sie,
                  dass
                  die Gebühr nicht mehr per Scheck entrichtet werden kann.</h4>
-             <p style="padding-top: 5pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Das
+             <p style="padding-top: 5pt;padding-left: 0pt;text-indent: 0pt;text-align: left;">Das
                  Führungszeugnis
                  kann
                  erst nach Eingang der Gebühr oder Vorlage des Zahlungsnachweises erteilt werden (§ 8 JVKostG).
              </p>
  
-             <h3 style="padding-left: 36pt;text-indent: -21pt;text-align: left;">3. Verschiedenes</h3>
+             <h3 style="padding-left: 0pt;text-indent: -21pt;text-align: left;">3. Verschiedenes</h3>
  
  
-             <p style="padding-top: 6pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Ein beantragtes
+             <p style="padding-top: 6pt;padding-left: 0pt;text-indent: 0pt;text-align: left;">Ein beantragtes
                  (Privat-)Führungszeugnis wird nur an die Antrag stellende Person persönlich an ihre Privatanschrift
                  übersandt.
                  Ein zur Vorlage bei einer Behörde beantragtes Führungszeugnis wird direkt an die Behörde übersandt. In
@@ -408,13 +318,13 @@ function getCheckBoxValue(boolean){
                  Antrag auf Erteilung eines Führungszeugnisses zur Vorlage bei einer Behörde ist daher die Anschrift der
                  Behörde
                  sowie der Verwendungszweck und/oder das Aktenzeichen der Empfängerbehörde anzugeben.</p>
-             <p style="padding-top: 3pt;padding-left: 26pt;text-indent: 0pt;text-align: justify;">Sollten Sie - neben
+             <p style="padding-top: 3pt;padding-left: 0pt;text-indent: 0pt;text-align: justify;">Sollten Sie - neben
                  oder
                  anstatt der deutschen - die Staatsangehörigkeit eines oder mehrerer anderer EU-Mitgliedstaaten besitzen,
                  so
                  sind
                  diese anzugeben. In diesem Fall wird ein Europäisches Führungszeugnis erteilt.</p>
-             <p style="padding-top: 3pt;padding-left: 26pt;text-indent: 0pt;text-align: justify; margin-bottom: -10pt;">
+             <p style="padding-top: 3pt;padding-left: 0pt;text-indent: 0pt;text-align: justify; margin-bottom: -10pt;">
                  Das Führungszeugnis
                  wird
                  nur in
@@ -424,38 +334,34 @@ function getCheckBoxValue(boolean){
                  Antragstellung
                  kann das umseitige Antragsformular verwendet werden.</p>
  
-             <div style="margin-left: 26pt; margin-top: 6pt;">
-                 <p>___________________________________________________________________________________</p>
+                 <div style="margin-left: 0pt; margin-top: 6pt;">
+                 <p>__________________________________________________________________</p>
              </div>
              <p class="s10"
-                 style="padding-left: 26pt;text-indent: 0pt;line-height: 9pt;text-align: left; margin-bottom: -10pt;">
+                 style="padding-left: 0pt;text-indent: 0pt;line-height: 9pt;text-align: left; margin-bottom: -10pt; font-size: 10pt;">
                  <b>Hausanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
-                 <b>Postanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
- 
+
+                 <b>Postanschrift: </b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
                  <b>Telefon: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 &nbsp;
                  <b>Sprechzeiten: </b>
              </p>
              <p class="s8"
-                 style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
-                 Adenauerallee 99-103 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 53094 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
-                 +49 228 99 410-5668 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                 style="padding-left: 0pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
+                 Adenauerallee 99-103 &nbsp; &nbsp; &nbsp; &nbsp;
+                 53094 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                 +49 228 99 410-5668 &nbsp; &nbsp;
                  Di - Do 09:00 – 12:00 Uhr
              </p>
              <p class="s8"
-                 style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
+                 style="padding-left: 0pt;text-indent: 0pt;text-align: left; font-size: 10pt; margin-bottom: -10pt;">
                  53113 Bonn &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                 &nbsp; &nbsp;
-                 &nbsp; &nbsp;
                  Germany
              </p>
-             <p class="s8" style="padding-left: 26pt;text-indent: 0pt;text-align: left; font-size: 10pt;">
+             <p class="s8" style="padding-left: 0pt;text-indent: 0pt;text-align: left; font-size: 10pt;">
                  <a href="http://www.bundesjustizamt.de/" target="_blank">www.bundesjustizamt.de</a>
              </p>
-         </div>
+     </div>
      </page>
      <script src="../data/htmlInput.js"></script>
      <script src="../screens/ExportPDFTestScreen.js"></script>
