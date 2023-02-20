@@ -73,7 +73,7 @@ export default function FragenScreen({ navigation }) {
 
     <View>
       <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom </Text>
+        <Text style={styles.logo}>|DeKom. </Text>
         <WeiterButton onPress={() => { 
           handleSubmit();
         }}>weiter</WeiterButton>
@@ -288,7 +288,7 @@ export default function FragenScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: 50,
+    marginTop: 10,
     marginBottom: 10,
     height: 50,
     flexDirection: 'row',
@@ -306,7 +306,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 20,
     marginRight: 20,
-    marginBottom: 0
+    marginBottom: 0,
+    color: "#223e4b",
   },
   headline: {
     fontWeight: 'bold',
@@ -315,6 +316,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
+    color: "#223e4b",
   },
   bottomline: {
     fontWeight: 'semi-bold',
@@ -323,20 +325,25 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
+    color: "#223e4b",
   },
   label: {
     margin: 8,
+    color: "#223e4b",
   },
   questionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
     height: 0,
+    color: "#223e4b",
+    marginBottom:0.1
   },
   textBetweenContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 0,
+    color: "#223e4b",
   },
   textInputContainer: {
     flexDirection: 'column',
@@ -350,6 +357,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 10,
     alignSelf: "center",
+    color: "#223e4b",
   },
   textBetween: {
     fontSize: 17,
@@ -358,7 +366,8 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginRight: 20,
     marginBottom: 0,
-    alignSelf: "center"
+    alignSelf: "center",
+    color: "#223e4b",
   },
   textInputContainerBetween: {
     marginTop: 10,
