@@ -6,46 +6,17 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import validationColor from "../../components/TextInput";
 import { useFormik } from "formik";
 
+let dateValue = "Bezahldatum";
+let dateTextColor = "rgba(34, 62, 75, 0.7)";
+
 function ZahlungsScreen({ route, navigation }) {
     let antragData = route.params.antragData;
     console.log("Antrag Data im ZahlungsScreen ==========>   " + JSON.stringify(antragData));
-    let dateValue = "Bezahldatum";
-    let dateTextColor = "rgba(34, 62, 75, 0.7)";
+    
 
     const [BezahlungDeKomCheckboxState, setBezahlungDeKomCheckboxState] = React.useState(false);
     const [BezahlungBereitsGemachtCheckboxState, setBezahlungBereitsGemachtCheckboxState] = React.useState(false);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-
-    const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
-
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
-
-    const handleConfirm = (date) => {
-        dateValue = date;
-        hideDatePicker();
-    };
-
-    const changeDateTextColor = (dateValue) => {
-        if (dateValue == "Bezahldatum") {
-            return dateTextColor;
-        } else return (dateTextColor = "black");
-    };
-
-    let month = dateValue.toString().substring(4, 7);
-    let day = dateValue.toString().substring(8, 10);
-    let year = dateValue.toString().substring(11, 15);
-
-    const checkString = (datevalue) => {
-        if (datevalue == "Bezahldatum") {
-            return dateValue;
-        } else return day + " " + month + " " + year;
-    };
-
+    
     const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
       initialValues: {
@@ -64,7 +35,41 @@ function ZahlungsScreen({ route, navigation }) {
         }`);
       },
     });
+
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        dateValue = date;
+        hideDatePicker();
+    };
+
+    let month = dateValue.toString().substring(4, 7);
+    let day = dateValue.toString().substring(8, 10);
+    let year = dateValue.toString().substring(11, 15);
+
+    const checkString = (datevalue) => {
+        if (datevalue == "Bezahldatum") {
+            return dateValue;
+        } else {
+        return day + " " + month + " " + year;
+        }
+    };
     
+    const changeDateTextColor = (dateValue) => {
+        if (dateValue == "Bezahldatum") {
+            return dateTextColor;
+        } else return (dateTextColor = "black");
+    };
+
     return (
         <View style={styles.screen}>
             <View style={styles.headerContainer}>
