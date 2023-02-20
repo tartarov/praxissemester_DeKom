@@ -188,7 +188,9 @@ function getCheckBoxValue(boolean){
                  <p style="text-indent: 0pt;text-align: left;"></p>
                  <h3 style="padding-top: 4pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Unterschrift der
                      Antrag
-                     stellenden Person<span class="s9">: </span><span
+                     stellenden Person<span class="s9">: <br>
+                     <img src= "data:image/png;base64,${userData.signatur}" style="width:20%; height:20%; paddingLeft:50%"/>
+                     <br> </span><span
                          class="s3">..........................................................................................</span>
                  </h3>
                  <br>
