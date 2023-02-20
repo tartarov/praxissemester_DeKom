@@ -141,9 +141,14 @@ app.get(
 
               if (results2.length) {
                 console.log("User found successfully.");
+                let buf="";
+                if(results2[0].SIGNATUR !== null){
+                    buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
+                 console.log("buf: " + buf);
+                  } else{
+                     buf = "";
+                  }
                 console.log("results2 : " + results2[0].SIGNATUR)
-                const buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
-               console.log("buf: " + buf);
                 resDekmdb.send(
                   formattingResponse(token, { value: true, result: results2, signature: buf })
                 );

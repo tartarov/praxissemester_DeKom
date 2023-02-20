@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }, {navigation}) => {
           setIsLoading(false);
         if (userSignedUpPARSED.body.value == true){
           greetingsName = userSignedUpPARSED.body.result[0].VORNAME;
-          Alert.alert("Willkommen, " + greetingsName + "!");
+        //  Alert.alert("Willkommen, " + greetingsName + "!");
         }
           return true;
         } else {

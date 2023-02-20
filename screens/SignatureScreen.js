@@ -47,10 +47,9 @@ const SignatureCaptures = ({ navigation }) => {
 
   const fetcher = async (stringBase) => {
     console.log("ich bin im fetcher")
-    console.log("das form  ist hier: " + stringBase)
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.169.116:3000/user/save/signature",
+      "http://92.116.9.113:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -65,7 +64,6 @@ const SignatureCaptures = ({ navigation }) => {
       });
 
       let responseJSON = await respond.json();
-      console.log("RESPONSE: " + responseJSON)
       let responseStringy = JSON.stringify(responseJSON);
       let responseParsed = JSON.parse(responseStringy);
   
