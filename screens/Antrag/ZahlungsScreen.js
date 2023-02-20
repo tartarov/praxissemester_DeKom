@@ -74,6 +74,7 @@ function ZahlungsScreen({ route, navigation }) {
         <View style={styles.screen}>
             <View style={styles.headerContainer}>
                 <Text style={styles.logo}>|DeKom </Text>
+                <WeiterButton onPress={() => {navigation.navigate("StaatsangehoerigkeitsScreen", {antragData});}}>zurück</WeiterButton>
                 <WeiterButton onPress={() => { 
                     handleSubmit();
                     navigation.navigate("ExportPDFTestScreen", { antragData }); }}>weiter</WeiterButton>

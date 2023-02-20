@@ -70,7 +70,8 @@ export default function StaatsangehoerigkeitsScreen({route, navigation}) {
     return (
         <View>
           <View style={styles.headerContainer}>
-            <Text style={styles.logo}>|DeKom </Text>
+            <Text style={styles.logo}>|DeKom. </Text>
+            <WeiterButton onPress={() => {navigation.navigate("FragenScreen", {antragData});}}>zurück</WeiterButton>
             <WeiterButton onPress={() => {navigation.navigate("ZahlungsScreen", {antragData});}}>weiter</WeiterButton>
           </View>
           <View style={styles.bodyContainer}>
@@ -82,7 +83,7 @@ export default function StaatsangehoerigkeitsScreen({route, navigation}) {
                 <Select2
                   style={styles.selectList}
                   isSelectSingle={false}
-                  colorTheme="black"
+                  colorTheme="#223e4b"
                   popupTitle="Staatsangehörigkeiten Auswahl"
                   title="Staatsangehörigkeiten auswählen"
                   searchPlaceHolderText="Wählen Sie Ihre Staatsangehöhrigkeiten aus"
@@ -105,6 +106,7 @@ export default function StaatsangehoerigkeitsScreen({route, navigation}) {
                       <NationalityItem
                         id={itemData.item.id}
                         text={itemData.item.name}
+                        textcolor="#223e4b"
                       />
                     );
                   }}
@@ -145,12 +147,12 @@ const styles = StyleSheet.create({
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 50,
+        marginTop: 10,
         marginBottom: 10,
       },
       bodyContainer: {
         height: 700,
-        marginTop: 100,
+        marginTop: 0,
         backgroundColor: '#f8c8c1'
       },
       h2: {
@@ -159,16 +161,22 @@ const styles = StyleSheet.create({
       logo: {
         fontWeight: 'bold',
         fontSize: 26,
-        marginLeft:  20,
+        marginTop: 10,
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 0,
+        color: "#223e4b",
       },
       questionText: {
         fontSize: 15,
         marginLeft: 20,
-        marginTop: 10
+        marginTop: 10,
+        color: "#223e4b"
       },
       selectListContainer: {
         flex: 7,
-        marginRight: 20
+        marginRight: 20,
+        color: "#223e4b"
       },
       selectList: {
         backgroundColor: "#ffffff"

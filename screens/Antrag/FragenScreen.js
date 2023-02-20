@@ -74,6 +74,7 @@ export default function FragenScreen({ navigation }) {
     <View>
       <View style={styles.headerContainer}>
         <Text style={styles.logo}>|DeKom. </Text>
+        <WeiterButton onPress={() => {navigation.navigate("Dokumente");}}>zurück</WeiterButton>
         <WeiterButton onPress={() => { 
           handleSubmit();
         }}>weiter</WeiterButton>

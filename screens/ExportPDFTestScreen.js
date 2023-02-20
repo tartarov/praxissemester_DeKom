@@ -4,6 +4,7 @@ import { shareAsync } from "expo-sharing";
 import { DataContext } from "../context/DataContext";
 import { useContext } from "react";
 import { StyleSheet, View, Image } from "react-native";
+import ButtonGhost from "../components/ButtonGhost";
 
 let html;
 
@@ -394,6 +395,15 @@ function getCheckBoxValue(boolean){
     <>
       <View style={styles.buttonContainer}>
         <Button label="Export PDF" onPress={generatePdf} />
+        <View style={{marginTop:50}}>
+        <ButtonGhost
+            title="Back"
+            label="zurück"
+            onPress={() => {
+              navigation.navigate("ZahlungsScreen", route);
+            }}
+          />
+          </View>
       </View>
     </>
   );

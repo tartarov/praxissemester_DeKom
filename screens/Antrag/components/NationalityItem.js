@@ -4,10 +4,10 @@ export default function NationalityItem(props) {
 
     return (
         <View style={styles.nationalityContainer}>
-            <Text>{props.text}</Text>
+            <Text style={{color: "#223e4b"}}>{props.text}</Text>
             <Button 
-                title="Upload your file 📑"
-                color="black"
+                title="Nachweis hochladen 📑"
+                color="#e94832"
                 onPress={pickDocument}
             />
         </View>
