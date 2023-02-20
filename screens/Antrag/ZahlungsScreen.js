@@ -73,7 +73,7 @@ function ZahlungsScreen({ route, navigation }) {
     return (
         <View style={styles.screen}>
             <View style={styles.headerContainer}>
-                <Text style={styles.logo}>|DeKom </Text>
+                <Text style={styles.logo}>|DeKom. </Text>
                 <WeiterButton onPress={() => {navigation.navigate("StaatsangehoerigkeitsScreen", {antragData});}}>zurück</WeiterButton>
                 <WeiterButton onPress={() => { 
                     handleSubmit();
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         color: '#1CA352'
     },
     headerContainer: {
-        marginTop: 50,
+        marginTop: 10,
         marginBottom: 10,
         height: 50,
         flexDirection: 'row',
@@ -155,8 +155,11 @@ const styles = StyleSheet.create({
     logo: {
         fontWeight: 'bold',
         fontSize: 26,
+        marginTop: 10,
         marginLeft: 20,
-        marginBottom: 25
+        marginRight: 20,
+        marginBottom: 0,
+        color: "#223e4b",
     },
     imageContainer: {
         margin: 20,
