@@ -43,23 +43,21 @@ const userData = {
   geburtsort: data.geburtsort,
   staatsangehörigkeit: data.staatsangehoerigkeit,
 
-  einsichtsland: 'Deutschland',
-  bezahlungsdatum: '01.01.2023',
+  einsichtsland: antragData.konsulatLand,
+  bezahlungsdatum: antragData.zahlungsDatum,
 
-  verwendungszweck: 'bewerbung',
-  bezeichung: 'Kein Ahnung Bro',
-  anschrift: 'Hier bla, 12355 Bielefeld',
+  verwendungszweck: antragData.verwendungszweck,
+  bezeichung: antragData.behörde,
+  anschrift: antragData.anschriftBehörde,
 
   checkbox1: getCheckBoxValue(antragData.normales),  //Führungszeugnis
   checkbox2: getCheckBoxValue(antragData.erweitertes),  //erweitertes Führungszeugnis
   checkbox3: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift
-  checkbox4: getCheckBoxValue(antragData.zurVorlage), //Vorlage bei Behörde
-  checkbox5: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift  ---doppelt--- ?
-  checkbox6: '', //Im Falle von Eintargungen Übersendung an:
-  checkbox7: '', //Deutsche Botschaft
+  checkbox4: getCheckBoxValue(antragData.übersendungBehörde), //Vorlage bei Behörde
+  checkbox7: getCheckBoxValue(antragData.einsichtÜbersendungBotschaft), //Deutsche Botschaft
   checkbox8: getCheckBoxValue(antragData.einsichtÜbersendungKonsulat), //Deutsches Konsulat in Land zur Einsichtnahme
-  checkbox9: getCheckBoxValue(antragData.bezahlungBereitsGemacht), //Gebühr bereits bezahlt
-  checkbox10: getCheckBoxValue(antragData.zahlungsDatum), //überwiesen an Datum auf das Bundesamt für Justiz Konto
+  checkbox9: getCheckBoxValue(antragData.bezahlungDeKom), //Gebühr bereits bezahlt
+  checkbox10: getCheckBoxValue(antragData.bezahlungBereitsGemacht), //überwiesen an Datum auf das Bundesamt für Justiz Konto
 }
 
  html = `
@@ -149,7 +147,7 @@ const userData = {
                  <input type="checkbox" id="checkBox7" ${userData.checkbox7}>
                  <label> Deutsche Botschaft / </label><br>
                  <input type="checkbox" id="checkBox8" ${userData.checkbox8}>
-                 <label id="einsichtLandHolder"> Deutsches Konsulat in <b>LAND</b> zur Einsichtnahme. (Bitte Hinweise auf
+                 <label id="einsichtLandHolder"> Deutsches Konsulat in <b>${userData.einsichtsland}</b> zur Einsichtnahme. (Bitte Hinweise auf
                      Seite 2
                      dieses Vordrucks
                      beachten!) </label><br>
@@ -165,7 +163,7 @@ const userData = {
              <label> Bereits bezahlt </label>
              <p style="margin-top: 3pt; margin-bottom: 3pt;">oder</p>
              <input type="checkbox" id="checkBox10" ${userData.checkbox10}>
-             <label id="bezahlungDatumHolder" value="${userData.bezahlungsdatum}"> überwiesen am <b>DATUM</b>
+             <label id="bezahlungDatumHolder"> überwiesen am <b>${userData.bezahlungsdatum}</b>
                  auf das Konto des Bundesamts für Justiz</label><br> <br>
              <p class="s3" style="padding-left: 199pt;text-indent: 0pt;line-height: 10pt;text-align: left;">Deutsche
                  Bundesbank <br>

@@ -38,6 +38,7 @@ export default function FragenScreen({ navigation }) {
     übersendungPrivat: ÜbersendungPrivatCheckboxState,
     übersendungBehörde: ÜbersendungBehördeCheckboxState,
     einsichtÜbersendungKonsulat: EinsichtÜbersendungKonsulatCheckboxState,
+    einsichtÜbersendungBotschaft: EinsichtÜbersendungBotschaftCheckboxState,
     bezahlungDeKom: false,
     bezahlungBereitsGemacht: false,
     zahlungsDatum: "/",
@@ -58,6 +59,8 @@ export default function FragenScreen({ navigation }) {
       onSubmit: (values) => {
         antragData.verwendungszweck = values.verwendungszweck;
         antragData.behörde = values.behörde;
+        antragData.anschriftBehörde = values.anschriftBehörde;
+        antragData.konsulatLand = values.land;
         navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
         
         console.log("Unser Values sieht so aus: " + JSON.stringify(values));

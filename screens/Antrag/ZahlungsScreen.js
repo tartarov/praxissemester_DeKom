@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 
 function ZahlungsScreen({ route, navigation }) {
     let antragData = route.params.antragData;
+    console.log("Antrag Data im ZahlungsScreen ==========>   " + JSON.stringify(antragData));
     let dateValue = "Bezahldatum";
     let dateTextColor = "rgba(34, 62, 75, 0.7)";
 
@@ -15,11 +16,6 @@ function ZahlungsScreen({ route, navigation }) {
     const [BezahlungBereitsGemachtCheckboxState, setBezahlungBereitsGemachtCheckboxState] = React.useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    function updateAntragData(){
-        antragData.bezahlungDekom = BezahlungDeKomCheckboxState;
-        antragData.bezahlungBereitsGemacht = BezahlungBereitsGemachtCheckboxState;
-        antragData.zahlungsDatum = checkString(dateValue);
-    }
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -56,6 +52,12 @@ function ZahlungsScreen({ route, navigation }) {
         bezahldatum: "",
       },
       onSubmit: (values) => {
+        antragData.bezahlungDeKom = BezahlungDeKomCheckboxState;
+        antragData.bezahlungBereitsGemacht = BezahlungBereitsGemachtCheckboxState;
+
+        values.zahlungsDatum = day + " " + month + " " + year;
+        antragData.zahlungsDatum = values.zahlungsDatum;
+
         console.log("Unser Values sieht so aus: " + JSON.stringify(values));
         console.log(`Bezahldatum: ${
           day + " " + month + " " + year
@@ -68,7 +70,7 @@ function ZahlungsScreen({ route, navigation }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.logo}>|DeKom </Text>
                 <WeiterButton onPress={() => { 
-                    updateAntragData();
+                    handleSubmit();
                     navigation.navigate("ExportPDFTestScreen", { antragData }); }}>weiter</WeiterButton>
             </View>
             <View style={styles.imageContainer}>
