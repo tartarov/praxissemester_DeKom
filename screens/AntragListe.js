@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import NotificationButton from "../components/NotificationButton";
 
 const DATA = [
   {
@@ -91,6 +92,7 @@ const Antragmenue = ({navigation}) => {
     <SafeAreaView style={styles.container}>
           <View style={styles.headerContainer}>
     <Text style={styles.logo}>|DeKom. </Text>
+    <NotificationButton />
   </View>
       <FlatList
         data={DATA}
@@ -104,11 +106,11 @@ const Antragmenue = ({navigation}) => {
 
 const styles = StyleSheet.create({
     headerContainer: {
+        marginTop:10,
         flexDirection: "row",
         justifyContent: "space-between",
       },
       logo: {
-        marginTop: 10,
         marginBottom: StatusBar.currentHeight ,
         fontWeight: "bold",
         fontSize: 38,
