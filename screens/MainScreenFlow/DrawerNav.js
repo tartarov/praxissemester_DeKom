@@ -7,7 +7,7 @@ import Menu from "../Menü/Menu";
 import Antragmenue from "./AntragListe";
 import ErteilungScreen from "../Antrag/ErteilungScreen";
 import FragenScreen from "../Antrag/FragenScreen";
-import { ScreenDoesNotExist } from "../ScreenDoesNotExist";
+import { ScreenDoesNotExist } from "../Error404/ScreenDoesNotExist";
 import SignatureCaptures from "../Menü/SignatureScreen";
 import ExportPDFTestScreen from "../Antrag/ExportPDFTestScreen";
 import StaatsangehoerigkeitsScreen from "../Antrag/StaatsangehoerigkeitScreens";

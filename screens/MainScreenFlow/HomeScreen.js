@@ -15,7 +15,7 @@ import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../../components/Paginator.js";
 import { AuthContext } from "../../context/AuthContext";
 import { DataContext } from "../../context/DataContext";
-import ModalTester from "../GeertingsModal.js";
+import ModalTester from "../Modals/GeertingsModal.js";
 import Loader from "../../components/Loader.js";
 import { Header } from "../../components/Header";
 

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import Login from "./screens/Login";
-import SignUp from "./screens/SignUpFlow/SignUp";
-import SignUpAdress from "./screens/SignUpFlow/SignUpAdress";
-import SignUpNav from "./screens/SignUpFlow/SignUpNav";
+import Login from "./screens/LoginAndRegister/Login";
+import SignUp from "./screens/LoginAndRegister/SignUpFlow/SignUp";
+import SignUpAdress from "./screens/LoginAndRegister/SignUpFlow/SignUpAdress";
+import SignUpNav from "./screens/LoginAndRegister/SignUpFlow/SignUpNav";
 import MainScreen from "./screens/MainScreenFlow/MainScreenNav";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext";

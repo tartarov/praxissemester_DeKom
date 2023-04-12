@@ -5,9 +5,9 @@ import {
   Animated,
   useWindowDimensions,
 } from "react-native";
-import ModalTester from "../screens/GeertingsModal.js";
-let ei
-function Paginator({data, scrollX }) {
+import ModalTester from "../screens/Modals/GeertingsModal.js";
+let ei;
+function Paginator({ data, scrollX }) {
   console.log("data current State:" + data);
   console.log("data current scrollx:" + scrollX);
   const { width } = useWindowDimensions();
@@ -31,13 +31,16 @@ function Paginator({data, scrollX }) {
 
           const color = scrollX.interpolate({
             inputRange,
-            outputRange: [ "#e94832", "#fce9e6", "#e94832"],
+            outputRange: ["#e94832", "#fce9e6", "#e94832"],
             extrapolate: "clamp",
           });
 
           return (
             <Animated.View
-              style={[styles.dot, { width: dotWidth, opacity, backgroundColor: color }]}
+              style={[
+                styles.dot,
+                { width: dotWidth, opacity, backgroundColor: color },
+              ]}
               key={i.toString()}
             />
           );
