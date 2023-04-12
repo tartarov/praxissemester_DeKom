@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "./screens/Login";
-import SignUp from "./screens/SignUp";
-import SignUpAdress from "./screens/SignUpAdress";
-import SignUpNav from "./screens/SignUpNav";
-import MainScreen from "./screens/MainScreen";
+import SignUp from "./screens/SignUpFlow/SignUp";
+import SignUpAdress from "./screens/SignUpFlow/SignUpAdress";
+import SignUpNav from "./screens/SignUpFlow/SignUpNav";
+import MainScreen from "./screens/MainScreenFlow/MainScreenNav";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext";
 import Loader from "./components/Loader";
@@ -54,26 +54,6 @@ const App = () => {
               component={AuthHandler}
               options={{ headerShown: false }}
             ></Stack.Screen>
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="SignUpAdress"
-              component={SignUpAdress}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="MainScreen"
-              component={MainScreen}
-              options={{ headerShown: false }}
-            />
           </Stack.Navigator>
         </NavigationContainer>
       </DataProvider>

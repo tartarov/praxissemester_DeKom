@@ -56,7 +56,6 @@ export const DataProvider = ({ children }) => {
 
   const getWalletData = async () => {
     const thisUser = await fetchData();
-    console.log("thisUser.body.result[0];" + thisUser.body.result[0])
     const personalInfo = thisUser.body.result[0];
     const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
       personalInfo;

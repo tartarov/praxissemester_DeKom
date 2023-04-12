@@ -9,10 +9,10 @@ import {
   Alert,
 } from "react-native";
 import { SignatureView } from "react-native-signature-capture-view";
-import ButtonGhost from "../components/ButtonGhost";
-import { AuthContext } from "../context/AuthContext";
-import LottieView from 'lottie-react-native';
-import Loader from "../components/Loader";
+import ButtonGhost from "../../components/ButtonGhost";
+import { AuthContext } from "../../context/AuthContext";
+import LottieView from "lottie-react-native";
+import Loader from "../../components/Loader";
 let isVarifiedVar;
 
 const SignatureCaptures = ({ navigation }) => {
@@ -20,10 +20,10 @@ const SignatureCaptures = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState("");
   const { isVerified } = useContext(AuthContext);
-  isVarifiedVar = isVerified
+  isVarifiedVar = isVerified;
 
   const fetcher = async (stringBase) => {
-    console.log("ich bin im fetcher")
+    console.log("ich bin im fetcher");
     setIsLoading(true);
     let respond = await fetch(
       "http://192.168.178.181:3000/user/save/signature",
@@ -35,20 +35,20 @@ const SignatureCaptures = ({ navigation }) => {
         },
         credentials: "same-origin",
         body: JSON.stringify({
-          base: stringBase
-      })
-
-      });
-
-      const responseJSON = await respond.json();
-
-      const verificationStatus = await isVarifiedVar(responseJSON);
-
-      if (verificationStatus == "verified" && responseJSON.body.value == true ) {
-          console.log("respond contains true => success... YUHU");
-          Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
+          base: stringBase,
+        }),
       }
-      setIsLoading(false);
+    );
+
+    const responseJSON = await respond.json();
+
+    const verificationStatus = await isVarifiedVar(responseJSON);
+
+    if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      console.log("respond contains true => success... YUHU");
+      Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -67,32 +67,50 @@ const SignatureCaptures = ({ navigation }) => {
             console.log("saved signature");
             var base64raw = val.replace("data:image/png;base64,", "");
             console.log(val);
-            Alert.alert("Sicher?" , "Bist du sicher, dass du diese Signatur speichern willst?",  [
-              {
-                text: 'Ja, speichere ',
-                onPress: () => {fetcher(base64raw), setText(val)},
-              },
-              {
-                text: 'Nein, nochmal'},
-              ])
+            Alert.alert(
+              "Sicher?",
+              "Bist du sicher, dass du diese Signatur speichern willst?",
+              [
+                {
+                  text: "Ja, speichere ",
+                  onPress: () => {
+                    fetcher(base64raw), setText(val);
+                  },
+                },
+                {
+                  text: "Nein, nochmal",
+                },
+              ]
+            );
           }}
           onClear={() => {
             console.log("cleared signature");
-            Alert.alert("Sicher?" , "Bist du sicher, dass du diese Signatur löschen willst?",  [
-              {
-                text: 'Ja, lösche ',
-                onPress: () => {fetcher(""), setText("")},
-              },
-              {
-                text: 'Nein, behalte'},
-              ])
+            Alert.alert(
+              "Sicher?",
+              "Bist du sicher, dass du diese Signatur löschen willst?",
+              [
+                {
+                  text: "Ja, lösche ",
+                  onPress: () => {
+                    fetcher(""), setText("");
+                  },
+                },
+                {
+                  text: "Nein, behalte",
+                },
+              ]
+            );
           }}
-        /> 
-         <Text style = {{
-           fontSize: 10,
-           alignItems:'center',
-           paddingLeft: 40
-          }}>Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.</Text>
+        />
+        <Text
+          style={{
+            fontSize: 10,
+            alignItems: "center",
+            paddingLeft: 40,
+          }}
+        >
+          Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.
+        </Text>
         <View
           style={{ flexDirection: "row", justifyContent: "center", height: 50 }}
         >
@@ -132,11 +150,18 @@ const SignatureCaptures = ({ navigation }) => {
         </View>
 
         <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
-        {isLoading == true ? <Loader/> :  <Text numberOfLines={10} ellipsizeMode="tail" style={{alignItems: 'center'}}>
-            {text} 
-        {/*  GESPEICHERT! */}
-          </Text>
-        }
+          {isLoading == true ? (
+            <Loader />
+          ) : (
+            <Text
+              numberOfLines={10}
+              ellipsizeMode="tail"
+              style={{ alignItems: "center" }}
+            >
+              {text}
+              {/*  GESPEICHERT! */}
+            </Text>
+          )}
         </ScrollView>
       </SafeAreaView>
     </>

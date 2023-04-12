@@ -1,7 +1,5 @@
 import * as React from "react";
 import {
-  StatusBar,
-  Image,
   FlatList,
   Dimensions,
   Animated,
@@ -9,18 +7,17 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
-  Button,
 } from "react-native";
-import { dataSample } from "../data/DataSample.js";
-import WalletHandler from "../components/WalletHandler.js";
-import PrimaryButton from "../components/PrimaryButton.js";
-import NotificationButton from "../components/NotificationButton";
+import { dataSample } from "../../data/DataSample.js";
+import WalletHandler from "../../components/WalletHandler.js";
+import PrimaryButton from "../../components/PrimaryButton.js";
 import { useRef, useState, useContext, useEffect } from "react";
-import Paginator from "../components/Paginator.js";
-import { AuthContext } from "../context/AuthContext";
-import { DataContext } from "../context/DataContext";
-import ModalTester from "./GeertingsModal.js";
-import Loader from "../components/Loader.js";
+import Paginator from "../../components/Paginator.js";
+import { AuthContext } from "../../context/AuthContext";
+import { DataContext } from "../../context/DataContext";
+import ModalTester from "../GeertingsModal.js";
+import Loader from "../../components/Loader.js";
+import { Header } from "../../components/Header";
 
 const { width } = Dimensions.get("screen");
 
@@ -30,13 +27,10 @@ const SPACING = 10;
 const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
-let isVerifiedVar;
-//let ichBinDurch = false
 
 function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
-  const { isVerified } = useContext(AuthContext);
   const { data, getWalletData } = useContext(DataContext);
 
   useEffect(() => {
@@ -45,10 +39,7 @@ function HomeScreen({ navigation }) {
     setIsLoading(false);
   }, []);
 
-  isVerifiedVar = isVerified;
-
   function DocumentList() {
-    //ichBinDurch = true
     return (
       <>
         <View style={styles.flatListContainer}>
@@ -86,12 +77,10 @@ function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar />
-      <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
-        <NotificationButton />
-      </View>
-      {isLoading == true ? <Loader/> : <DocumentList />}
+      <Header />
+
+      {isLoading == true ? <Loader /> : <DocumentList />}
+
       <View style={styles.buttonContainer}>
         <PrimaryButton
           children={"Antrag hinzufügen"}
@@ -101,7 +90,7 @@ function HomeScreen({ navigation }) {
           children={"Ausweis hinzufügen"}
           onPress={() => navigation.navigate("ScreenDoesNotExist")}
         />
-      </View> 
+      </View>
       <ModalTester data={data[0]} />
     </SafeAreaView>
   );
@@ -110,9 +99,6 @@ function HomeScreen({ navigation }) {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  screen: {
-    color: "#223e4b",
-  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -122,18 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  headerContainer: {
-    marginTop: 10,
-    height: 50,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  logo: {
-    fontWeight: "bold",
-    fontSize: 38,
-    marginLeft: 20,
-    color: "#223e4b",
   },
   documentContainer: {
     width: width,

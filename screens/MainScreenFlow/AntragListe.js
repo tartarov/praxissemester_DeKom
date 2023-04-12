@@ -1,64 +1,71 @@
 import React, { useState } from "react";
-import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import NotificationButton from "../components/NotificationButton";
+import {
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import NotificationButton from "../../components/NotificationButton";
 
 const DATA = [
   {
     id: "1",
     title: "Führungszeugnis",
-    navigator: "FragenScreen"
+    navigator: "FragenScreen",
   },
   {
     id: "2",
     title: "erweitertes Führungszeugnis",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
-  id: "3",
-  title: "Wohnsitz-Ummeldung",
-  navigator: "ScreenDoesNotExist"
-},
-{
+    id: "3",
+    title: "Wohnsitz-Ummeldung",
+    navigator: "ScreenDoesNotExist",
+  },
+  {
     id: "4",
     title: "Kirchenaustritt",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
     id: "5",
     title: "Kindergeld",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
     id: "6",
     title: "Wohngeld",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
-  id: "7",
-  title: "Arbeitslosengeld",
-  navigator: "ScreenDoesNotExist"
-},
-{
+    id: "7",
+    title: "Arbeitslosengeld",
+    navigator: "ScreenDoesNotExist",
+  },
+  {
     id: "8",
     title: "neuer Personalausweiß",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
     id: "9",
     title: "neuer Führerschein",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
     id: "10",
     title: "BAFöG",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
   {
     id: "11",
     title: "Geburtsurkunde",
-    navigator: "ScreenDoesNotExist"
+    navigator: "ScreenDoesNotExist",
   },
-
 ];
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -67,20 +74,22 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-const Antragmenue = ({navigation}) => {
-        const [selectedId, setSelectedId] = useState(null);
-
+const Antragmenue = ({ navigation }) => {
+  const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
     const backgroundColor = item.id === selectedId ? "#e94832" : "#f8c8c1";
-    const color = item.id === selectedId ? 'white' : '#223e4b';
+    const color = item.id === selectedId ? "white" : "#223e4b";
 
     return (
       <Item
         item={item}
-        onPress={() => {setSelectedId(item.id), setTimeout(() => {
-            navigation.navigate(item.navigator)
-          }, 250)}}
+        onPress={() => {
+          setSelectedId(item.id),
+            setTimeout(() => {
+              navigation.navigate(item.navigator);
+            }, 250);
+        }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
@@ -88,12 +97,11 @@ const Antragmenue = ({navigation}) => {
   };
 
   return (
-
     <SafeAreaView style={styles.container}>
-          <View style={styles.headerContainer}>
-    <Text style={styles.logo}>|DeKom. </Text>
-    <NotificationButton />
-  </View>
+      <View style={styles.headerContainer}>
+        <Text style={styles.logo}>|DeKom. </Text>
+        <NotificationButton />
+      </View>
       <FlatList
         data={DATA}
         renderItem={renderItem}
@@ -105,28 +113,28 @@ const Antragmenue = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-    headerContainer: {
-        marginTop:10,
-        flexDirection: "row",
-        justifyContent: "space-between",
-      },
-      logo: {
-        marginBottom: StatusBar.currentHeight ,
-        fontWeight: "bold",
-        fontSize: 38,
-        marginLeft: 20,
-        color: "#223e4b",
-      },
+  headerContainer: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  logo: {
+    marginBottom: StatusBar.currentHeight,
+    fontWeight: "bold",
+    fontSize: 38,
+    marginLeft: 20,
+    color: "#223e4b",
+  },
   container: {
     flex: 1,
-   // marginTop: StatusBar.currentHeight || 0,
+    // marginTop: StatusBar.currentHeight || 0,
   },
   item: {
     padding: 20,
     marginVertical: 2,
     marginHorizontal: 16,
     borderRadius: 6,
-    elevation: 1
+    elevation: 1,
   },
   title: {
     fontSize: 18,

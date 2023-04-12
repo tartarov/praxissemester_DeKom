@@ -1,25 +1,25 @@
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
-import { DataContext } from "../context/DataContext";
+import { DataContext } from "../../context/DataContext";
 import { useContext } from "react";
 import { StyleSheet, View, Image } from "react-native";
-import ButtonGhost from "../components/ButtonGhost";
+import ButtonGhost from "../../components/ButtonGhost";
 
 let html;
 
-export default function ExportPDFTestScreen({route, navigation}) {
-const antragData = route.params.antragData;
+export default function ExportPDFTestScreen({ route, navigation }) {
+  const antragData = route.params.antragData;
 
-const { getUserData } = useContext(DataContext);
+  const { getUserData } = useContext(DataContext);
 
-function getCheckBoxValue(boolean){
-    if(boolean == true) {
-        return "checked";
+  function getCheckBoxValue(boolean) {
+    if (boolean == true) {
+      return "checked";
     } else {
-        return "";
-    };
-};
+      return "";
+    }
+  }
 
   async function loadUserData() {
     data = await getUserData();
@@ -40,24 +40,24 @@ function getCheckBoxValue(boolean){
       staatsangehörigkeit: data.staatsangehoerigkeit,
       signatur: data.signatur,
 
-  einsichtsland: antragData.konsulatLand,
-  bezahlungsdatum: antragData.zahlungsDatum,
+      einsichtsland: antragData.konsulatLand,
+      bezahlungsdatum: antragData.zahlungsDatum,
 
-  verwendungszweck: antragData.verwendungszweck,
-  bezeichung: antragData.behörde,
-  anschrift: antragData.anschriftBehörde,
+      verwendungszweck: antragData.verwendungszweck,
+      bezeichung: antragData.behörde,
+      anschrift: antragData.anschriftBehörde,
 
-  checkbox1: getCheckBoxValue(antragData.normales),  //Führungszeugnis
-  checkbox2: getCheckBoxValue(antragData.erweitertes),  //erweitertes Führungszeugnis
-  checkbox3: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift
-  checkbox4: getCheckBoxValue(antragData.übersendungBehörde), //Vorlage bei Behörde
-  checkbox7: getCheckBoxValue(antragData.einsichtÜbersendungBotschaft), //Deutsche Botschaft
-  checkbox8: getCheckBoxValue(antragData.einsichtÜbersendungKonsulat), //Deutsches Konsulat in Land zur Einsichtnahme
-  checkbox9: getCheckBoxValue(antragData.bezahlungDeKom), //Gebühr bereits bezahlt
-  checkbox10: getCheckBoxValue(antragData.bezahlungBereitsGemacht), //überwiesen an Datum auf das Bundesamt für Justiz Konto
-}
+      checkbox1: getCheckBoxValue(antragData.normales), //Führungszeugnis
+      checkbox2: getCheckBoxValue(antragData.erweitertes), //erweitertes Führungszeugnis
+      checkbox3: getCheckBoxValue(antragData.übersendungPrivat), //Übersendung an PrivatAnschrift
+      checkbox4: getCheckBoxValue(antragData.übersendungBehörde), //Vorlage bei Behörde
+      checkbox7: getCheckBoxValue(antragData.einsichtÜbersendungBotschaft), //Deutsche Botschaft
+      checkbox8: getCheckBoxValue(antragData.einsichtÜbersendungKonsulat), //Deutsches Konsulat in Land zur Einsichtnahme
+      checkbox9: getCheckBoxValue(antragData.bezahlungDeKom), //Gebühr bereits bezahlt
+      checkbox10: getCheckBoxValue(antragData.bezahlungBereitsGemacht), //überwiesen an Datum auf das Bundesamt für Justiz Konto
+    };
 
- html = `
+    html = `
  <!doctype html>
  <html id="Test">
  
@@ -88,9 +88,15 @@ function getCheckBoxValue(boolean){
                      <p class="s1"
                          style="padding: 10pt; margin-left: 0pt;display:inline-block ;text-indent: 0pt;line-height: 12pt;text-align: left;border-radius: 10px ;border:black solid 1px;">
                          <span class="h3">Absender: </span>(<u>Bitte aktuelle Privatanschrift eintragen</u>)<br><br>
-                         <span id="nameHolder" class="p">${userData.vorname+ " " + userData.name}</span><br>
-                         <span id="adresseHolder" class="p">${userData.straße+ " " + userData.hausnummer}</span><br>
-                         <span id="ortHolder" class="p">${userData.postleitzahl+ " " + userData.stadt}</span>
+                         <span id="nameHolder" class="p">${
+                           userData.vorname + " " + userData.name
+                         }</span><br>
+                         <span id="adresseHolder" class="p">${
+                           userData.straße + " " + userData.hausnummer
+                         }</span><br>
+                         <span id="ortHolder" class="p">${
+                           userData.postleitzahl + " " + userData.stadt
+                         }</span>
                      </p>
                  </div>
              </div>
@@ -136,7 +142,9 @@ function getCheckBoxValue(boolean){
                  <input type="checkbox" id="checkBox7" ${userData.checkbox7}>
                  <label> Deutsche Botschaft / </label><br>
                  <input type="checkbox" id="checkBox8" ${userData.checkbox8}>
-                 <label id="einsichtLandHolder"> Deutsches Konsulat in <b>${userData.einsichtsland}</b> zur Einsichtnahme. (Bitte Hinweise auf
+                 <label id="einsichtLandHolder"> Deutsches Konsulat in <b>${
+                   userData.einsichtsland
+                 }</b> zur Einsichtnahme. (Bitte Hinweise auf
                      Seite 2
                      dieses Vordrucks
                      beachten!) </label>
@@ -150,7 +158,9 @@ function getCheckBoxValue(boolean){
              <label> Bereits bezahlt </label>
              <p style="margin-top: 3pt; margin-bottom: 3pt;">oder</p>
              <input type="checkbox" id="checkBox10" ${userData.checkbox10}>
-             <label id="bezahlungDatumHolder"> überwiesen am <b>${userData.bezahlungsdatum}</b>
+             <label id="bezahlungDatumHolder"> überwiesen am <b>${
+               userData.bezahlungsdatum
+             }</b>
                  auf das Konto des Bundesamts für Justiz</label><br> <br>
              <p class="s3" style="padding-left: 199pt;text-indent: 0pt;line-height: 10pt;text-align: left;">Deutsche
                  Bundesbank <br>
@@ -170,10 +180,18 @@ function getCheckBoxValue(boolean){
                      <h3> Meine Personaldaten lauten:</h3>
                      <p id="geburtsnameHolder" style="margin-top: -10pt"> Geburtsname (Pflichtfeld):
                          ${userData.geburtsname}</p>
-                     <p id="familiennameHolder" style="margin-top: -5pt"> Familienname: ${userData.name}</p>
-                     <p id="vornameHolder" style="margin-top: -5pt"> Vorname(n): ${userData.vorname}</p>
-                     <p id="geburtsdatumHolder" style="margin-top: -5pt"> Geburtsdatum: ${userData.geburtsdatum}</p>
-                     <p id="geburtsortHolder" style="margin-top: -5pt"> Geburtsort: ${userData.geburtsort}</p>
+                     <p id="familiennameHolder" style="margin-top: -5pt"> Familienname: ${
+                       userData.name
+                     }</p>
+                     <p id="vornameHolder" style="margin-top: -5pt"> Vorname(n): ${
+                       userData.vorname
+                     }</p>
+                     <p id="geburtsdatumHolder" style="margin-top: -5pt"> Geburtsdatum: ${
+                       userData.geburtsdatum
+                     }</p>
+                     <p id="geburtsortHolder" style="margin-top: -5pt"> Geburtsort: ${
+                       userData.geburtsort
+                     }</p>
                      <p id="staatsangehörigkeitHolder" style="margin-top: -5pt"> Staatsangehörigkeit:
                          ${userData.staatsangehörigkeit}</p>
                  </div>
@@ -186,7 +204,9 @@ function getCheckBoxValue(boolean){
                  <h3 style="padding-top: 4pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Unterschrift der
                      Antrag
                      stellenden Person<span class="s9">: <br>
-                     <img src= "data:image/png;base64,${userData.signatur}" style="width:20%; height:20%; paddingLeft:50%"/>
+                     <img src= "data:image/png;base64,${
+                       userData.signatur
+                     }" style="width:20%; height:20%; paddingLeft:50%"/>
                      <br> </span><span
                          class="s3">..........................................................................................</span>
                  </h3>
@@ -371,7 +391,6 @@ function getCheckBoxValue(boolean){
   }
 
   const generatePdf = async () => {
-
     await loadUserData();
     const file = await printToFileAsync({
       html: html,
@@ -390,15 +409,15 @@ function getCheckBoxValue(boolean){
     <>
       <View style={styles.buttonContainer}>
         <Button label="Export PDF" onPress={generatePdf} />
-        <View style={{marginTop:50}}>
-        <ButtonGhost
+        <View style={{ marginTop: 50 }}>
+          <ButtonGhost
             title="Back"
             label="zurück"
             onPress={() => {
               navigation.navigate("ZahlungsScreen", route);
             }}
           />
-          </View>
+        </View>
       </View>
     </>
   );

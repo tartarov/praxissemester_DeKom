@@ -9,14 +9,14 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import validationColor from "../components/TextInput";
-import Button from "../components/Button.js";
-import TextInput from "../components/TextInput.js";
-import DropDown from "../components/DropDown.js";
+import validationColor from "../../components/TextInput";
+import Button from "../../components/Button.js";
+import TextInput from "../../components/TextInput.js";
+import DropDown from "../../components/DropDown.js";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import SignUpAdress from "./SignUpAdress";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 const nameRegex = /^[a-zA-Z\s]+[\u00C0-\u017Fa-zA-Z']+$/;
 
@@ -114,14 +114,12 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 
-
-function navigateUs () {
-  const navigation = useNavigation(); 
-return navigation.navigate('SignUpAdress');; // navigation.navigate("MainScreen");
-};
+function navigateUs() {
+  const navigation = useNavigation();
+  return navigation.navigate("SignUpAdress"); // navigation.navigate("MainScreen");
+}
 
 export default function SignUp({ navigation }) {
-
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
       validationSchema: SignUpSchema,
@@ -146,10 +144,10 @@ export default function SignUp({ navigation }) {
       Geschlecht: ${Object.values(selectedItem)[1]},Geburtsdatum: ${
           day + " " + month + " " + year
         }`);
-        values.geschlecht = Object.values(selectedItem)[1]
-        values.geburtsdatum = day + " " + month + " " + year
-        console.log("GEBURTSDATUM: " + values.geburtsdatum)
-        navigation.navigate("SignUpAdress", {values})
+        values.geschlecht = Object.values(selectedItem)[1];
+        values.geburtsdatum = day + " " + month + " " + year;
+        console.log("GEBURTSDATUM: " + values.geburtsdatum);
+        navigation.navigate("SignUpAdress", { values });
       },
     });
 
@@ -444,7 +442,6 @@ export default function SignUp({ navigation }) {
               </Col>
             </Row>
           </View>
-
         </View>
         <View>
           <Text style={[styles.text, { marginTop: 50 }]}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import RNModal from "react-native-modal";
 type ModalProps = {
   isVisible: boolean;
@@ -47,9 +47,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
     borderRadius: 8,
-   // borderWidth: 1,
-    //borderColor: "#000",
-   // borderStyle: "solid",
     elevation: 6,
   },
   header: {

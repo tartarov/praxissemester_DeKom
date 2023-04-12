@@ -5,8 +5,8 @@ const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fetch = require("node-fetch");
-const { cookieJWTAuth } = require("./middleware/cookieJWTAuth");
-const {formattingResponse} = require("./middleware/Formatter.js")
+const { cookieJWTAuth } = require("../middleware/cookieJWTAuth");
+const {formattingResponse} = require("../middleware/Formatter.js")
 const jwt_decode = require("jwt-decode");
 global.atob = require("atob");
 global.Blob = require("node-blob");

@@ -2,16 +2,16 @@ import { StyleSheet, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./HomeScreen";
-import Menu from "./Menu";
+import Menu from "../Menü/Menu";
 import Antragmenue from "./AntragListe";
-import ErteilungScreen from "./Antrag/ErteilungScreen";
-import FragenScreen from "./Antrag/FragenScreen";
-import { ScreenDoesNotExist } from "./ScreenDoesNotExist";
-import SignatureCaptures from "./SignatureScreen";
+import ErteilungScreen from "../Antrag/ErteilungScreen";
+import FragenScreen from "../Antrag/FragenScreen";
+import { ScreenDoesNotExist } from "../ScreenDoesNotExist";
+import SignatureCaptures from "../Menü/SignatureScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ExportPDFTestScreen from "./ExportPDFTestScreen";
-import StaatsangehoerigkeitsScreen from "./Antrag/StaatsangehoerigkeitScreens";
-import ZahlungsScreen from "./Antrag/ZahlungsScreen";
+import ExportPDFTestScreen from "../Antrag/ExportPDFTestScreen";
+import StaatsangehoerigkeitsScreen from "../Antrag/StaatsangehoerigkeitScreens";
+import ZahlungsScreen from "../Antrag/ZahlungsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -101,7 +101,7 @@ function MainScreen() {
             tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
           }}
         />
-         <Tab.Screen
+        <Tab.Screen
           name="ZahlungsScreen"
           component={ZahlungsScreen}
           options={{
