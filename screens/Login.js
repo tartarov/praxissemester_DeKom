@@ -1,11 +1,7 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useContext } from "react";
 import {
-  ActivityIndicator,
   Text,
   View,
-  StyleSheet,
-  Modal,
-  Pressable,
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native"; //some imports not in use (yet)
@@ -41,7 +37,6 @@ export default function Login({ navigation }) {
       validationSchema: LoginSchema,
       initialValues: { id: "", pin: "" },
       onSubmit: (values) => {
-        //navigation.navigate("HomeScreen")  DAS KLAPPT HIER AUCH NICHT MEHR
         fetchData({ navigation });
         login(values.pin, values.id);
       },

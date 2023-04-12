@@ -9,10 +9,7 @@ import ButtonGhost from "../components/ButtonGhost";
 let html;
 
 export default function ExportPDFTestScreen({route, navigation}) {
-let antragData = route.params.antragData;
-let antragDataStringy = JSON.stringify(antragData);
-console.log("Antrag Data:  " + antragDataStringy);
-
+const antragData = route.params.antragData;
 
 const { getUserData } = useContext(DataContext);
 
@@ -26,7 +23,6 @@ function getCheckBoxValue(boolean){
 
   async function loadUserData() {
     data = await getUserData();
-    console.log("DIE SIGNATUR IN DER HTML:" + data.signatur)
 
     const userData = {
       vorname: data.vorname,
@@ -375,7 +371,6 @@ function getCheckBoxValue(boolean){
   }
 
   const generatePdf = async () => {
-
 
     await loadUserData();
     const file = await printToFileAsync({

@@ -18,59 +18,37 @@ import { AuthContext } from "../context/AuthContext";
 import SignUpAdress from "./SignUpAdress";
 import { useNavigation } from '@react-navigation/native';
 
+const nameRegex = /^[a-zA-Z\s]+[\u00C0-\u017Fa-zA-Z']+$/;
+
 const SignUpSchema = Yup.object().shape({
   titel: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   vorname: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   zweitname: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   nachname: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   behoerde: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   geburtsort: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   augenfarbe: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
   groesse: Yup.string()
     .matches(/^\d+$/, "Only numbers")
     .min(1, "Too short!")
     .max(3, "Too long!"),
   staatsangehoerigkeit: Yup.string()
     .min(1, "Too Short!")
-    .matches(
-      /^[aA-zZ\s]+[\u00C0-\u017Fa-zA-Z']+$/,
-      "Only alphabets are allowed for this field "
-    ),
+    .matches(nameRegex, "Only alphabets are allowed for this field"),
 });
 
 const styles = {
@@ -470,7 +448,7 @@ export default function SignUp({ navigation }) {
         </View>
         <View>
           <Text style={[styles.text, { marginTop: 50 }]}>
-            Alle notwendigen Daten können sie 1zu1 aus ihrem Personalausweis
+            Alle notwendigen Daten können Sie 1zu1 aus Ihrem Personalausweis
             entnehmen.
           </Text>
         </View>

@@ -1,43 +1,37 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const { send, allowedNodeEnvironmentFlags } = require("process");
 const cookieParser = require("cookie-parser");
-const sessions = require("express-session");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("./middleware/cookieJWTAuth");
+const {formattingResponse} = require("./middleware/Formatter.js")
 const jwt_decode = require("jwt-decode");
 global.atob = require("atob");
-global.Blob = require('node-blob');
-const url = require('url');
+global.Blob = require("node-blob");
 
 const connectionTestdb = mysql.createPool({
-  host: "localhost",
-  port: "3306",
-  user: "root",
-  password: "password", // ''
-  database: "testdb",
+  host: process.env.TEST_DB_HOST,
+  port: process.env.TEST_DB_PORT,
+  user: process.env.TEST_DB_USER,
+  password: process.env.TEST_DB_PASSWORD, // ''
+  database: process.env.TEST_DB_DATABASE,
 });
 
 const connectionDekomdb = mysql.createPool({
-  host: "localhost",
-  port: "3306",
-  user: "root",
-  password: "password", // ''
-  database: "dekomdb",
+  host: process.env.DEKOM_DB_HOST,
+  port: process.env.DEKOM_DB_PORT,
+  user: process.env.DEKOM_DB_USER,
+  password: process.env.DEKOM_DB_PASSWORD, // ''
+  database: process.env.DEKOM_DB_DATABASE,
 });
 
-function formattingResponse(token, body) {
-  let response = { token: token, body: body };
-  return response;
-}
-
-// Starting our app.
 const app = express();
-app.use(bodyParser.json({ type: "application/json" }));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+//app.use(session({ secret: 'mySecret', resave: false, saveUninitialized: false }));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -47,209 +41,162 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(cookieParser());
-
-let ourConnection;
-
 const getHash = async (value) => {
   const { createHmac } = await import("crypto");
-  const secret = "abcdefgahah";
+  const secret = process.env.HASH_SECRET;
   let hash = createHmac("sha256", secret).update(value).digest("hex");
   return hash;
 };
 
-app.get("/auth.behoerde", function (reqTestdb, resTestdb) {
-  console.log("Ich bin hier!!!!!");
-  connectionTestdb.getConnection(function (err, ourConnection) {
+const authorized = async (id, pin) => {
+  
+  try {
+    const response = await fetch(
+      `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
+    );
+    const responseJSON = await response.json();
+    return responseJSON;
+  } catch (error) {
+    console.error(`Error during authorization: ${error.message}`);
+    throw error;
+  }
+};
+
+app.get("/auth.behoerde", (req, res) => {
+  const { pin, id } = req.query;
+  connectionTestdb.getConnection((err, ourConnection) => {
     connectionTestdb.query(
-      "SELECT * FROM testdb.userdaten WHERE PIN=" +
-        reqTestdb.query.pin +
-        " AND ID='" +
-        reqTestdb.query.id +
-        "'",
-      function (error, results, fields) {
-        console.log("Result of Query" + results);
-        console.log(results);
-        if (results.length) {
-          resTestdb.send(true);
-        } else {
-          resTestdb.send(false);
-        }
+      "SELECT * FROM testdb.userdaten WHERE PIN = ? AND ID = ?",
+      (values = [pin, id]),
+      (err, results, fields) => {
+        res.send(results.length > 0);
         ourConnection.release();
-        if (error) throw error;
+        if (err) {
+          console.error("Error querying database:", err);
+          res.send(false);
+          return;
+        }
       }
     );
   });
 });
 
-const authorized = async (id, pin) => {
-  let respond = await fetch(
-    "http://92.116.9.113:3000/auth.behoerde?pin=" + pin + "&id=" + id
-  ).catch(function (error) {
-    console.log(
-      "There has been a problem with your fetch operation: " + error.message
-    );
-    throw error;
-  });
-  let respondJSON = await respond.json();
-  let respondSTRING = JSON.stringify(respondJSON);
-  return respondSTRING;
-};
+app.get("/testdb.userdaten", async (req, res) => {
+  const { id, pin } = req.query;
 
-app.get("/testdb.userdaten", async function (reqTestdb, resTestdb) {
-  console.log(
-    "ServerSide - reqTestDb:" +
-      reqTestdb.query.id +
-      "------------- " +
-      reqTestdb.query.pin
-  );
-  let value = await authorized(reqTestdb.query.id, reqTestdb.query.pin);
+  const isAuthenticated = await authorized(id, pin);
 
-  if (value == "true") {
-    let user = { id: reqTestdb.query.id, pin: reqTestdb.query.pin };
+  if (isAuthenticated) {
+    let user = { id: id, pin: pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      //JWT
-      expiresIn: "10m",
+      expiresIn: "1.5m",
     });
-    resTestdb.cookie("token", token, {
-      httpOnly: true,
-    });
-    resTestdb.send(formattingResponse(token, { value: true }));
+
+    res.cookie("token", token, { httpOnly: true });
+    res.send(formattingResponse(token, { value: true }));
   } else {
-    resTestdb.send(formattingResponse(null, { value: null }));
+    res.send(formattingResponse(null, { value: null }));
   }
 });
 
-app.get(
-  "/dekomdb.dekom_user/identify",
-  cookieJWTAuth,
-  function (reqDekomdb, resDekmdb) {
-    const token = reqDekomdb.cookies.token; //so bekommen wir den Token
-    let decoded = jwt_decode(token);
-    let decodedJSON = JSON.stringify(decoded);
-    let decodedParseToken = JSON.parse(decodedJSON);
-    connectionDekomdb.getConnection(function (err, ourConnection) {
-      getHash(decodedParseToken.user.id).then((hash) => {
-        console.log(hash);
-        connectionDekomdb.query(
-          "SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='" + hash + "';",
-          function (error2, results2, fields) {
-            if (error2) {
-              console.log("An error occurred:", error2.message);
-              throw error2
-            } else {
+app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
+  const token = req.cookies.token; //so bekommen wir den Token
+  const decoded = jwt_decode(token);
+  const userIdHash = await getHash(decoded.user.id);
 
-              if (results2.length) {
-                console.log("User found successfully.");
-                let buf="";
-                if(results2[0].SIGNATUR !== null){
-                    buf = new Buffer.from(results2[0].SIGNATUR).toString('base64');
-                 console.log("buf: " + buf);
-                  } else{
-                     buf = "";
-                  }
-                console.log("results2 : " + results2[0].SIGNATUR)
-                resDekmdb.send(
-                  formattingResponse(token, { value: true, result: results2, signature: buf })
-                );
-              } else {
-                console.log("User-------- not found.");
-                resDekmdb.send(formattingResponse(token, { value: false }));
-              }
-            }
-            ourConnection.release();
+  const query = `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    connectionDekomdb.query(query, (error, results, fields) => {
+      if (error) {
+        console.log("An error occurred:", error.message);
+        throw error;
+      } else {
+        if (results.length) {
+          console.log("User found successfully.");
+          let buf = "";
+          if (results[0].SIGNATUR !== null) {
+            buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
+          } else {
+            buf = "";
           }
-        );
-      });
+          res.send(
+            formattingResponse(token, {
+              value: true,
+              result: results,
+              signature: buf,
+            })
+          );
+        } else {
+          console.log("User-------- not found.");
+          res.send(formattingResponse(token, { value: false }));
+        }
+      }
+      ourConnection.release();
     });
-  }
-);
+  });
+});
 
-app.post("/user/save", cookieJWTAuth, function (req, resData) {
-  console.log("Request triggered");
-  console.log("USERDATA IN ROUTES: " + req.body.geschlecht);
-  let userData = req.body;
-  console.log("UserData beim Server: " + JSON.stringify(userData));
-  let token = req.cookies.token;
-  let decoded = jwt_decode(token);
-  let decodedJSON = JSON.stringify(decoded);
-  let decodedParseToken = JSON.parse(decodedJSON);
-  connectionDekomdb.getConnection(function (err, ourConnection) {
-    getHash(decodedParseToken.user.id).then((hash) => {
-      connectionDekomdb.query(
-        "INSERT INTO dekomdb.dekom_user (USER_ID_HASH,TITEL,NAME,VORNAME,ZWEITNAME, GESCHLECHT,GEBURTSDATUM,AUGENFARBE,GROESSE,VORWAHL,TELEONNUMMER,BUNDESLAND,GEBURTSORT,STADT,BEHOERDE,PLZ,STRASSE,HAUSNUMMER,E_MAIL,STAATSANGEHOERIGKEIT) VALUES ('" +
-          hash +
-          "','" +
-          userData.titel +
-          "','" +
-          userData.nachname +
-          "','" +
-          userData.vorname +
-          "','" +
-          userData.zweitname +
-          "','" +
-          userData.geschlecht +
-          "','" +
-          userData.geburtsdatum +
-          "','" +
-          userData.augenfarbe +
-          "','" +
-          userData.groesse +
-          "','" +
-          userData.vorwahl +
-          "','" +
-          userData.telefonnummer +
-          "','" +
-          userData.bundesland +
-          "','" +
-          userData.geburtsort +
-          "','" +
-          userData.stadt +
-          "','" +
-          userData.behoerde +
-          "','" +
-          userData.postleitzahl +
-          "','" +
-          userData.straße +
-          "','" +
-          userData.hausnummer +
-          "','" +
-          userData.email +
-          "','" +
-          userData.staatsangehoerigkeit +
-          "');"
-      );
-    });
+app.post("/user/save", cookieJWTAuth, async (req, resData) => {
+  const userData = req.body;
+
+  const token = req.cookies.token;
+  const decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.id);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    connectionDekomdb.query(
+      "INSERT INTO dekomdb.dekom_user (USER_ID_HASH,TITEL,NAME,VORNAME,ZWEITNAME, GESCHLECHT,GEBURTSDATUM,AUGENFARBE,GROESSE,VORWAHL,TELEONNUMMER,BUNDESLAND,GEBURTSORT,STADT,BEHOERDE,PLZ,STRASSE,HAUSNUMMER,E_MAIL,STAATSANGEHOERIGKEIT) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      (values = [
+        hash,
+        userData.titel,
+        userData.nachname,
+        userData.vorname,
+        userData.zweitname,
+        userData.geschlecht,
+        userData.geburtsdatum,
+        userData.augenfarbe,
+        userData.groesse,
+        userData.vorwahl,
+        userData.telefonnummer,
+        userData.bundesland,
+        userData.geburtsort,
+        userData.stadt,
+        userData.behoerde,
+        userData.postleitzahl,
+        userData.straße,
+        userData.hausnummer,
+        userData.email,
+        userData.staatsangehoerigkeit,
+      ])
+    );
     ourConnection.release();
   });
   resData.send(formattingResponse(token, { value: true }));
 });
 
-app.post("/user/save/signature", cookieJWTAuth, function (req, resData) { 
-console.log("hello!!!!!!")
-let token = req.cookies.token;
-let decoded = jwt_decode(token);
-let decodedJSON = JSON.stringify(decoded);
-let decodedParseToken = JSON.parse(decodedJSON);
-connectionDekomdb.getConnection(function (err, ourConnection) {
-  console.log("ich setze jetzt ein!")
-  getHash(decodedParseToken.user.id).then((hash) => {
+app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.id);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
-    "UPDATE dekomdb.dekom_user SET SIGNATUR = ? WHERE USER_ID_HASH= ? ;", values = [new Buffer.from(req.body.base, 'base64'), hash], function(err,res){
-        if(err){
-          throw err
+      "UPDATE dekomdb.dekom_user SET SIGNATUR = ? WHERE USER_ID_HASH= ? ;",
+      (values = [new Buffer.from(req.body.base, "base64"), hash]),
+      function (err, res) {
+        if (err) {
+          throw err;
         }
       }
     );
+    ourConnection.release();
   });
-  ourConnection.release();
-});
-resData.send(formattingResponse(token, { value: true }));
+  resData.send(formattingResponse(token, { value: true }));
 });
 
 // Starting our server.
-app.listen(3000, () => {
+app.listen(process.env.PORT, process.env.IP, () => {
   console.log(
-    "Go to http://93.132.35.91:3000/testdb.userdaten so you can see the data."
+    `Server has been started and listens to port ${process.env.PORT}.`
   );
 });

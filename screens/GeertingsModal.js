@@ -13,11 +13,6 @@ import Button from "../components/Button";
     setModalVisible(!isModalVisible);
   };
 
-
-//console.log("DATALALA: " + JSON.stringify(data.document.vorname))
- 
-//let greetingsName = "Willkommen, " + data[0].document.vorname
-
   return (
     <View style={{ flex: 1 }}>
       <Modal isVisible={isModalVisible}>

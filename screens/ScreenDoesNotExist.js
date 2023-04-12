@@ -1,5 +1,5 @@
 import LottieView from 'lottie-react-native';
-import { useRef, useState, useContext, useEffect } from "react";
+import { useState } from "react";
 import {
     View,
     StyleSheet,

@@ -19,15 +19,15 @@ export default PrimaryButton;
 const styles = StyleSheet.create({
     buttonOuterContainer: {
         borderRadius: 28,
-        margin: 4,
+        margin: 9,
         overflow: 'hidden',
         width: width * 0.5,
+        elevation: 5,
     },
     buttonInnerContainer:{
         backgroundColor: '#e94832',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        elevation: 2,
+        paddingVertical: 1,
+        paddingHorizontal: 20,
     },
     buttonText: {
         color: 'white',

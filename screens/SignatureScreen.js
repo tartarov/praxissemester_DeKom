@@ -9,14 +9,11 @@ import {
   Alert,
 } from "react-native";
 import { SignatureView } from "react-native-signature-capture-view";
-import { FileWatcherEventKind } from "typescript";
 import ButtonGhost from "../components/ButtonGhost";
 import { AuthContext } from "../context/AuthContext";
-import FormData from 'form-data'
-import { atob } from "js-base64";
 import LottieView from 'lottie-react-native';
+import Loader from "../components/Loader";
 let isVarifiedVar;
-let form;
 
 const SignatureCaptures = ({ navigation }) => {
   const signatureRef = useRef(null);
@@ -25,31 +22,11 @@ const SignatureCaptures = ({ navigation }) => {
   const { isVerified } = useContext(AuthContext);
   isVarifiedVar = isVerified
 
-  const loader = () => {
-
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-         <LottieView
-        autoPlay
-        style={{
-          width: 100,
-          height: 100,
-          backgroundColor: '#eee1',
-          speed: 3
-        }}
-        // Find more Lottie files at https://lottiefiles.com/featured
-        source={require('../assets/loader2.json')}
-      />
-      </View>
-    );
-  
-}
-
   const fetcher = async (stringBase) => {
     console.log("ich bin im fetcher")
     setIsLoading(true);
     let respond = await fetch(
-      "http://92.116.9.113:3000/user/save/signature",
+      "http://192.168.178.181:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -63,16 +40,13 @@ const SignatureCaptures = ({ navigation }) => {
 
       });
 
-      let responseJSON = await respond.json();
-      let responseStringy = JSON.stringify(responseJSON);
-      let responseParsed = JSON.parse(responseStringy);
-  
-      let verified = await isVarifiedVar(responseParsed);
-      if (verified == "verified") {
-        if (responseParsed.body.value == true) {
+      const responseJSON = await respond.json();
+
+      const verificationStatus = await isVarifiedVar(responseJSON);
+
+      if (verificationStatus == "verified" && responseJSON.body.value == true ) {
           console.log("respond contains true => success... YUHU");
           Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
-        }
       }
       setIsLoading(false);
   };
@@ -158,7 +132,7 @@ const SignatureCaptures = ({ navigation }) => {
         </View>
 
         <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
-        {isLoading == true ? loader() :  <Text numberOfLines={10} ellipsizeMode="tail" style={{alignItems: 'center'}}>
+        {isLoading == true ? <Loader/> :  <Text numberOfLines={10} ellipsizeMode="tail" style={{alignItems: 'center'}}>
             {text} 
         {/*  GESPEICHERT! */}
           </Text>

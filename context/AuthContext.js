@@ -1,145 +1,136 @@
-import React, { createContext, useState, useEffect } from "react";
-import { Alert, View } from "react-native";
+import React, { createContext, useEffect, useReducer, useState } from "react";
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LottieView from 'lottie-react-native';
-import checkmark from '../components/animations/checkmark.js'
+
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }, {navigation}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingCorrect, setIsLoadingCorrect] = useState(false);
-  const [userToken, setUserToken] = useState(null);
-  const [userSignedUp, setUserSignedUp] = useState("false");
-  let greetingsName;
+const initialState = {
+  isLoading: false,
+  userToken: null,
+  userSignedUp: false,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload };
+    case "SET_TOKEN":
+      return { ...state, userToken: action.payload };
+    case "SET_SIGNED_UP":
+      return { ...state, userSignedUp: action.payload };
+    case "CLEAR":
+      return { isLoading: false, userToken: null, userSignedUp: false };
+    default:
+      return state;
+  }
+};
+
+export const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { isLoading, userToken, userSignedUp } = state;
+  const ipAddress = "192.168.178.184";
 
   const login = async (userPin, userId) => {
-    setIsLoading(true);
-    console.log("login going into fetch...");
-    let response = await fetch(
-      "http://92.116.9.113:3000/testdb.userdaten?pin=" +
-        userPin +
-        "&id=" +
-        userId
-    ).catch(function (error) {
-      console.log(
-        "There has been a problem with your fetch operation: " + error.message
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      const response = await fetch(
+        `http://${ipAddress}:3000/testdb.userdaten?pin=${userPin}&id=${userId}`
       );
-      throw error;
-    });
-    console.log("login data from behörde fetched.");
-    console.log("login ongoing parsing to get token...");
-    let dataTestdb = await response.json();
-    let resultTestdb = JSON.stringify(dataTestdb);
-    let objTestdb = JSON.parse(resultTestdb);
-    console.log("TOKEN AFTER LOGIN: " + objTestdb.token);
-
-    if (objTestdb.token !== null) {
-      setIsLoadingCorrect(true)
-      console.log("login Token is not null.");
-      setUserToken(objTestdb.token);
-      console.log("login Token inserterted into AsyncStorage!");
-      AsyncStorage.setItem("userToken", objTestdb.token);
-    } else {
-      Alert.alert(
-        "Etwas ist schiefgelaufen.",
-        "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
-      );
+      const requiredToken = await response.json();
+      const token = requiredToken.token
+      console.log("TOKEN: " + token)
+      if (token) {
+        dispatch({ type: "SET_TOKEN", payload: token });
+        AsyncStorage.setItem("userToken", token);
+      } else {
+        Alert.alert(
+          "Etwas ist schiefgelaufen.",
+          "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
+        );
+      }
+    } catch (error) {
+      console.log(`Error during login: ${error.message}`);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
     }
-     setIsLoading(false)
-     setIsLoadingCorrect(false)
   };
 
   const signup = async (userData) => {
-    console.log(
-      "SignUp Process pressed. No function implemented yet. SetUserSignUp stll false."
-    );
-    setIsLoading(true);
-    let response = await fetch("http://92.116.9.113:3000/user/save", {
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    const apiUrl = `http://${ipAddress}:3000/user/save`;
+    const requestOptions = {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       credentials: "same-origin",
-      body: JSON.stringify(userData)
-    });
+      body: JSON.stringify(userData),
+    };
 
-    let responseJSON = await response.json();
-    let responseStringy = JSON.stringify(responseJSON);
-    let responseParsed = JSON.parse(responseStringy);
+    const response = await fetch(apiUrl, requestOptions);
 
-    if ((await isVerified(responseParsed)) == "verified") {
-      if (responseParsed.body.value == true) {
-        console.log("respond contains true => success");
-        setUserSignedUp("true");
-      }
+    const newUser = await response.json();
+
+    const verificationStatus = await isVerified(newUser);
+    if (verificationStatus === "verified" && newUser.body.value === true) {
+      console.log("Signup successful");
+      dispatch({ type: "SET_SIGNED_UP", payload: true });
     }
-    setIsLoading(false);
+    dispatch({ type: "SET_LOADING", payload: false });
   };
 
   const logout = () => {
-    console.log("logut initiated.");
-    setIsLoading(true);
-    setUserToken(null);
+    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch({ type: "CLEAR" });
     AsyncStorage.removeItem("userToken");
     AsyncStorage.removeItem("isSignedUp");
-    console.log(
-      "logut token and Boolean for SignUp deleted from AsyncStorage."
-    );
-    setIsLoading(false);
+    dispatch({ type: "SET_LOADING", payload: false });
   };
 
   const isSignedUp = async () => {
-    setIsLoading(true);
-    console.log(
-      "isSignedUp initiated. preparing fetch with Token from AsyncStorage..."+ process.env.IP_ADRESS
-    );
-    try {
-      let userIsInDataBank = await fetch(
-        "http://92.116.9.113:3000/dekomdb.dekom_user/identify?token=" +
-          userToken
-      );
 
-      console.log("isSignedUp data fetched. Verifying if Token still Valid.");
-      let userSignedUpJSON = await userIsInDataBank.json();
-      let userSignedUpStringy = JSON.stringify(userSignedUpJSON);
-      let userSignedUpPARSED = JSON.parse(userSignedUpStringy);
-      if ((await isVerified(userSignedUpPARSED)) == "verified") {
-        console.log("Bin in if Abfrage");
-        if (userSignedUpPARSED.body.value != false) {
-          console.log("userIsSignedUp: " + userSignedUpPARSED.body.value);
-          console.log("isSignedUp: " + true);
-          setUserSignedUp("true");
-          setIsLoading(false);
-        if (userSignedUpPARSED.body.value == true){
-          greetingsName = userSignedUpPARSED.body.result[0].VORNAME;
-        //  Alert.alert("Willkommen, " + greetingsName + "!");
-        }
-          return true;
-        } else {
-          console.log("userIsSignedUp: " + userSignedUpPARSED.body.value);
-          console.log("isSignedUp: " + false);
-          setUserSignedUp("false");
-          setIsLoading(false);
-          return false;
-        }
-      } else {
-        console.log("alles Käse!");
+
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    try {
+      const response = await fetch(
+        `http://${ipAddress}:3000/dekomdb.dekom_user/identify?token=${userToken}`
+      );
+      const confirmedUser = await response.json();
+
+      const isUserVerified = (await isVerified(confirmedUser)) === "verified";
+
+      if (!isUserVerified) {
+        console.log("Invalid user verification status");
+        dispatch({ type: "SET_LOADING", payload: false });
+        return false;
       }
+
+      const userIsSignedUp = confirmedUser.body.value === true;
+
+      dispatch({
+        type: "SET_SIGNED_UP",
+        payload: userIsSignedUp ? true : false,
+      });
+
+      dispatch({ type: "SET_LOADING", payload: false });
+      console.log("userIsSignedUp: ------ " + userIsSignedUp)
+      return userIsSignedUp;
     } catch (e) {
       console.log(`isSignedUp error : ${e}`);
+      dispatch({ type: "SET_LOADING", payload: false });
+      return false;
     }
-    setIsLoading(false);
   };
 
   const isLoggedIn = async () => {
     try {
-      setIsLoading(true);
-      console.log("ISLOGGEDIN checking Token from Storage");
-      let userToken = await AsyncStorage.getItem("userToken");
-      console.log("ISLOGGEDIN Token from Strage is: " + userToken);
-      setUserToken(userToken);
-      setIsLoading(false);
+      dispatch({ type: "SET_LOADING", payload: true });
+      const userToken = await AsyncStorage.getItem("userToken");
+      dispatch({ type: "SET_TOKEN", payload: userToken });
+      dispatch({ type: "SET_LOADING", payload: false });
     } catch (e) {
       console.log(`isLoggedIn error : ${e}`);
     }
@@ -147,25 +138,20 @@ export const AuthProvider = ({ children }, {navigation}) => {
 
   const isVerified = async (result) => {
     try {
-      /*let resultJSON = await result.json();
-      let resultStringy = JSON.stringify(resultJSON)
-      let resultPARSE = JSON.parse(resultStringy)*/
-      console.log("resultStringy:" + result.body.value);
       if (result.body.value == "logout") {
-        console.log("ich bin im logout");
+        console.log("User session ended.");
         logout();
         Alert.alert("Session wurde beendet. Bitte logge dich nochmal ein.");
       } else {
         return "verified";
       }
-    } catch (e) {
-      console.log(`isVerifiedError error : ${e}`);
+    } catch (error) {
+      console.log(`isVerifiedError error : ${error}`);
     }
   };
 
   useEffect(() => {
     isLoggedIn();
-    //  isSignedUp();
   }, []);
 
   return (
@@ -177,7 +163,6 @@ export const AuthProvider = ({ children }, {navigation}) => {
         isSignedUp,
         isVerified,
         isLoading,
-        isLoadingCorrect,
         userToken,
         userSignedUp,
       }}
@@ -186,5 +171,3 @@ export const AuthProvider = ({ children }, {navigation}) => {
     </AuthContext.Provider>
   );
 };
-
-

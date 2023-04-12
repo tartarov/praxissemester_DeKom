@@ -6,13 +6,12 @@ export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const { isVerified } = useContext(AuthContext);
+  const ipAddress = "192.168.178.183";
 
   let currentData = [
     {
       title: "Personalausweis",
-      color: 'green',
-      //location: 'Max, Mustermann',
-      // date: 'Nov 17th, 2020',
+      color: "green",
       poster:
         "https://images.unsplash.com/photo-1561016444-14f747499547?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80",
       document: {
@@ -27,9 +26,7 @@ export const DataProvider = ({ children }) => {
     },
     {
       title: "Führerschein",
-      color: 'blue',
-      //location: 'Max, Mustermann',
-      // date: 'Sept 3rd, 2020',
+      color: "blue",
       poster:
         "https://images.unsplash.com/photo-1588421357574-87938a86fa28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
       document: {
@@ -46,79 +43,93 @@ export const DataProvider = ({ children }) => {
     },
   ];
 
-  const getWalletData = async () => {
-    let respond = await fetch(
-      "http://92.116.9.113:3000/dekomdb.dekom_user/identify",
+  const fetchData = async () => {
+    const respond = await fetch(
+      `http://192.168.178.184:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }
     );
+    const thisUser = await respond.json();
+    return thisUser;
+  };
 
-    let respJson = await respond.json();
-    let respStringy = JSON.stringify(respJson);
-    console.log("respStringy" + respStringy);
-    let respParsed = JSON.parse(respStringy);
-    console.log("respParsed: " + respParsed.body.value);
+  const getWalletData = async () => {
+    const thisUser = await fetchData();
+    console.log("thisUser.body.result[0];" + thisUser.body.result[0])
+    const personalInfo = thisUser.body.result[0];
+    const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
+      personalInfo;
 
-    if (respParsed.body.value == true) {
-      if ((await isVerified(respParsed)) == "verified") {
-        //Data of Personalausweis
-        currentData[0].document.name = respParsed.body.result[0].NAME;
-        currentData[0].document.vorname = respParsed.body.result[0].VORNAME;
-        currentData[0].document.geburtstag = respParsed.body.result[0].GEBURTSDATUM;
-        currentData[0].document.geburtsort = respParsed.body.result[0].GEBURTSORT;
-        currentData[0].document.staatsangehoerigkeit = respParsed.body.result[0].STAATSANGEHOERIGKEIT;
-
-        //Data of Fuehrerschein
-        currentData[1].document.name = respParsed.body.result[0].NAME;
-        currentData[1].document.vorname = respParsed.body.result[0].VORNAME;
-        currentData[1].document.geburtstag =
-          respParsed.body.result[0].GEBURTSDATUM;
-        currentData[1].document.geburtsort =
-          respParsed.body.result[0].GEBURTSORT;
-
-        setData(currentData);
-
-        console.log("data : " + currentData[0].document.name);
-      }
+    if (thisUser.body.value !== true) {
+      return;
     }
+
+    const verificationStatus = await isVerified(thisUser);
+
+    if (verificationStatus !== "verified") {
+      return;
+    }
+    //Data of Personalausweis
+    currentData[0].document = {
+      ...currentData[0].document,
+      name: NAME,
+      vorname: VORNAME,
+      geburtstag: GEBURTSDATUM,
+      geburtsort: GEBURTSORT,
+      staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
+    };
+
+    //Data of Fuehrerschein
+    currentData[1].document = {
+      ...currentData[1].document,
+      name: NAME,
+      vorname: VORNAME,
+      geburtstag: GEBURTSDATUM,
+      geburtsort: GEBURTSORT,
+    };
+
+    setData(currentData);
   };
 
   const getUserData = async () => {
-    let respond = await fetch(
-      "http://92.116.9.113:3000/dekomdb.dekom_user/identify",
-      {
-        credentials: "same-origin",
-      }
-    );
+    const thisUser = await fetchData();
+    const personalInfo = thisUser.body.result[0];
+    const {
+      NAME,
+      VORNAME,
+      GEBURTSDATUM,
+      GEBURTSORT,
+      STAATSANGEHOERIGKEIT,
+      STRASSE,
+      HAUSNUMMER,
+      PLZ,
+      STADT,
+    } = personalInfo;
 
-    let respJson = await respond.json();
-    let respStringy = JSON.stringify(respJson);
-    console.log("respStringy" + respStringy);
-    let respParsed = JSON.parse(respStringy);
-    console.log("respParsed: " + respParsed.body.value);
-
-    if (respParsed.body.value == true) {
-      if ((await isVerified(respParsed)) == "verified") {
-
-        let data = {
-          name: respParsed.body.result[0].NAME,
-          vorname: respParsed.body.result[0].VORNAME,
-          geburtstag: respParsed.body.result[0].GEBURTSDATUM,
-          geburtsort: respParsed.body.result[0].GEBURTSORT,
-          staatsangehoerigkeit: respParsed.body.result[0].STAATSANGEHOERIGKEIT,
-          strasse: respParsed.body.result[0].STRASSE,
-          hausnummer: respParsed.body.result[0].HAUSNUMMER,
-          plz: respParsed.body.result[0].PLZ,
-          stadt: respParsed.body.result[0].STADT,
-          signatur: respParsed.body.signature
-        }
-
-
-        console.log("data : " + data);
-        return (data);
-      }
+    if (thisUser.body.value !== true) {
+      return;
     }
+
+    const verificationStatus = await isVerified(thisUser);
+
+    if (verificationStatus !== "verified") {
+      return;
+    }
+
+    let data = {
+      name: NAME,
+      vorname: VORNAME,
+      geburtstag: GEBURTSDATUM,
+      geburtsort: GEBURTSORT,
+      staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
+      strasse: STRASSE,
+      hausnummer: HAUSNUMMER,
+      plz: PLZ,
+      stadt: STADT,
+      signatur: thisUser.body.signature,
+    };
+    return data;
   };
 
   return (
