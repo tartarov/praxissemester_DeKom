@@ -1,10 +1,10 @@
-import Button from "../../components/Button";
+import Button from "../../components/Buttons/Button";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { DataContext } from "../../context/DataContext";
 import { useContext } from "react";
 import { StyleSheet, View, Image } from "react-native";
-import ButtonGhost from "../../components/ButtonGhost";
+import ButtonGhost from "../../components/Buttons/ButtonGhost";
 
 let html;
 

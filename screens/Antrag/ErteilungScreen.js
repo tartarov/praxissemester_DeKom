@@ -1,21 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from 'react-native';
+import { Header } from "../../components/Header";
 import InputFeld from "../../components/InputFeld";
 import ZahlAuswahl from "../../components/ZahlAuswahl";
 //Dion
 function ErteilungScreen(){
-//missing check box for the confirmation if you want it sent
-//Missing 
-//then this bekomes editable
-//continue basicly needs nothing because then this is finished
-
-
 
     return(
        <View style={styles.screen}>
-        <View style={styles.headerContainer}>
-            <Text style={styles.logo}>|Dekom</Text>
-        </View>
+      <Header/>
         <InputFeld/>
         {/* text = Wie viele Exemplare des Führungszeugnisses benötigen Sie?, min = 1, max = 10 */}
         <View style={styles.container}>
@@ -43,17 +36,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         paddingTop: 10,
-    },
-    headerContainer : {
-        height: 50,
-        flexDirection: 'row',
-       // justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    logo : {
-        fontWeight: 'bold',
-        fontSize: 38,
-        marginLeft: 20,
     }
 });
 

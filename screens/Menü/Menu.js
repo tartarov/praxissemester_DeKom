@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { View, Text, Alert } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
-import Button from "../../components/Button";
-import NotificationButton from "../../components/NotificationButton";
+import Button from "../../components/Buttons/Button";
+import NotificationButton from "../../components/Buttons/NotificationButton";
 
 export default function Menu({ navigation }) {
   const { logout } = useContext(AuthContext);

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import { Modal } from "../../components/Modal";
 import { DataContext } from "../../context/DataContext";
-import Button from "../../components/Button";
+import Button from "../../components/Buttons/Button";
 
 function ModalTester({ data }) {
   const [isModalVisible, setModalVisible] = useState(true);

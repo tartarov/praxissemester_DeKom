@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import validationColor from "../../../components/TextInput";
-import Button from "../../../components/Button.js";
+import Button from "../../../components/Buttons/Button.js";
 import TextInput from "../../../components/TextInput.js";
 import DropDown from "../../../components/DropDown.js";
 import DateTimePickerModal from "react-native-modal-datetime-picker";

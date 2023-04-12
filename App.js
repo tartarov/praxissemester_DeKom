@@ -8,7 +8,7 @@ import SignUpNav from "./screens/LoginAndRegister/SignUpFlow/SignUpNav";
 import MainScreen from "./screens/MainScreenFlow/MainScreenNav";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext";
-import Loader from "./components/Loader";
+import Loader from "./components/animations/Loader";
 
 const Stack = createNativeStackNavigator();
 let alreadyCalled = false;

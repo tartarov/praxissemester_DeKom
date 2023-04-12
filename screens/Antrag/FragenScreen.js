@@ -1,28 +1,34 @@
-import { LinkingContext } from '@react-navigation/native';
+import { LinkingContext } from "@react-navigation/native";
 //import * as React from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import NumericInput from 'react-native-numeric-input'
-import TextInput from '../../components/TextInput';
-import WeiterButton from '../../components/WeiterButton';
+import NumericInput from "react-native-numeric-input";
+import TextInput from "../../components/TextInput";
+import WeiterButton from "../../components/Buttons/WeiterButton";
 import React, { useRef, useState, useContext } from "react";
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from "../../context/AuthContext";
 import { useFormik } from "formik";
 
-
-
 export default function FragenScreen({ navigation }) {
-
-
   const [state, setState] = React.useState(1);
   const [VorlageCheckboxState, setVorlageCheckboxState] = React.useState(false);
   const [AuslandCheckboxState, setAuslandCheckboxState] = React.useState(false);
-  const [ErweitertesCheckboxState, setErweitertesCheckboxState] = React.useState(false);
-  const [NormalesCheckboxState, setNormalesCheckboxState] = React.useState(false);
-  const [ÜbersendungPrivatCheckboxState, setÜbersendungPrivatCheckboxState] = React.useState(false);
-  const [ÜbersendungBehördeCheckboxState, setÜbersendungBehördeCheckboxState] = React.useState(false);
-  const [EinsichtÜbersendungBotschaftCheckboxState, setEinsichtÜbersendungBotschaftCheckboxState] = React.useState(false);
-  const [EinsichtÜbersendungKonsulatCheckboxState, setEinsichtÜbersendungKonsulatCheckboxState] = React.useState(false);
+  const [ErweitertesCheckboxState, setErweitertesCheckboxState] =
+    React.useState(false);
+  const [NormalesCheckboxState, setNormalesCheckboxState] =
+    React.useState(false);
+  const [ÜbersendungPrivatCheckboxState, setÜbersendungPrivatCheckboxState] =
+    React.useState(false);
+  const [ÜbersendungBehördeCheckboxState, setÜbersendungBehördeCheckboxState] =
+    React.useState(false);
+  const [
+    EinsichtÜbersendungBotschaftCheckboxState,
+    setEinsichtÜbersendungBotschaftCheckboxState,
+  ] = React.useState(false);
+  const [
+    EinsichtÜbersendungKonsulatCheckboxState,
+    setEinsichtÜbersendungKonsulatCheckboxState,
+  ] = React.useState(false);
 
   const verwendungszweck = useRef(null);
   const behörde = useRef(null);
@@ -46,7 +52,7 @@ export default function FragenScreen({ navigation }) {
     behörde: "/",
     anschriftBehörde: "/",
     konsulatLand: "/",
-  }
+  };
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -62,29 +68,38 @@ export default function FragenScreen({ navigation }) {
         antragData.anschriftBehörde = values.anschriftBehörde;
         antragData.konsulatLand = values.land;
         navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
-        
-        console.log("Unser Values sieht so aus: " + JSON.stringify(values));
-        console.log(`Verwendungszweck: ${values.verwendungszweck},Behörde: ${values.behörde
-          }, Anschrift der Behörde: ${values.anschriftBehörde} Land: ${values.land}`);
       },
-  });
+    });
 
   return (
-
     <View>
       <View style={styles.headerContainer}>
         <Text style={styles.logo}>|DeKom. </Text>
-        <WeiterButton onPress={() => {navigation.navigate("Dokumente");}}>zurück</WeiterButton>
-        <WeiterButton onPress={() => { 
-          handleSubmit();
-        }}>weiter</WeiterButton>
+        <WeiterButton
+          onPress={() => {
+            navigation.navigate("Dokumente");
+          }}
+        >
+          zurück
+        </WeiterButton>
+        <WeiterButton
+          onPress={() => {
+            handleSubmit();
+          }}
+        >
+          weiter
+        </WeiterButton>
       </View>
       <ScrollView>
         <View style={styles.bodyContainer}>
-          <Text style={styles.headline}>Ergänzende Daten - Angaben zum Führungszeugnis</Text>
+          <Text style={styles.headline}>
+            Ergänzende Daten - Angaben zum Führungszeugnis
+          </Text>
           <Text style={styles.bottomline}>Zutreffendes bitte Ankreuzen!</Text>
           <View style={[styles.questionContainer, styles.white]}>
-            <Text style={styles.questionText}>Benötigen Sie ein normales Führungszeugnis?</Text>
+            <Text style={styles.questionText}>
+              Benötigen Sie ein normales Führungszeugnis?
+            </Text>
             <View style={styles.checkbox}>
               <BouncyCheckbox
                 disableText={false}
@@ -99,11 +114,12 @@ export default function FragenScreen({ navigation }) {
             </View>
           </View>
           <View style={[styles.textBetweenContainer, styles.white]}>
-            <Text style={styles.textBetween
-            }>Oder</Text>
+            <Text style={styles.textBetween}>Oder</Text>
           </View>
           <View style={[styles.questionContainer, styles.white]}>
-            <Text style={styles.questionText}>Benötigen Sie ein erweitertes Führungszeugnis?</Text>
+            <Text style={styles.questionText}>
+              Benötigen Sie ein erweitertes Führungszeugnis?
+            </Text>
             <View style={styles.checkbox}>
               <BouncyCheckbox
                 disableText={false}
@@ -113,12 +129,17 @@ export default function FragenScreen({ navigation }) {
                 unfillColor="#FFFFFF"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
-                onPress={() => setErweitertesCheckboxState(!ErweitertesCheckboxState)}
+                onPress={() =>
+                  setErweitertesCheckboxState(!ErweitertesCheckboxState)
+                }
               />
             </View>
           </View>
           <View style={[styles.questionContainer]}>
-            <Text style={styles.questionText}>Bitten Sie um die Übersendung an Ihre oben genannte private Anschrift?</Text>
+            <Text style={styles.questionText}>
+              Bitten Sie um die Übersendung an Ihre oben genannte private
+              Anschrift?
+            </Text>
             <View style={styles.checkbox}>
               <BouncyCheckbox
                 disableText={false}
@@ -128,12 +149,19 @@ export default function FragenScreen({ navigation }) {
                 unfillColor="#FFFFFF"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
-                onPress={() => setÜbersendungPrivatCheckboxState(!ÜbersendungPrivatCheckboxState)}
+                onPress={() =>
+                  setÜbersendungPrivatCheckboxState(
+                    !ÜbersendungPrivatCheckboxState
+                  )
+                }
               />
             </View>
           </View>
           <View style={[styles.questionContainer, styles.white]}>
-            <Text style={styles.questionText}>Bitten Sie um die Übersendung des Führungszeugnisses zur Vorlage an die deutsche Behörde?</Text>
+            <Text style={styles.questionText}>
+              Bitten Sie um die Übersendung des Führungszeugnisses zur Vorlage
+              an die deutsche Behörde?
+            </Text>
             <View style={styles.checkbox}>
               <BouncyCheckbox
                 disableText={false}
@@ -143,12 +171,19 @@ export default function FragenScreen({ navigation }) {
                 unfillColor="#FFFFFF"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
-                onPress={() => setÜbersendungBehördeCheckboxState(!ÜbersendungBehördeCheckboxState)}
+                onPress={() =>
+                  setÜbersendungBehördeCheckboxState(
+                    !ÜbersendungBehördeCheckboxState
+                  )
+                }
               />
             </View>
           </View>
           <View style={[styles.textBetweenContainer, styles.white]}>
-            <Text style={styles.textBetween}>Bei Übersendung an eine deutsche Behörde sind zusätzlich folgende Angaben nötig:</Text>
+            <Text style={styles.textBetween}>
+              Bei Übersendung an eine deutsche Behörde sind zusätzlich folgende
+              Angaben nötig:
+            </Text>
           </View>
           <View style={[styles.textInputContainer, styles.white]}>
             <View style={styles.textInputContainerBetween}>
@@ -186,8 +221,8 @@ export default function FragenScreen({ navigation }) {
               ></TextInput>
             </View>
             <View style={styles.textInputContainerBetween}>
-              <TextInput 
-              placeholder="Anschrift der Behörde"
+              <TextInput
+                placeholder="Anschrift der Behörde"
                 ref={anschriftBehörde}
                 autoCompleteType="text"
                 keyboardType="default"
@@ -203,8 +238,11 @@ export default function FragenScreen({ navigation }) {
             </View>
           </View>
           <View style={[styles.textBetweenContainer]}>
-            <Text style={[styles.textBetween, { marginTop: 20 }
-            ]}>Für den Fall, dass das Führungszeugnis zur Vorlage einer Behörde Eintragungnen enthält, bitten Sie zur Einsichtnahme vor Versendung an die oben bezeichnete Behörde um Übersendung an:</Text>
+            <Text style={[styles.textBetween, { marginTop: 20 }]}>
+              Für den Fall, dass das Führungszeugnis zur Vorlage einer Behörde
+              Eintragungnen enthält, bitten Sie zur Einsichtnahme vor Versendung
+              an die oben bezeichnete Behörde um Übersendung an:
+            </Text>
           </View>
           <View style={[styles.questionContainer]}>
             <Text style={styles.questionText}>Die Deutsche Botschaft</Text>
@@ -217,17 +255,19 @@ export default function FragenScreen({ navigation }) {
                 unfillColor="#FFFFFF"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
-                onPress={() => setEinsichtÜbersendungBotschaftCheckboxState(!EinsichtÜbersendungBotschaftCheckboxState)}
+                onPress={() =>
+                  setEinsichtÜbersendungBotschaftCheckboxState(
+                    !EinsichtÜbersendungBotschaftCheckboxState
+                  )
+                }
               />
             </View>
           </View>
           <View style={[styles.textBetweenContainer]}>
-            <Text style={styles.textBetween
-            }>Oder</Text>
+            <Text style={styles.textBetween}>Oder</Text>
           </View>
           <View style={[styles.questionContainer]}>
-            <Text style={styles.questionText
-            }>das deutsche Konsulat in</Text>
+            <Text style={styles.questionText}>das deutsche Konsulat in</Text>
             <View style={styles.checkbox}>
               <BouncyCheckbox
                 disableText={false}
@@ -237,11 +277,20 @@ export default function FragenScreen({ navigation }) {
                 unfillColor="#FFFFFF"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
-                onPress={() => setEinsichtÜbersendungKonsulatCheckboxState(!EinsichtÜbersendungKonsulatCheckboxState)}
+                onPress={() =>
+                  setEinsichtÜbersendungKonsulatCheckboxState(
+                    !EinsichtÜbersendungKonsulatCheckboxState
+                  )
+                }
               />
             </View>
           </View>
-          <View style={[styles.textInputContainer, { marginBottom: 20, marginTop: -15 }]}>
+          <View
+            style={[
+              styles.textInputContainer,
+              { marginBottom: 20, marginTop: -15 },
+            ]}
+          >
             <View style={{ alignSelf: "center", width: 340 }}>
               <TextInput
                 placeholder="Land"
@@ -260,11 +309,13 @@ export default function FragenScreen({ navigation }) {
             </View>
           </View>
           <View style={[styles.questionContainer, styles.white]}>
-            <Text style={styles.questionText}>Wie viele Exemplare des Führungszeugnisses benötigen Sie?</Text>
+            <Text style={styles.questionText}>
+              Wie viele Exemplare des Führungszeugnisses benötigen Sie?
+            </Text>
             <View style={[styles.checkbox, { marginRight: 80 }]}>
               <NumericInput
                 value={state.value}
-                onChange={value => setState({ value })}
+                onChange={(value) => setState({ value })}
                 minValue={1}
                 maxValue={10}
                 onLimitReached={(isMax, msg) => console.log(isMax, msg)}
@@ -272,15 +323,18 @@ export default function FragenScreen({ navigation }) {
                 totalHeight={30}
                 iconSize={20}
                 step={1}
-                valueType='real'
+                valueType="real"
                 rounded
-                textColor='#00000'
-                iconStyle={{ color: 'white' }}
-                rightButtonBackgroundColor='#80BE25'
-                leftButtonBackgroundColor='#Be2525' />
+                textColor="#00000"
+                iconStyle={{ color: "white" }}
+                rightButtonBackgroundColor="#80BE25"
+                leftButtonBackgroundColor="#Be2525"
+              />
             </View>
           </View>
-          <View style={[styles.questionContainer, { height: 60, marginTop: 60 }]}></View>
+          <View
+            style={[styles.questionContainer, { height: 60, marginTop: 60 }]}
+          ></View>
         </View>
       </ScrollView>
     </View>
@@ -292,17 +346,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   bodyContainer: {
     height: 1300,
     marginTop: 5,
-    backgroundColor: '#eeeeee',
-    flexDirection: 'column',
+    backgroundColor: "#eeeeee",
+    flexDirection: "column",
   },
   logo: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 26,
     marginTop: 10,
     marginLeft: 20,
@@ -311,7 +365,7 @@ const styles = StyleSheet.create({
     color: "#223e4b",
   },
   headline: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 24,
     marginTop: 20,
     marginLeft: 20,
@@ -320,7 +374,7 @@ const styles = StyleSheet.create({
     color: "#223e4b",
   },
   bottomline: {
-    fontWeight: 'semi-bold',
+    fontWeight: "semi-bold",
     fontSize: 20,
     marginTop: 0,
     marginLeft: 20,
@@ -333,22 +387,22 @@ const styles = StyleSheet.create({
     color: "#223e4b",
   },
   questionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     flex: 1,
     height: 0,
     color: "#223e4b",
-    marginBottom:0.1
+    marginBottom: 0.1,
   },
   textBetweenContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     flex: 0,
     color: "#223e4b",
   },
   textInputContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   questionText: {
     fontSize: 17,
@@ -384,7 +438,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   white: {
-    backgroundColor: '#f8c8c1'
-  }
+    backgroundColor: "#f8c8c1",
+  },
 });
-

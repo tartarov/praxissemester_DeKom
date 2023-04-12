@@ -9,10 +9,10 @@ import {
   Alert,
 } from "react-native";
 import { SignatureView } from "react-native-signature-capture-view";
-import ButtonGhost from "../../components/ButtonGhost";
+import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import { AuthContext } from "../../context/AuthContext";
 import LottieView from "lottie-react-native";
-import Loader from "../../components/Loader";
+import Loader from "../../components/animations/Loader";
 let isVarifiedVar;
 
 const SignatureCaptures = ({ navigation }) => {

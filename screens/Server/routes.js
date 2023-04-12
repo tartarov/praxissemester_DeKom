@@ -89,7 +89,7 @@ app.get("/testdb.userdaten", async (req, res) => {
   if (isAuthenticated) {
     let user = { id: id, pin: pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "1.5m",
+      expiresIn: "5m",
     });
 
     res.cookie("token", token, { httpOnly: true });

@@ -10,13 +10,12 @@ import {
 } from "react-native";
 import { dataSample } from "../../data/DataSample.js";
 import WalletHandler from "../../components/WalletHandler.js";
-import PrimaryButton from "../../components/PrimaryButton.js";
+import PrimaryButton from "../../components/Buttons/PrimaryButton.js";
 import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../../components/Paginator.js";
-import { AuthContext } from "../../context/AuthContext";
 import { DataContext } from "../../context/DataContext";
 import ModalTester from "../Modals/GeertingsModal.js";
-import Loader from "../../components/Loader.js";
+import Loader from "../../components/animations/Loader.js";
 import { Header } from "../../components/Header";
 
 const { width } = Dimensions.get("screen");
@@ -78,7 +77,6 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Header />
-
       {isLoading == true ? <Loader /> : <DocumentList />}
 
       <View style={styles.buttonContainer}>
@@ -102,7 +100,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#fce9e6",
+    backgroundColor: "#2C3639",
   },
   buttonContainer: {
     flex: 1,
@@ -131,6 +129,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "500",
     fontSize: 24,
-    color: "#223e4b",
+    color: "#3F4E4F",
   },
 });

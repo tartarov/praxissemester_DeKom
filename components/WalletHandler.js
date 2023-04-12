@@ -1,5 +1,5 @@
-import Ausweis from "./Ausweis";
-import Fuehrerschein from "./Fuehrerschein";
+import Ausweis from "./WalletCards/Ausweis";
+import Fuehrerschein from "./WalletCards/Fuehrerschein";
 
 function WalletHandler ({data}){
     // getUserDataByHash();

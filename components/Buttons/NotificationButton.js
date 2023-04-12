@@ -1,11 +1,6 @@
-import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
+import { View, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import ModalTester from "../screens/Modals/GeertingsModal";
-import { Modal } from "./Modal";
-import React, { useState, useContext, useEffect } from "react";
-import Button from "./Button";
-
-const { width } = Dimensions.get("screen");
+import React from "react";
 
 function NotificationButton({ onPress }) {
   return (
@@ -17,9 +12,9 @@ function NotificationButton({ onPress }) {
             : styles.buttonInnerContainer
         }
         onPress={onPress}
-        android_ripple={{ color: "#23619A" }}
+        android_ripple={{ color: "#3F4E4F" }}
       >
-        <Ionicons name="notifications" size={12} color="black" />
+        <Ionicons name="notifications" size={15} color="#A27B5C" />
       </Pressable>
     </View>
   );
@@ -29,14 +24,14 @@ export default NotificationButton;
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 20,
+    marginRight: 50,
     marginTop: 15,
   },
   buttonInnerContainer: {
-    backgroundColor: "white",
+    backgroundColor: "#3F4E4F",
     paddingVertical: 8,
     paddingHorizontal: 8,
-    borderColor: "black",
+    borderColor: "#A27B5C",
     borderWidth: 1,
     borderRadius: 16,
     elevation: 6,

@@ -21,7 +21,17 @@ function MainScreen() {
     <>
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={{ swipeEnabled: true }}
+        screenOptions={{ 
+          swipeEnabled: true,
+          tabBarStyle: {
+            height: 45,
+            paddingHorizontal: 5,
+            paddingTop: 0,
+            backgroundColor: '#2C3639',
+            position: 'absolute',
+            borderTopWidth: 0,
+        },
+         }}
       >
         <Tab.Screen
           name="Dokumente"
@@ -29,7 +39,7 @@ function MainScreen() {
           options={{
             headerShown: false, //change HomeScreen to DokumenteScreen
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="document" color="#223e4b" size={size} />
+              <Ionicons name="document" color="#3F4E4F" size={size} />
             ),
           }}
         />
@@ -39,7 +49,7 @@ function MainScreen() {
           options={{
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color="#223e4b" size={size} />
+              <Ionicons name="home" color="#3F4E4F" size={size} />
             ),
           }}
         />
@@ -49,7 +59,7 @@ function MainScreen() {
           options={{
             headerShown: false, //change HomeScreen to MenuScreen
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="menu" color="#223e4b" size={size} />
+              <Ionicons name="menu" color="#3F4E4F" size={size} />
             ),
           }}
         />

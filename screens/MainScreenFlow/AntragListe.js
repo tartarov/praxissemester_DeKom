@@ -7,9 +7,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from "react-native";
-import NotificationButton from "../../components/NotificationButton";
+import { Header } from "../../components/Header";
 
+const { width } = Dimensions.get("screen");
+const ITEM_WIDTH = width * 0.95;
 const DATA = [
   {
     id: "1",
@@ -78,8 +81,8 @@ const Antragmenue = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#e94832" : "#f8c8c1";
-    const color = item.id === selectedId ? "white" : "#223e4b";
+    const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
+    const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
 
     return (
       <Item
@@ -98,11 +101,8 @@ const Antragmenue = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
-        <NotificationButton />
-      </View>
-      <FlatList
+     <Header/>
+      <FlatList style={styles.flatlist}
         data={DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -113,32 +113,25 @@ const Antragmenue = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  logo: {
-    marginBottom: StatusBar.currentHeight,
-    fontWeight: "bold",
-    fontSize: 38,
-    marginLeft: 20,
-    color: "#223e4b",
-  },
   container: {
     flex: 1,
-    // marginTop: StatusBar.currentHeight || 0,
+    justifyContent: "center",
+    backgroundColor: "#2C3639"
   },
   item: {
     padding: 20,
-    marginVertical: 2,
-    marginHorizontal: 16,
+    marginVertical: 3,
+    marginHorizontal: 10,
     borderRadius: 6,
     elevation: 1,
   },
   title: {
     fontSize: 18,
   },
+  flatlist:{
+    height: ITEM_WIDTH * 1.55,
+    marginTop: 10,
+  }
 });
 
 export default Antragmenue;

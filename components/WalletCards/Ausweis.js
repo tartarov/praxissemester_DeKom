@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, Dimensions, Platform } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, Dimensions } from "react-native";
 
 
 const { width } = Dimensions.get('screen');
@@ -9,7 +9,7 @@ const ImageHeight = ImageWidth * 0.8;
 function Ausweis ({data}){
     return(
         <View style={styles.container}>
-            <ImageBackground source={require('../assets/images/fuehrerscheinBg.png')} style={styles.image}>
+            <ImageBackground source={require('../../assets/images/persoBackground.png')} style={styles.image}>
                 <View style={styles.dataContainer}>
                 <View style={styles.textContainer}>
                     <Text style={styles.heading}>Name</Text>
@@ -19,40 +19,28 @@ function Ausweis ({data}){
                     <Text style={styles.heading}>Vorname</Text>
                     <Text style={styles.text}>{data.document.vorname}</Text>
                 </View>
-
                 <View style={styles.group}>
                     <View style={styles.textContainer}> 
-                        <Text style={styles.heading}>Geburtsdatum und -ort</Text>
+                        <Text style={styles.heading}>Geburtstag</Text>
                         <Text style={styles.text}>{data.document.geburtstag}</Text>
                     </View>
                     <View style={styles.textContainer}> 
-                        <Text style={styles.text}>{data.document.geburtsort}</Text>
+                        <Text style={styles.heading}>Staatsangehörigkeit</Text>
+                        <Text style={styles.text}>{data.document.staatsangehoerigkeit}</Text>
                     </View>
                 </View>
-
-                <View style={styles.group}>
-                   <View style={styles.textContainer}> 
-                       <Text style={styles.heading}>Ausstellungsdatum</Text>
-                       <Text style={styles.text}>{data.document.ausstellungsdatum}</Text>
-                    </View>
-                    <View style={styles.textContainer}> 
-                      <Text style={styles.heading}>Ausstellungsbehörde</Text>
-                      <Text style={styles.text}>{data.document.ausstellungsbehoerde}</Text>
-                    </View>
+                <View style={styles.textContainer}> 
+                    <Text style={styles.heading}>Geburtsort</Text>
+                    <Text style={styles.text}>{data.document.geburtsort}</Text>
                 </View>
                 <View style={styles.group}>
                    <View style={styles.textContainer}> 
-                      <Text style={styles.heading}>Ablaufdatum</Text>
-                      <Text style={styles.text}>{data.document.ablaufdatum}</Text>
+                      <Text style={styles.heading}>Gültig bis</Text>
+                      <Text style={styles.text}>{data.document.gueltigBis}</Text>
                    </View>
-                <View style={styles.textContainer}> 
-                    <Text style={styles.heading}>Führerscheinnummer</Text>
-                    <Text style={styles.text}>{data.document.nummer}</Text>
-                </View>
-                </View>
-                <View style={styles.textContainer}> 
-                    <Text style={styles.heading}>Type</Text>
-                    <Text style={styles.text}>{data.document.type}</Text>
+                   <View style={[styles.textContainer, {paddingLeft: 50}]}> 
+                      <Text style={styles.text}>{data.document.nummer}</Text>
+                   </View>
                 </View>
                 </View>
             </ImageBackground>
@@ -75,7 +63,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     dataContainer: {
-        padding: 10,
+        padding: 20,
     },
     group: {
         flexDirection: 'row',
@@ -84,14 +72,14 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     heading: {
-        fontSize: Platform.OS === 'android' ? 10 : 12, //Platform.OS === 'android' ? 10 : 12,
+        fontSize: 12,
         fontStyle: 'italic',
         color: '#223e4b',
         paddingHorizontal: 10,
     },
     text: {
         color: '#223e4b',
-        fontSize: Platform.OS === 'android' ? 16 : 18,
+        fontSize: 18,
         fontWeight: 'bold',
         paddingHorizontal: 10,
     }

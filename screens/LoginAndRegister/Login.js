@@ -2,7 +2,7 @@ import React, { useRef, useContext } from "react";
 import { Text, View, TouchableWithoutFeedback, Keyboard } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Button from "../../components/Button.js";
+import Button from "../../components/Buttons/Button.js";
 import TextInput from "../../components/TextInput.js";
 import { AuthContext } from "../../context/AuthContext";
 

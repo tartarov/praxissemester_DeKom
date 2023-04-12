@@ -3,7 +3,7 @@ import { Text, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import Button from "../../../components/Button.js";
+import Button from "../../../components/Buttons/Button.js";
 import TextInput from "../../../components/TextInput.js";
 import DropDown from "../../../components/DropDown.js";
 import { AuthContext } from "../../../context/AuthContext";
