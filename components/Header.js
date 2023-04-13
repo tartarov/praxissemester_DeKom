@@ -16,8 +16,9 @@ export function Header() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
+    //flex: 1,
+    paddingBottom:20,
+    paddingTop:20,
     backgroundColor: "#2C3639",
   },
   headerContainer: {  
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   logo: {
+    //fontFamily: "Trebuchet MS",
     fontWeight: "bold",
     fontSize: 38,
     marginLeft: 20,

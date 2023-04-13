@@ -11,7 +11,6 @@ import {
 import { SignatureView } from "react-native-signature-capture-view";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import { AuthContext } from "../../context/AuthContext";
-import LottieView from "lottie-react-native";
 import Loader from "../../components/animations/Loader";
 let isVarifiedVar;
 
@@ -23,10 +22,9 @@ const SignatureCaptures = ({ navigation }) => {
   isVarifiedVar = isVerified;
 
   const fetcher = async (stringBase) => {
-    console.log("ich bin im fetcher");
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.178.181:3000/user/save/signature",
+      "http://192.168.178.185:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -66,7 +64,6 @@ const SignatureCaptures = ({ navigation }) => {
             //  a base64 encoded image
             console.log("saved signature");
             var base64raw = val.replace("data:image/png;base64,", "");
-            console.log(val);
             Alert.alert(
               "Sicher?",
               "Bist du sicher, dass du diese Signatur speichern willst?",

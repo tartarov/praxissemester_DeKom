@@ -24,12 +24,13 @@ function MainScreen() {
         screenOptions={{ 
           swipeEnabled: true,
           tabBarStyle: {
-            height: 45,
+            height: 50,
             paddingHorizontal: 5,
             paddingTop: 0,
             backgroundColor: '#2C3639',
-            position: 'absolute',
-            borderTopWidth: 0,
+            position: 'relative',
+            borderTopWidth: 1,
+            borderColor: "#DCD7C9"
         },
          }}
       >

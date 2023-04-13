@@ -129,8 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   flatlist:{
-    height: ITEM_WIDTH * 1.55,
-    marginTop: 10,
+    height: ITEM_WIDTH * 1.5,
   }
 });
 

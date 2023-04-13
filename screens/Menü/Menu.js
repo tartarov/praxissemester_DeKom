@@ -1,34 +1,26 @@
 import React, { useContext } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, StatusBar } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import Button from "../../components/Buttons/Button";
 import NotificationButton from "../../components/Buttons/NotificationButton";
+import { Header } from "../../components/Header";
 
 export default function Menu({ navigation }) {
   const { logout } = useContext(AuthContext);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-      }}
-    >
-      <View style={{ marginBottom: 180, marginLeft: 20, marginTop: 50 }}>
-        <NotificationButton />
-      </View>
-      <Text style={{ color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
-        |DeKom.
-      </Text>
+<>
+     <Header/>
       <View
         style={{
+          flex: 1,
           alignItems: "center",
           justifyConent: "center",
-          // marginTop: StatusBar.currentHeight * 2,
+          paddingTop: 100,
+           backgroundColor: "#3F4E4F"
         }}
       >
-        <Text style={{ marginBottom: 20, fontSize: 20 }}> Menü </Text>
+       {/* <Text style={{ marginBottom: 20, fontSize: 20 }}> Menü </Text> */}
         <Button
           title="logout"
           label="abmelden"
@@ -40,7 +32,7 @@ export default function Menu({ navigation }) {
           logout{" "}
         </Button>
 
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 50 }}>
           <Button
             title="signate"
             label="signieren"
@@ -57,6 +49,6 @@ export default function Menu({ navigation }) {
           </Button>
         </View>
       </View>
-    </View>
+      </>
   );
 }

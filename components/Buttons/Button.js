@@ -10,14 +10,14 @@ export default function Button({ label, onPress }) {
         width: 245,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#e94832',
+        backgroundColor: '#A27B5C',
         elevation: 9
       }}
       activeOpacity={0.7}
       onPress={onPress}
     >
       <Text
-        style={{ fontSize: 18, color: 'white', textTransform: 'uppercase' }}
+        style={{ fontSize: 18, color: '#DCD7C9', textTransform: 'uppercase' }}
       >
         {label}
       </Text>
