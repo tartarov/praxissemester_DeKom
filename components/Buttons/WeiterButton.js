@@ -3,7 +3,7 @@ import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
 
 const { width } = Dimensions.get('screen');
 
-function PrimaryButton({children, onPress}){
+function WeiterButton({children, onPress}){
     return (
     <View style={styles.buttonOuterContainer}>
       <Pressable style={({pressed}) => pressed ? [styles.buttonInnerContainer, styles.pressed]: styles.buttonInnerContainer} onPress={onPress} 
@@ -14,26 +14,29 @@ function PrimaryButton({children, onPress}){
     );
 }
 
-export default PrimaryButton;
+export default WeiterButton;
 
 const styles = StyleSheet.create({
     buttonOuterContainer: {
-        borderRadius: 28,
+        borderColor: "#fff",
+       // borderWidth: 2,
+        borderRadius: 10,
         marginHorizontal: 10,
-        marginVertical: 4,
+        marginRight: 25,
+        marginTop: 8,
         overflow: 'hidden',
         width: 100,
     },
     buttonInnerContainer:{
-        backgroundColor: '#e94832',
-        paddingVertical: 2,
-        paddingHorizontal: 16,
+        backgroundColor: '#A27B5C',
+    //    paddingVertical: 2,
+    //    paddingHorizontal: 16,
         elevation: 2,
     },
     buttonText: {
-        color: 'white',
+        color: '#DCD7C9',
         textAlign: 'center',
-        padding: 10,
+        padding: 6,
     },
     pressed: {
         opacity: 0.75,

@@ -24,7 +24,7 @@ const SignatureCaptures = ({ navigation }) => {
   const fetcher = async (stringBase) => {
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.178.185:3000/user/save/signature",
+      "http://192.168.1.213:3000/user/save/signature",
       {
         method: "POST",
         headers: {

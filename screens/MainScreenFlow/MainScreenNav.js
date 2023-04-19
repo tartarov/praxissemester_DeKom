@@ -8,13 +8,14 @@ import ErteilungScreen from "../Antrag/ErteilungScreen";
 import FragenScreen from "../Antrag/FragenScreen";
 import { ScreenDoesNotExist } from "../Error404/ScreenDoesNotExist";
 import SignatureCaptures from "../Menü/SignatureScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExportPDFTestScreen from "../Antrag/ExportPDFTestScreen";
 import StaatsangehoerigkeitsScreen from "../Antrag/StaatsangehoerigkeitScreens";
 import ZahlungsScreen from "../Antrag/ZahlungsScreen";
+import React from "react";
+import DrawerNav from "./DrawerNav";
+
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 function MainScreen() {
   return (

@@ -6,7 +6,7 @@ export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const { isVerified } = useContext(AuthContext);
-  const ipAddress = "192.168.178.183";
+  const ipAddress = "192.168.178.24";
 
   let currentData = [
     {
@@ -45,7 +45,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     const respond = await fetch(
-      `http://192.168.178.185:3000/dekomdb.dekom_user/identify`,
+      `http://192.168.178.24:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }
@@ -91,9 +91,10 @@ export const DataProvider = ({ children }) => {
     setData(currentData);
   };
 
-  const getUserData = async () => {
+  async function getUserData () {
     const thisUser = await fetchData();
     const personalInfo = thisUser.body.result[0];
+    console.log("THIS USER IS: " + personalInfo)
     const {
       NAME,
       VORNAME,

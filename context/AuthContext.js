@@ -28,7 +28,7 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
-  const ipAddress = "192.168.178.185";
+  const ipAddress = "192.168.178.24";
 
   const login = async (userPin, userId) => {
     try {
@@ -90,7 +90,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isSignedUp = async () => {
-
 
     dispatch({ type: "SET_LOADING", payload: true });
 

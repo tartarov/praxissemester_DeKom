@@ -45,17 +45,17 @@ export default function Login({ navigation }) {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#fff",
+          backgroundColor: "#2C3639",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Text style={{ color: "#223e4b", fontSize: 40, fontWeight: "bold" }}>
+        <Text style={{ color: "#A27B5C", fontSize: 40, fontWeight: "bold" }}>
           |DeKom.
         </Text>
         <Text
           style={{
-            color: "#223e4b",
+            color: "#A27B5C",
             fontSize: 10,
             fontWeight: "light",
             marginBottom: 100,
@@ -67,6 +67,7 @@ export default function Login({ navigation }) {
           style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
         >
           <TextInput
+            style={{ color: "#DCD7C9"}}
             icon="user"
             placeholder="Enter your ID"
             autoCapitalize="none"
@@ -85,6 +86,7 @@ export default function Login({ navigation }) {
           style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
         >
           <TextInput
+            style={{ color: "#DCD7C9"}}
             icon="key"
             placeholder="Enter your PIN"
             secureTextEntry

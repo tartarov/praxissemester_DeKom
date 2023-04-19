@@ -3,23 +3,34 @@ import { Text, View } from "react-native";
 import { Modal } from "../../components/Modal";
 import { DataContext } from "../../context/DataContext";
 import Button from "../../components/Buttons/Button";
+import Loader from "../../components/animations/Loader";
 
-function ModalTester({ data }) {
+function ModalTester() {
   const [isModalVisible, setModalVisible] = useState(true);
-  //const { data, getWalletData } =  useContext(DataContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const { data, getWalletData } = useContext(DataContext);
+
+  useEffect(() => {
+    setIsLoading(true)
+    getWalletData()
+    setIsLoading(false);
+    }, []);
+
+  console.log("ICH BIN IM MODAL")
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+  if(data.length){
   return (
     <View style={{ flex: 1 }}>
       <Modal isVisible={isModalVisible}>
         <Modal.Container>
-          <Modal.Header title={"Guten Tag!"} />
+          <Modal.Header title={"Hallo " + data[0].document.vorname + "!" } />
           <Modal.Body>
-            <Text style={styles.text}>
-              Sie haben soweit keine neue Nachrichten.
+            <Text style={{alignItems:'center', paddingLeft: 15 , color: '#DCD7C9'}}>
+            {isLoading ? <Loader/> :  "Du hast soweit keine neuen Aufgaben."}
             </Text>
           </Modal.Body>
           <Modal.Footer>
@@ -29,6 +40,7 @@ function ModalTester({ data }) {
       </Modal>
     </View>
   );
+}
 }
 
 export default ModalTester;

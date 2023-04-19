@@ -45,7 +45,7 @@ const ModalFooter = ({ children }: { children?: React.ReactNode }) => (
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#DCD7C9",
+    backgroundColor: "#3F4E4F",
     borderRadius: 8,
     elevation: 6,
   },
@@ -57,12 +57,14 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     textAlign: "center",
     fontSize: 28,
+    color: '#DCD7C9',
   },
   body: {
     justifyContent: "center",
     textAlign: "center",
     paddingHorizontal: 40,
     minHeight: 100,
+    color: '#DCD7C9',
   },
   footer: {
     justifyContent: "center",

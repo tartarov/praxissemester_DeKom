@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import { dataSample } from "../../data/DataSample.js";
 import WalletHandler from "../../components/WalletHandler.js";
@@ -32,6 +33,7 @@ function HomeScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
 
+
   useEffect(() => {
     setIsLoading(true);
     getWalletData();
@@ -51,14 +53,20 @@ function HomeScreen({ navigation }) {
             decelerationRate={"fast"}
             data={data}
             renderItem={({ item, index }) => (
-              <View>
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>{item.title}</Text>
+              <Pressable
+                onPress={() => {
+                  console.log("Hello, ! was clicked!" + item.title);
+                }}
+              >
+                <View>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>{item.title}</Text>
+                  </View>
+                  <View style={styles.documentContainer}>
+                    <WalletHandler data={item} />
+                  </View>
                 </View>
-                <View style={styles.documentContainer}>
-                  <WalletHandler data={item} />
-                </View>
-              </View>
+              </Pressable>
             )}
             keyExtractor={(data) => data.title}
             onScroll={Animated.event(
@@ -69,6 +77,7 @@ function HomeScreen({ navigation }) {
             )}
           />
         </View>
+     
         <Paginator data={data} scrollX={scrollX} />
       </>
     );
@@ -76,20 +85,20 @@ function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header navigation ={navigation} />
       {isLoading == true ? <Loader /> : <DocumentList />}
 
       <View style={styles.buttonContainer}>
         <PrimaryButton
           children={"Antrag hinzufügen"}
-          onPress={() => navigation.navigate("Dokumente")}
+         onPress={() => navigation.navigate("Dokumente")}
         />
         <PrimaryButton
           children={"Ausweis hinzufügen"}
           onPress={() => navigation.navigate("ScreenDoesNotExist")}
         />
       </View>
-      <ModalTester data={data[0]} />
+      <ModalTester/>
     </SafeAreaView>
   );
 }
@@ -101,6 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#2C3639",
+   // marginTop:10
   },
   buttonContainer: {
     flex: 1,
@@ -113,8 +123,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flatListContainer: {
-    height: ITEM_WIDTH * 1,
-    marginTop: 50,
+    height: ITEM_WIDTH * 0.8,
+    marginTop: 30,
   },
   animationContainer: {
     justifyContent: "center",
@@ -124,7 +134,15 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: "center",
     alignItems: "center",
-    margin: 10,
+    borderWidth: 1,
+    borderColor: "#3F4E4F",
+    borderBottomWidth: 0,
+    paddingBottom: 0,
+    marginLeft: ITEM_WIDTH/9,
+    marginRight: ITEM_WIDTH/9,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    backgroundColor: "#DCD7C9",
   },
   text: {
     fontWeight: "500",

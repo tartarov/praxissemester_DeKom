@@ -7,6 +7,7 @@ import Select2 from "react-native-select-two";
 import countries from "../../assets/countries.json";
 import NationalityItem from "./components/NationalityItem";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import { Header } from "../../components/Header";
 
 const mockData = [
   { id: 1, name: "React Native Developer", checked: true }, // set default checked for render option item
@@ -67,8 +68,8 @@ export default function StaatsangehoerigkeitsScreen({ route, navigation }) {
 
   return (
     <View>
+      <Header/>
       <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
         <WeiterButton
           onPress={() => {
             navigation.navigate("FragenScreen", { antragData });
@@ -157,16 +158,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerContainer: {
-    height: 50,
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10,
+    alignItems:"center",
+    backgroundColor: "#2C3639", //2C3639
+    paddingLeft: 80,
+    paddingBottom: 10,
   },
   bodyContainer: {
     height: 700,
     marginTop: 0,
-    backgroundColor: "#f8c8c1",
+    backgroundColor: "#3F4E4F",
   },
   h2: {
     fontSize: 20,
@@ -178,13 +179,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   questionText: {
     fontSize: 15,
     marginLeft: 20,
     marginTop: 10,
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   selectListContainer: {
     flex: 7,

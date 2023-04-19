@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ImageBackground, Dimensions } from "react-nativ
 const { width } = Dimensions.get('screen');
 
 const ImageWidth = width * 0.95;
-const ImageHeight = ImageWidth * 0.8;
+const ImageHeight = ImageWidth * 0.7;
 
 function Ausweis ({data}){
     return(
@@ -55,21 +55,24 @@ const styles = StyleSheet.create({
         width: ImageWidth,
         height: ImageHeight,
         elevation: 10,
-        borderRadius: 14,
+        borderRadius: 10,
     },
     image: {
         flex: 1,
-        borderRadius: 14,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#3F4E4F",
         overflow: 'hidden',
     },
     dataContainer: {
         padding: 20,
+        paddingTop: 8
     },
     group: {
         flexDirection: 'row',
     },
     textContainer: {
-        paddingTop: 10,
+        paddingTop: 4,
     },
     heading: {
         fontSize: 12,

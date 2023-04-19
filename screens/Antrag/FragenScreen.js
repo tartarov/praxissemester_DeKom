@@ -8,6 +8,7 @@ import WeiterButton from "../../components/Buttons/WeiterButton";
 import React, { useRef, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useFormik } from "formik";
+import { Header } from "../../components/Header";
 
 export default function FragenScreen({ navigation }) {
   const [state, setState] = React.useState(1);
@@ -73,8 +74,8 @@ export default function FragenScreen({ navigation }) {
 
   return (
     <View>
-      <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
+       <Header/>
+       <View style={styles.headerContainer}>
         <WeiterButton
           onPress={() => {
             navigation.navigate("Dokumente");
@@ -106,7 +107,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={NormalesCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#3F4E4F"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() => setNormalesCheckboxState(!NormalesCheckboxState)}
@@ -126,7 +127,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ErweitertesCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#3F4E4F"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -146,7 +147,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ÜbersendungPrivatCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#3F4E4F"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -168,7 +169,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ÜbersendungBehördeCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#3F4E4F"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -252,7 +253,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={EinsichtÜbersendungBotschaftCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#3F4E4F"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -274,7 +275,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={EinsichtÜbersendungKonsulatCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#FFFFFF"
+                unfillColor="#A4B1B6"
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -308,7 +309,7 @@ export default function FragenScreen({ navigation }) {
               ></TextInput>
             </View>
           </View>
-          <View style={[styles.questionContainer, styles.white]}>
+          <View style={[styles.questionContainer, styles.white, {paddingBottom:25, overflow:'hidden'}]}>
             <Text style={styles.questionText}>
               Wie viele Exemplare des Führungszeugnisses benötigen Sie?
             </Text>
@@ -343,16 +344,15 @@ export default function FragenScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 50,
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems:"center",
+    backgroundColor: "#2C3639", //2C3639
+    paddingLeft: 80,
+    paddingBottom: 10,
   },
   bodyContainer: {
     height: 1300,
-    marginTop: 5,
-    backgroundColor: "#eeeeee",
+    backgroundColor: "#3F4E4F",
     flexDirection: "column",
   },
   logo: {
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#223e4b",
+    color: "#A27B5C",
   },
   headline: {
     fontWeight: "bold",
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   bottomline: {
     fontWeight: "semi-bold",
@@ -380,29 +380,30 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   label: {
     margin: 8,
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   questionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-    height: 0,
-    color: "#223e4b",
-    marginBottom: 0.1,
+    color: "#DCD7C9",
+
   },
   textBetweenContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 0,
-    color: "#223e4b",
+    color: "#DCD7C9",
+ 
   },
   textInputContainer: {
     flexDirection: "column",
     justifyContent: "space-between",
+
   },
   questionText: {
     fontSize: 17,
@@ -410,9 +411,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 10,
     marginRight: 20,
-    marginBottom: 10,
+    marginBottom: 0,
     alignSelf: "center",
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   textBetween: {
     fontSize: 17,
@@ -422,7 +423,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 0,
     alignSelf: "center",
-    color: "#223e4b",
+    color: "#DCD7C9",
   },
   textInputContainerBetween: {
     marginTop: 10,
@@ -438,6 +439,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   white: {
-    backgroundColor: "#f8c8c1",
+    backgroundColor: "#2C3639",
   },
 });

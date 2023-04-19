@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, Text, Alert, StatusBar } from "react-native";
-import { AuthContext } from "../../context/AuthContext";
+import  {AuthContext}  from "../../context/AuthContext";
 import Button from "../../components/Buttons/Button";
 import NotificationButton from "../../components/Buttons/NotificationButton";
 import { Header } from "../../components/Header";
@@ -10,7 +10,7 @@ export default function Menu({ navigation }) {
 
   return (
 <>
-     <Header/>
+     <Header navigation={navigation}/>
       <View
         style={{
           flex: 1,

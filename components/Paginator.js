@@ -1,12 +1,11 @@
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
   useWindowDimensions,
 } from "react-native";
-import ModalTester from "../screens/Modals/GeertingsModal.js";
-let ei;
+import React from 'react'
+
 function Paginator({ data, scrollX }) {
   console.log("data current State:" + data);
   console.log("data current scrollx:" + scrollX);

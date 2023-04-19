@@ -425,9 +425,9 @@ export default function ExportPDFTestScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    margin: 10,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor:'#2C3639'
   },
 });

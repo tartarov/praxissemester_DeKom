@@ -101,7 +101,7 @@ const Antragmenue = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-     <Header/>
+     <Header navigation={navigation}/>
       <FlatList style={styles.flatlist}
         data={DATA}
         renderItem={renderItem}

@@ -24,13 +24,13 @@ export default NotificationButton;
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 50,
-    marginTop: 15,
+    marginLeft: 50,
+    marginTop: 18,
   },
   buttonInnerContainer: {
     backgroundColor: "#3F4E4F",
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 6,
     borderColor: "#A27B5C",
     borderWidth: 1,
     borderRadius: 16,

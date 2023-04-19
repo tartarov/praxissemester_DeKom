@@ -5,9 +5,10 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import validationColor from "../../components/TextInput";
 import { useFormik } from "formik";
+import { Header } from "../../components/Header";
 
 let dateValue = "Bezahldatum";
-let dateTextColor = "rgba(34, 62, 75, 0.7)";
+let dateTextColor = "#DCD7C9";
 
 function ZahlungsScreen({ route, navigation }) {
   let antragData = route.params.antragData;
@@ -70,13 +71,13 @@ function ZahlungsScreen({ route, navigation }) {
   const changeDateTextColor = (dateValue) => {
     if (dateValue == "Bezahldatum") {
       return dateTextColor;
-    } else return (dateTextColor = "black");
+    } else return (dateTextColor = "#DCD7C9");
   };
 
   return (
     <View style={styles.screen}>
+      <Header/>
       <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
         <WeiterButton
           onPress={() => {
             navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
@@ -108,7 +109,7 @@ function ZahlungsScreen({ route, navigation }) {
               isChecked={BezahlungDeKomCheckboxState}
               size={25}
               fillColor="#e94832"
-              unfillColor="#FFFFFF"
+              unfillColor="#3F4E4F"
               iconStyle={{ borderColor: "green" }}
               innerIconStyle={{ borderWidth: 2 }}
               onPress={() =>
@@ -130,7 +131,7 @@ function ZahlungsScreen({ route, navigation }) {
               isChecked={BezahlungBereitsGemachtCheckboxState}
               size={25}
               fillColor="#e94832"
-              unfillColor="#FFFFFF"
+              unfillColor="#3F4E4F"
               iconStyle={{ borderColor: "green" }}
               innerIconStyle={{ borderWidth: 2 }}
               onPress={() =>
@@ -167,14 +168,14 @@ function ZahlungsScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
-    color: "#1CA352",
+    color: "#3F4E4F",
   },
   headerContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 50,
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems:"center",
+    backgroundColor: "#2C3639", //2C3639
+    paddingLeft: 80,
+    paddingBottom: 10,
   },
   logo: {
     fontWeight: "bold",
@@ -183,21 +184,23 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#223e4b",
+    color: "#3F4E4F",
   },
   imageContainer: {
-    margin: 20,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor:'#3F4E4F'
   },
   image: {
+    marginTop:20,
     width: 250,
     height: 250,
+    borderRadius:20
   },
   bodyContainer: {
-    height: 200,
-    marginTop: 5,
-    backgroundColor: "#eeeeee",
+    height: 340,
+    paddingBottom:70,
+    backgroundColor: "#3F4E4F",
     flexDirection: "column",
   },
   questionContainer: {
@@ -223,6 +226,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 10,
     alignSelf: "center",
+    color:'#DCD7C9'
   },
   textBetween: {
     fontSize: 17,
@@ -232,6 +236,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 0,
     alignSelf: "center",
+    color:'#DCD7C9'
   },
   textInputContainerBetween: {
     marginTop: 10,
@@ -247,7 +252,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   white: {
-    backgroundColor: "#f8c8c1",
+    backgroundColor: "#3F4E4F",
   },
   dateText: {
     borderWidth: StyleSheet.hairlineWidth,

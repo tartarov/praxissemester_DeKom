@@ -1,19 +1,27 @@
 import React from "react";
 import { StatusBar, Text, View, StyleSheet, SafeAreaView } from "react-native";
 import NotificationButton from "./Buttons/NotificationButton";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import WeiterButton from "./Buttons/WeiterButton";
 
-export function Header({navigation}) {
+export function HeaderAntrag({ weiterButtonOnPress }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <View style={styles.headerContainer}>
-        <Text style={styles.logo}>|DeKom. </Text>
+      <Text style={styles.logo}>|DeKom. </Text>
+        <WeiterButton
+          onPress={weiterButtonOnPress}
+        >
+          zurück
+        </WeiterButton>
+        <WeiterButton
+          onPress={() => {
+            handleSubmit();
+          }}
+        >
+          weiter
+        </WeiterButton>
         <NotificationButton />
-        <TouchableOpacity onPress={()=> navigation.openDrawer()}>
-        <Ionicons name='list-outline' size={34} style={{paddingRight:40, paddingTop:16, color: '#A27B5C'}}/>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -25,8 +33,6 @@ const styles = StyleSheet.create({
     paddingBottom:20,
     paddingTop:20,
     backgroundColor: "#2C3639",
-  //  borderBottomLeftRadius: 20,
-  //  borderBottomRightRadius: 20
   },
   headerContainer: {  
     marginTop: 10,
