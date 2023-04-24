@@ -1,10 +1,12 @@
 import React, { useRef, useContext } from "react";
-import { Text, View, TouchableWithoutFeedback, Keyboard } from "react-native"; //some imports not in use (yet)
+import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../../components/Buttons/Button.js";
 import TextInput from "../../components/TextInput.js";
 import { AuthContext } from "../../context/AuthContext";
+import CustomText from "../../components/Font.js";
+import LogoText from "../../components/LogoFont.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -47,22 +49,22 @@ export default function Login({ navigation }) {
           flex: 1,
           backgroundColor: "#2C3639",
           alignItems: "center",
-          justifyContent: "center",
+          paddingTop:150
+         // justifyContent: "center",
         }}
       >
-        <Text style={{ color: "#A27B5C", fontSize: 40, fontWeight: "bold" }}>
+        <LogoText style={{ color: "#A27B5C", fontSize: 40}}>
           |DeKom.
-        </Text>
-        <Text
+        </LogoText>
+        <CustomText
           style={{
             color: "#A27B5C",
             fontSize: 10,
-            fontWeight: "light",
-            marginBottom: 100,
+            marginBottom: 250,
           }}
         >
           All bueraucracies. One app.
-        </Text>
+        </CustomText>
         <View
           style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
         >

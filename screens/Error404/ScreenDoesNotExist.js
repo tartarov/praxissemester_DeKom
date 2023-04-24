@@ -29,7 +29,7 @@ export function ScreenDoesNotExist({ navigation }) {
           style={{
             fontSize: 18,
             fontWeight: "light",
-            color: "#223e4b",
+            color: "#2C3639",
             marginTop: 40,
           }}
         >
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
   animationContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 60,
+    paddingTop: 60,
+    backgroundColor: '#DCD7C9',
+    paddingBottom: 300,
   },
 });

@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomText from "../components/Font";
 
 export const AuthContext = createContext();
 
@@ -28,7 +29,7 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
-  const ipAddress = "192.168.178.24";
+  const ipAddress = "192.168.238.116";
 
   const login = async (userPin, userId) => {
     try {

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -7,24 +7,39 @@ import {
   ScrollView,
   View,
   Alert,
+  Image,
 } from "react-native";
-import { SignatureView } from "react-native-signature-capture-view";
+import {SignatureView} from "react-native-signature-capture-view"
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/animations/Loader";
+import CustomText from "../../components/Font";
+import { DataContext } from "../../context/DataContext";
+import { Header } from "../../components/Header";
 let isVarifiedVar;
 
 const SignatureCaptures = ({ navigation }) => {
   const signatureRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [text, setText] = useState("");
   const { isVerified } = useContext(AuthContext);
+  const { userData, fetchData } = useContext(DataContext);
+  const [trigerred, setIsTriggered] = useState(false);
+  const [imageUrl, setImageUrl] = useState(
+    `data:image/png;base64,${userData.body.signature}`
+  );
   isVarifiedVar = isVerified;
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData();
+    setIsLoading(false);
+    setImageUrl(`data:image/png;base64,${userData.body.signature}`);
+  }, [trigerred]);
 
   const fetcher = async (stringBase) => {
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.1.213:3000/user/save/signature",
+      "http://192.168.178.24:3000/user/save/signature",
       {
         method: "POST",
         headers: {
@@ -51,11 +66,15 @@ const SignatureCaptures = ({ navigation }) => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" style={{ paddingTop: 100 }} />
-      <SafeAreaView style={{ flex: 1, paddingTop: 100 }}>
+      <Header navigation={navigation} />
+      <SafeAreaView
+        style={{ flex: 1, paddingTop: 10, backgroundColor: "#2C3639" }}
+      >
         <SignatureView
           style={{
             borderWidth: 2,
+            //  borderRadius: 5,
+            //  borderColor:'#DCD7C9',
             height: 250,
           }}
           ref={signatureRef}
@@ -71,7 +90,8 @@ const SignatureCaptures = ({ navigation }) => {
                 {
                   text: "Ja, speichere ",
                   onPress: () => {
-                    fetcher(base64raw), setText(val);
+                    setIsTriggered(true);
+                    fetcher(base64raw)
                   },
                 },
                 {
@@ -89,7 +109,8 @@ const SignatureCaptures = ({ navigation }) => {
                 {
                   text: "Ja, lösche ",
                   onPress: () => {
-                    fetcher(""), setText("");
+                    setIsTriggered(true);
+                    fetcher("")
                   },
                 },
                 {
@@ -99,34 +120,61 @@ const SignatureCaptures = ({ navigation }) => {
             );
           }}
         />
-        <Text
+        <CustomText
           style={{
             fontSize: 10,
             alignItems: "center",
-            paddingLeft: 40,
+            paddingTop: 15,
+            paddingLeft: 30,
+            color: "#DCD7C9",
           }}
         >
           Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.
-        </Text>
+        </CustomText>
         <View
-          style={{ flexDirection: "row", justifyContent: "center", height: 50 }}
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            height: 50,
+          }}
         >
           <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              borderWidth: 2,
+              borderRadius: 10,
+              borderColor: "#DCD7C9",
+              marginTop: 20,
+              marginLeft: 30,
+              marginRight: 30,
+            }}
             onPress={() => {
               signatureRef.current.clearSignature();
             }}
           >
-            <Text>Löschen</Text>
+            <CustomText style={{ color: "#DCD7C9" }}>Löschen</CustomText>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              borderWidth: 2,
+              borderRadius: 10,
+              borderColor: "#DCD7C9",
+              marginTop: 20,
+              marginLeft: 30,
+              marginRight: 30,
+            }}
             onPress={() => {
+              setIsTriggered(true);
               signatureRef.current.saveSignature();
               Alert.alert("Gespeichert!", "Deine Signatur wurde gepeichert.");
             }}
           >
-            <Text>Speichern</Text>
+            <CustomText style={{ color: "#DCD7C9" }}>Speichern</CustomText>
           </TouchableOpacity>
         </View>
         <View
@@ -141,23 +189,41 @@ const SignatureCaptures = ({ navigation }) => {
             title="Back"
             label="zurück"
             onPress={() => {
-              navigation.navigate("Menü");
+              setIsTriggered(true);
+              navigation.navigate("Settings");
             }}
           />
         </View>
 
         <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
+          <CustomText
+            style={{
+              color: "#DCD7C9",
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              marginLeft: 128,
+              paddingBottom: 10,
+              fontSize: 12,
+            }}
+          >
+            Saved Signature:
+          </CustomText>
           {isLoading == true ? (
             <Loader />
           ) : (
-            <Text
-              numberOfLines={10}
-              ellipsizeMode="tail"
-              style={{ alignItems: "center" }}
-            >
-              {text}
-              {/*  GESPEICHERT! */}
-            </Text>
+            <Image
+              source={{ uri: imageUrl }}
+              style={{
+                width: 200,
+                height: 150,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 20,
+                flex: 1,
+                marginLeft: 85,
+              }}
+            />
           )}
         </ScrollView>
       </SafeAreaView>

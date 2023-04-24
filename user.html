@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User ID Card</title>
+    <style>
+      /* CSS styles for ID card layout */
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #id-card {
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+      }
+      #id-card img {
+        height: 80px;
+        margin-bottom: 10px;
+        width: 80px;
+      }
+      #id-card h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      #id-card p {
+        font-size: 14px;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="id-card">
+      <img src="\assets\images\pngwing.com.png" alt="User Profile Image" />
+      <h2>Loading user data...</h2>
+    </div>
+
+    <script></script>
+
+    <script  type="module" >
+      const idCard = document.querySelector('#id-card');
+      const img = idCard.querySelector('img');
+      const h2 = idCard.querySelector('h2');
+      import AsyncStorage from "https://cdn.skypack.dev/@react-native-async-storage/async-storage";
+
+      async function fetchUserData() {
+        try {
+          const response = await fetch('http://192.168.178.24:3000/dekomdb.dekom_user/identify', {
+            credentials: 'same-origin',
+          });
+          const data = await response.json();
+          const value = await AsyncStorage.getAllKeys()
+          console.log(value)
+          const ourData = JSON.stringify(data)
+         // img.src = data.profile_image_url;
+          h2.textContent = `${ourData} ${ourData}`;
+          idCard.innerHTML += `
+            <p>Voller Name: Max Mustermann</p>
+          `;
+        } catch (error) {
+          h2.textContent = 'Error fetching user data';
+          console.error(error);
+        }
+      }
+
+      fetchUserData();
+    </script>
+  </body>
+</html>
+

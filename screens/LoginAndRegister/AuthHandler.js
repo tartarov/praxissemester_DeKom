@@ -29,7 +29,7 @@ let alreadyCalled = false;
     if (userToken && userSignedUp) {
       alreadyCalled = true;
       console.log("Hey2")
-      return <DrawerNavigator/>; //<BottomTabNavigator/>
+      return <DrawerNavigator/>; 
     }
   
     if (userToken && !userSignedUp) {

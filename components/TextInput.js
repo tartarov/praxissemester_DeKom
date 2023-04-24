@@ -3,7 +3,7 @@ import { TextInput as RNTextInput, View, StyleSheet} from 'react-native';
 import { Entypo as Icon } from '@expo/vector-icons';
 
 const TextInput = forwardRef(({ icon, error, touched, ...otherProps }, ref) => {
- const validationColor = !touched ? '#aaa' : error ? '#CC3D3F' : '#223e4b';
+ const validationColor = !touched ? '#DCD7C9' : error ? '#CC3D3F' : '#3fcc3d';
   return (
     <View
       style={{

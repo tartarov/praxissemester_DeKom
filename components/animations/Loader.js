@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 function Loader() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#2C3639' }}>
       <LottieView
         autoPlay
         style={{

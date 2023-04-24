@@ -9,7 +9,7 @@ import {
   View,
   Dimensions
 } from "react-native";
-import { Header } from "../../components/Header";
+import { HeaderBottomdrawer } from "../../components/HeaderBottomDrawer";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -77,9 +77,9 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-const Antragmenue = ({ navigation }) => {
+const Antragmenue = ({ navigation  , isExpanded}) => {
   const [selectedId, setSelectedId] = useState(null);
-
+  
   const renderItem = ({ item }) => {
     const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
     const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
@@ -101,7 +101,7 @@ const Antragmenue = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-     <Header navigation={navigation}/>
+     <HeaderBottomdrawer navigation={navigation} isExpanded={isExpanded}/>
       <FlatList style={styles.flatlist}
         data={DATA}
         renderItem={renderItem}
@@ -116,7 +116,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#2C3639"
+    backgroundColor: "#2C3639",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    overflow:'hidden'
   },
   item: {
     padding: 20,

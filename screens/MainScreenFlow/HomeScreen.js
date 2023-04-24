@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import { dataSample } from "../../data/DataSample.js";
 import WalletHandler from "../../components/WalletHandler.js";
-import PrimaryButton from "../../components/Buttons/PrimaryButton.js";
 import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../../components/Paginator.js";
 import { DataContext } from "../../context/DataContext";
 import ModalTester from "../Modals/GeertingsModal.js";
 import Loader from "../../components/animations/Loader.js";
 import { Header } from "../../components/Header";
+import BottomDrawerScreen from "../../components/BottomDrawer.js";
 
 const { width } = Dimensions.get("screen");
 
@@ -86,19 +86,9 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation ={navigation} />
-      {isLoading == true ? <Loader /> : <DocumentList />}
-
-      <View style={styles.buttonContainer}>
-        <PrimaryButton
-          children={"Antrag hinzufügen"}
-         onPress={() => navigation.navigate("Dokumente")}
-        />
-        <PrimaryButton
-          children={"Ausweis hinzufügen"}
-          onPress={() => navigation.navigate("ScreenDoesNotExist")}
-        />
-      </View>
+      {isLoading ? <Loader /> : <DocumentList />}
       <ModalTester/>
+   <BottomDrawerScreen navigation = {navigation} icon/>
     </SafeAreaView>
   );
 }
@@ -147,6 +137,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "500",
     fontSize: 24,
+    fontFamily: 'Nexa-ExtraLight',
     color: "#3F4E4F",
   },
 });

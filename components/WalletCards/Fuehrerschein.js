@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#223e4b",
     fontSize: Platform.OS === "android" ? 16 : 18,
-    fontWeight: "bold",
+    fontFamily: 'Nexa-Heavy',
     paddingHorizontal: 10,
   },
 });

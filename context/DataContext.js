@@ -5,6 +5,7 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const { isVerified } = useContext(AuthContext);
   const ipAddress = "192.168.178.24";
 
@@ -45,12 +46,13 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     const respond = await fetch(
-      `http://192.168.178.24:3000/dekomdb.dekom_user/identify`,
+      `http://192.168.238.116:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }
     );
     const thisUser = await respond.json();
+    setUserData(thisUser)
     return thisUser;
   };
 
@@ -93,6 +95,13 @@ export const DataProvider = ({ children }) => {
 
   async function getUserData () {
     const thisUser = await fetchData();
+
+    const verificationStatus = await isVerified(thisUser);
+
+    if (verificationStatus !== "verified") {
+      return;
+    }
+
     const personalInfo = thisUser.body.result[0];
     console.log("THIS USER IS: " + personalInfo)
     const {
@@ -111,11 +120,6 @@ export const DataProvider = ({ children }) => {
       return;
     }
 
-    const verificationStatus = await isVerified(thisUser);
-
-    if (verificationStatus !== "verified") {
-      return;
-    }
 
     let data = {
       name: NAME,
@@ -137,7 +141,9 @@ export const DataProvider = ({ children }) => {
       value={{
         getWalletData,
         data,
+        userData,
         getUserData,
+        fetchData
       }}
     >
       {children}

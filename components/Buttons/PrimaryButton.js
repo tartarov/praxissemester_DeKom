@@ -18,21 +18,24 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
     buttonOuterContainer: {
-        borderRadius: 28,
+        borderRadius: 14,
         margin: 9,
         overflow: 'hidden',
-        width: width * 0.5,
+        //width: width * 0.5,
         elevation: 5,
     },
     buttonInnerContainer:{
         backgroundColor: '#A27B5C',
-        paddingVertical: 1,
-        paddingHorizontal: 20,
+        paddingHorizontal: 32,
+        paddingTop:18,
+        paddingBottom:18
     },
     buttonText: {
         color: '#DCD7C9',
         textAlign: 'center',
         padding: 10,
+        fontSize: 12,
+        fontFamily: 'Nexa-ExtraLight',
     },
     pressed: {
         opacity: 0.75,

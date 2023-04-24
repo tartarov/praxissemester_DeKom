@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./SignUp";
 import SignUpAdress from "./SignUpAdress";
-import MainScreen from "../../MainScreenFlow/MainScreenNav";
+import BottomTabNavigator from "../../../navigations/TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +23,7 @@ export default function SignUpNav() {
       ></Stack.Screen>
       <Stack.Screen
         name="MainScreen"
-        component={MainScreen}
+        component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

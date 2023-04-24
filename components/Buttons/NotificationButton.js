@@ -25,7 +25,7 @@ export default NotificationButton;
 const styles = StyleSheet.create({
   container: {
     marginLeft: 50,
-    marginTop: 18,
+    marginTop: 12,
   },
   buttonInnerContainer: {
     backgroundColor: "#3F4E4F",
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     borderColor: "#A27B5C",
     borderWidth: 1,
     borderRadius: 16,
-    elevation: 6,
   },
   pressed: {
     opacity: 0.5,

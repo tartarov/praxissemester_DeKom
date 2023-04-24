@@ -78,7 +78,7 @@ export default function FragenScreen({ navigation }) {
        <View style={styles.headerContainer}>
         <WeiterButton
           onPress={() => {
-            navigation.navigate("Dokumente");
+            navigation.navigate("Home");
           }}
         >
           zurück
