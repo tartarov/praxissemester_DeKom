@@ -29,7 +29,7 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
-  const ipAddress = "192.168.238.116";
+  const ipAddress = "192.168.1.213";
 
   const login = async (userPin, userId) => {
     try {

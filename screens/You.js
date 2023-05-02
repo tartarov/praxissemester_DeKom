@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Dimensions, StyleSheet } from "react-native";
+import { View, Dimensions, StyleSheet, Text } from "react-native";
 import { SafeAreaView, ScrollView } from "react-native-safe-area-context";
 import { DataContext } from "../context/DataContext";
 import { Header } from "../components/Header";
@@ -19,7 +19,6 @@ function You({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
   const [nameVar, setNameVar] = useState("");
-  // const [number, setNumber] = React.useState(1);
   const [userId, serUserId] = useState("");
 
   const getData = async (key) => {
@@ -68,7 +67,7 @@ function You({ navigation }) {
       },
     });
 
-  if (userId.length) {
+ // if (userId.length) {
     return (
       <SafeAreaView style={{ backgroundColor: "#3F4E4F" }}>
         <Header navigation={navigation} />
@@ -97,7 +96,7 @@ function You({ navigation }) {
               elevation: 9,
             }}
           >
-            <QRCode value={userId} size={120} />
+           {userId.length ?  <QRCode value={userId} size={120}  /> : <Loader/>}
           </View>
           <LogoText
             style={{ marginTop: 5, color: "#DCD7C9", alignItems: "center" }}
@@ -153,9 +152,6 @@ function You({ navigation }) {
         </View>
       </SafeAreaView>
     );
-  } else{
-    <Loader /> 
-  }
-}
+  } 
 
 export default You;

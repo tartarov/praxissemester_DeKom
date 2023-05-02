@@ -17,6 +17,9 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AuthContext } from "../../../context/AuthContext";
 import SignUpAdress from "./SignUpAdress";
 import { useNavigation } from "@react-navigation/native";
+import CustomText from "../../../components/Font";
+import DropDownPicker from "react-native-dropdown-picker";
+import { SelectList } from "react-native-dropdown-select-list";
 
 const nameRegex = /^[a-zA-Z\s]+[\u00C0-\u017Fa-zA-Z']+$/;
 
@@ -54,12 +57,13 @@ const SignUpSchema = Yup.object().shape({
 const styles = {
   contianer: {
     marginTop: 30,
-    width: "90%",
+    width: "100%",
+    backgroundColor: "#2C3639",
   },
   app: {
-    flex: 5, // the number of columns you want to devide the screen into
-    width: "100%",
-    marginHorizontal: "auto",
+    flex: 1, // the number of columns you want to devide the screen into
+    // width: "100%",
+    // marginHorizontal: "auto",
   },
   row: {
     flexDirection: "row",
@@ -95,14 +99,14 @@ const Row = ({ children }) => <View style={styles.row}>{children}</View>;
 
 let gender = [
   {
-    id: 1,
-    name: "männlich",
+    key: 1,
+    value: "männlich",
   },
   {
-    id: 2,
-    name: "weiblich",
+    key: 2,
+    value: "weiblich",
   },
-  { id: 3, name: "divers" },
+  { key: 3, value: "divers" },
 ];
 
 let dateValue = "Geburtsdatum";
@@ -113,11 +117,6 @@ const DismissKeyboard = ({ children }) => (
     {children}
   </TouchableWithoutFeedback>
 );
-
-function navigateUs() {
-  const navigation = useNavigation();
-  return navigation.navigate("SignUpAdress"); // navigation.navigate("MainScreen");
-}
 
 export default function SignUp({ navigation }) {
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
@@ -137,14 +136,15 @@ export default function SignUp({ navigation }) {
         staatsangehoerigkeit: "",
       },
       onSubmit: (values) => {
+        console.log(selectedItem);
         console.log("Unser Values sieht so aus: " + JSON.stringify(values));
         console.log(`Titel: ${values.titel}, Vorname: ${
           values.vorname
         }, Zweitname: ${values.zweitname} Nachname: ${values.nachname},
-      Geschlecht: ${Object.values(selectedItem)[1]},Geburtsdatum: ${
+      Geschlecht: ${selectedItem},Geburtsdatum: ${
           day + " " + month + " " + year
         }`);
-        values.geschlecht = Object.values(selectedItem)[1];
+        values.geschlecht = selectedItem;
         values.geburtsdatum = day + " " + month + " " + year;
         console.log("GEBURTSDATUM: " + values.geburtsdatum);
         navigation.navigate("SignUpAdress", { values });
@@ -152,7 +152,9 @@ export default function SignUp({ navigation }) {
     });
 
   const [selectedItem, setSelectedItem] = useState(null);
+
   const onSelect = (item) => {
+    console.log("VALLL: " + item);
     setSelectedItem(item);
   };
 
@@ -202,35 +204,36 @@ export default function SignUp({ navigation }) {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#fff",
           alignItems: "center",
           justifyContent: "center",
+          backgroundColor: "#2C3639",
         }}
       >
-        <Text
+        <CustomText
           style={{
-            marginTop: 50,
+            marginTop: 80,
             color: "#223e4b",
             fontSize: 40,
-            fontWeight: "bold",
+            color: "#A27B5C",
           }}
         >
           DeKom.
-        </Text>
+        </CustomText>
 
-        <Text
+        <CustomText
           style={{
             color: "#223e4b",
             fontSize: 10,
             fontWeight: "light",
             marginBottom: 10,
+            color: "#A27B5C",
           }}
         >
           All bueraucracies. One app.
-        </Text>
+        </CustomText>
 
-        <View style={styles.contianer}>
-          <View style={[styles.app, { zIndex: 20 }]}>
+        <View style={[styles.contianer]}>
+          <View style={{ flex: 1 }}>
             <Row>
               <Col numRows={1}>
                 <TextInput
@@ -249,12 +252,19 @@ export default function SignUp({ navigation }) {
                 />
               </Col>
               <Col numRows={1}>
-                <DropDown
-                  dropDownName={"Geschlecht"}
-                  value={selectedItem}
-                  data={gender}
-                  onSelect={onSelect}
-                />
+                <View style={[{ zIndex: 1, flexGrow: 1 }]}>
+                  <SelectList
+                    placeholder="Geschlecht"
+                    setSelected={onSelect}
+                    save="value"
+                    searchPlaceholder="suche"
+                    //  value={selectedItem}
+                    data={gender}
+                    dropdownStyles={{ backgroundColor: "#DCD7C9", height: 100, borderColor:'#DCD7C9' }}
+                    boxStyles={{borderColor:'#DCD7C9', borderWidth:0.5}}
+                    inputStyles={{color:'#DCD7C9'}}
+                  />
+                </View>
               </Col>
             </Row>
           </View>

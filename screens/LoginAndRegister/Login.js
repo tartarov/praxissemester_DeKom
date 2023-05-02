@@ -1,5 +1,5 @@
 import React, { useRef, useContext } from "react";
-import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from "react-native"; //some imports not in use (yet)
+import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Image } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../../components/Buttons/Button.js";
@@ -60,7 +60,7 @@ export default function Login({ navigation }) {
           style={{
             color: "#A27B5C",
             fontSize: 10,
-            marginBottom: 250,
+            marginBottom: 200,
           }}
         >
           All bueraucracies. One app.
@@ -85,7 +85,7 @@ export default function Login({ navigation }) {
           />
         </View>
         <View
-          style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
+          style={{ paddingHorizontal: 32, marginBottom: 0, width: "100%" }}
         >
           <TextInput
             style={{ color: "#DCD7C9"}}
@@ -105,6 +105,10 @@ export default function Login({ navigation }) {
             ref={pin}
             onSubmitEditing={() => handleSubmit()}
           />
+        </View>
+       {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
+        <View style={{felx:1, paddingHorizontal:40, marginBottom:70}}>
+        <Image source={require('../../assets/images/AusweisApp2_Bildmarke_transparent.png')} style={{height:30, width: 180, marginVertical:20}}/>
         </View>
         <Button label="Authentifizieren" onPress={handleSubmit} />
       </View>

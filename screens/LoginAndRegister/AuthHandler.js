@@ -22,22 +22,18 @@ let alreadyCalled = false;
       if (userToken != null && alreadyCalled == false) {
         isSignedUp();
         alreadyCalled = true;
-        console.log("Hey")
       }
     }, []);
   
     if (userToken && userSignedUp) {
       alreadyCalled = true;
-      console.log("Hey2")
       return <DrawerNavigator/>; 
     }
   
     if (userToken && !userSignedUp) {
-      console.log("Hey3")
       return <SignUpNav />;
     }
 
-    console.log("Hey4")
     return <Login />;
   };
 

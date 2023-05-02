@@ -7,6 +7,8 @@ import Button from "../../../components/Buttons/Button.js";
 import TextInput from "../../../components/TextInput.js";
 import DropDown from "../../../components/DropDown.js";
 import { AuthContext } from "../../../context/AuthContext";
+import CustomText from "../../../components/Font.js";
+import { SelectList } from "react-native-dropdown-select-list";
 
 const SignUpSchema = Yup.object().shape({
   straße: Yup.string()
@@ -42,12 +44,12 @@ const SignUpSchema = Yup.object().shape({
 const styles = {
   contianer: {
     marginTop: 30,
-    width: "90%",
+    width: "100%",
   },
   app: {
-    flex: 5, // the number of columns you want to devide the screen into
-    width: "100%",
-    marginHorizontal: "auto",
+    flex: 1, // the number of columns you want to devide the screen into
+    // width: "100%",
+    // marginHorizontal: "auto",
   },
   row: {
     flexDirection: "row",
@@ -74,65 +76,65 @@ const Row = ({ children }) => <View style={styles.row}>{children}</View>;
 
 let bundeslaender = [
   {
-    id: 1,
-    name: "Baden Württemberg",
+    key: 1,
+    value: "Baden Württemberg",
   },
   {
-    id: 2,
-    name: "Bayern",
+    key: 2,
+    value: "Bayern",
   },
-  { id: 3, name: "Berlin" },
+  { key: 3, value: "Berlin" },
   {
-    id: 4,
-    name: "Brandenburg",
-  },
-  {
-    id: 5,
-    name: "Bremen",
+    key: 4,
+    value: "Brandenburg",
   },
   {
-    id: 6,
-    name: "Hamburg",
+    key: 5,
+    value: "Bremen",
   },
   {
-    id: 7,
-    name: "Hessen",
+    key: 6,
+    value: "Hamburg",
   },
   {
-    id: 8,
-    name: "Mecklenburg-Vorpommern",
+    key: 7,
+    value: "Hessen",
   },
   {
-    id: 9,
-    name: "Niedersachsen",
+    key: 8,
+    value: "Mecklenburg-Vorpommern",
   },
   {
-    id: 10,
-    name: "Nordrhein Westfalen",
+    key: 9,
+    value: "Niedersachsen",
   },
   {
-    id: 11,
-    name: "Rheinland-Pfalz",
+    key: 10,
+    value: "Nordrhein Westfalen",
   },
   {
-    id: 12,
-    name: "Saarland",
+    key: 11,
+    value: "Rheinland-Pfalz",
   },
   {
-    id: 13,
-    name: "Sachsen",
+    key: 12,
+    value: "Saarland",
   },
   {
-    id: 14,
-    name: "Sachsen-Anhalt",
+    key: 13,
+    value: "Sachsen",
   },
   {
-    id: 15,
-    name: "Schleswig-Holstein",
+    key: 14,
+    value: "Sachsen-Anhalt",
   },
   {
-    id: 16,
-    name: "Thüringen",
+    key: 15,
+    value: "Schleswig-Holstein",
+  },
+  {
+    key: 16,
+    value: "Thüringen",
   },
 ];
 
@@ -160,12 +162,10 @@ export default function SignUpAdress({ route, navigation }) {
       },
       onSubmit: (values) => {
         console.log(`Straße: ${values.straße}, Hausnummer: ${values.hausnummer},
-      Stadt: ${values.stadt}, Postleitzahl: ${
-          values.postleitzahl
-        }, Bundesland: ${Object.values(selectedBundesland)[1]}
+      Stadt: ${values.stadt}, Postleitzahl: ${values.postleitzahl}, Bundesland: ${selectedBundesland}
        Vorwahl: ${values.vorwahl}, Telefonnummer: ${values.telefonnummer},
       Email: ${values.email}`);
-        values.bundesland = Object.values(selectedBundesland)[1];
+        values.bundesland = selectedBundesland;
 
         let userData = { ...route.params.values, ...values };
         console.log("UserData: " + JSON.stringify(userData));
@@ -184,32 +184,31 @@ export default function SignUpAdress({ route, navigation }) {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#fff",
+          backgroundColor: "#2C3639",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Text
+        <CustomText
           style={{
-            marginTop: 50,
-            color: "#223e4b",
+            marginTop: 80,
+            color: "#A27B5C",
             fontSize: 40,
-            fontWeight: "bold",
           }}
         >
           DeKom.
-        </Text>
+        </CustomText>
 
-        <Text
+        <CustomText
           style={{
-            color: "#223e4b",
+            color: "#A27B5C",
             fontSize: 10,
             fontWeight: "light",
             marginBottom: 10,
           }}
         >
           All bueraucracies. One app.
-        </Text>
+        </CustomText>
         <View style={styles.contianer}>
           <View style={[styles.app, { zIndex: 0, marginTop: 60 }]}>
             <Row>
@@ -283,29 +282,34 @@ export default function SignUpAdress({ route, navigation }) {
               </Col>
             </Row>
           </View>
-          <View
-            style={[
-              styles.app,
-              { zIndex: 20, marginTop: 60, overflowY: "scroll" },
-            ]}
-          >
-            <Row>
-              <Col numRows={1}>
-                <DropDown
-                  dropDownName={"Bundesland"}
-                  value={selectedBundesland}
+
+          <Row>
+            <Col numRows={1}>
+             
+                <SelectList
+                  placeholder="Bundesland"
+                  setSelected={onSelectBundesland}
+                  save="value"
+                  searchPlaceholder="suche"
+                  //  value={selectedItem}
                   data={bundeslaender}
-                  onSelect={onSelectBundesland}
+                  dropdownStyles={{ backgroundColor: "#DCD7C9", height: 200, zIndex:1 }}
+                  boxStyles={{marginTop:67, paddingVertical:15,borderColor:'#DCD7C9', borderWidth:0.5}}
+                  inputStyles={{color:'#DCD7C9'}}
+                  //dropDownName={"Bundesland"}
+                  // value={selectedBundesland}
+                  // data={bundeslaender}
+                  // onSelect={onSelectBundesland}
                 />
-              </Col>
-            </Row>
-          </View>
+            
+            </Col>
+          </Row>
+
           <View style={[styles.app, { zIndex: 0, marginTop: 60 }]}>
             <Row>
               <Col numRows={1}>
                 <TextInput
-                  value="+49"
-                  placeholder="Vorwahl"
+                  placeholder="+49"
                   autoCompleteType="text"
                   keyboardType="default"
                   autoCapitalize="none"

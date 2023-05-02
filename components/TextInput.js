@@ -22,7 +22,8 @@ const TextInput = forwardRef(({ icon, error, touched, ...otherProps }, ref) => {
       <View style={{ flex: 1}}>
         <RNTextInput
           underlineColorAndroid='transparent'
-          placeholderTextColor='#DCD7C9'
+          placeholderTextColor='#3F4E4F'
+          color='#DCD7C9'
           ref={ref}
           {...otherProps}
         />
