@@ -9,6 +9,7 @@ import Menu from "../screens/Menü/Menu";
 import Settings from "../screens/Settings";
 import CustomDrawer from "../components/CustomDrawer";
 import You from "../screens/You";
+import FertigeAntragListe from "../screens/FertigeAntragListe";
 
 const Drawer = createDrawerNavigator();
 
@@ -46,8 +47,8 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Menu"
-        component={Menu}
+        name="FertigeAntragListe"
+        component={FertigeAntragListe}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons

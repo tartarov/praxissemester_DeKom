@@ -5,12 +5,13 @@ import { DataContext } from "../../context/DataContext";
 import { useContext } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
+import AntragContext from "../../context/AntragContext";
 
 let html;
 
 export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params.antragData;
-
+  const {addToListe} = useContext(AntragContext)
   const { getUserData } = useContext(DataContext);
 
   function getCheckBoxValue(boolean) {
@@ -402,6 +403,8 @@ export default function ExportPDFTestScreen({ route, navigation }) {
         bottom: 50,
       },
     });
+    const uriFile = file.uri
+    addToListe(uriFile)
     await shareAsync(file.uri);
   };
 

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("../middleware/cookieJWTAuth");
-const {formattingResponse} = require("../middleware/Formatter.js")
+const { formattingResponse } = require("../middleware/Formatter.js");
 const jwt_decode = require("jwt-decode");
 global.atob = require("atob");
 global.Blob = require("node-blob");
@@ -49,7 +49,6 @@ const getHash = async (value) => {
 };
 
 const authorized = async (id, pin) => {
-  
   try {
     const response = await fetch(
       `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
@@ -192,6 +191,59 @@ app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
     ourConnection.release();
   });
   resData.send(formattingResponse(token, { value: true }));
+});
+
+app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.id);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    console.log("File ist " + req.body.file);
+    connectionDekomdb.query(
+      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG) VALUES (?,?)",
+      (values = [hash, req.body.file]),
+      function (err, res) {
+        if (err) {
+          console.log(err)
+          throw err;
+        }
+      }
+    );
+    ourConnection.release();
+  });
+  resData.send(formattingResponse(token, { value: true }));
+});
+
+app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.id);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    connectionDekomdb.query(
+      "SELECT * FROM dekomdb.userdocuments WHERE USER_ID_HASH= ? ",
+      (values = [hash]), (err, res) => {
+        if (err) {
+          console.log(err)
+          throw err;
+        } else if (res.length) {
+          console.log("Documents found! +++");
+          console.log("Docuemnts are: " + JSON.stringify(res[0].ANTRAG))
+          resData.send(
+            formattingResponse(token, {
+              value: true,
+              result: res,
+            })
+          );
+        } else {
+          console.log("No Documents found -------- ");
+          resData.send(formattingResponse(token, { value: false }));
+        }
+      }
+    );
+    ourConnection.release();
+  });
 });
 
 // Starting our server.
