@@ -9,7 +9,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import {SignatureView} from "react-native-signature-capture-view"
+//import {SignatureView} from "react-native-signature-capture-view"
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/animations/Loader";
@@ -70,7 +70,7 @@ const SignatureCaptures = ({ navigation }) => {
       <SafeAreaView
         style={{ flex: 1, paddingTop: 10, backgroundColor: "#2C3639" }}
       >
-        <SignatureView
+      {/*  <SignatureView 
           style={{
             borderWidth: 2,
             //  borderRadius: 5,
@@ -119,7 +119,7 @@ const SignatureCaptures = ({ navigation }) => {
               ]
             );
           }}
-        />
+        /> */}
         <CustomText
           style={{
             fontSize: 10,

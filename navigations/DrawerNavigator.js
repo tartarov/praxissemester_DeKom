@@ -23,7 +23,7 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: "#DCD7C9",
         drawerLabelStyle: {
           fontFamily: "Nexa-ExtraLight",
-        },
+        }, unmountOnBlur: true
         //drawerInactiveTintColor:'dark-grey'
       }}
       initialRouteName="Wallet"
@@ -47,7 +47,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="FertigeAntragListe"
+        name="Docs in process"
         component={FertigeAntragListe}
         options={{
           drawerIcon: ({ color }) => (

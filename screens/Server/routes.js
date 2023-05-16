@@ -54,6 +54,7 @@ const authorized = async (id, pin) => {
       `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
     );
     const responseJSON = await response.json();
+
     return responseJSON;
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
@@ -68,13 +69,14 @@ app.get("/auth.behoerde", (req, res) => {
       "SELECT * FROM testdb.userdaten WHERE PIN = ? AND ID = ?",
       (values = [pin, id]),
       (err, results, fields) => {
-        res.send(results.length > 0);
-        ourConnection.release();
         if (err) {
           console.error("Error querying database:", err);
           res.send(false);
           return;
         }
+        //console.log(err)
+        res.send(results.length > 0);
+        ourConnection.release();
       }
     );
   });
@@ -198,11 +200,41 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   let decoded = jwt_decode(token);
   const hash = await getHash(decoded.user.id);
 
+  let date_ob = new Date();
+
+  // current date
+  // adjust 0 before single digit date
+  let date = ("0" + date_ob.getDate()).slice(-2);
+  
+  // current month
+  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+  
+  // current year
+  let year = date_ob.getFullYear();
+  
+  // current hours
+  let hours = date_ob.getHours();
+  
+  // current minutes
+  let minutes = date_ob.getMinutes();
+  
+  // current seconds
+  let seconds = date_ob.getSeconds();
+  
+  // prints date in YYYY-MM-DD format
+  console.log(year + "-" + month + "-" + date);
+  
+  // prints date & time in YYYY-MM-DD HH:MM:SS format
+  let fullDate = date + "-" + month + "-" + year + ",  " + hours + ":" + minutes + ":" + seconds
+  console.log(date + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds);
+  console.log(date)
+
+
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("File ist " + req.body.file);
     connectionDekomdb.query(
-      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG) VALUES (?,?)",
-      (values = [hash, req.body.file]),
+      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG, DATUM) VALUES (?,?,?)",
+      (values = [hash, req.body.file, fullDate]),
       function (err, res) {
         if (err) {
           console.log(err)
@@ -229,7 +261,7 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
           throw err;
         } else if (res.length) {
           console.log("Documents found! +++");
-          console.log("Docuemnts are: " + JSON.stringify(res[0].ANTRAG))
+          console.log("Docuemnts are: " + JSON.stringify(res));
           resData.send(
             formattingResponse(token, {
               value: true,

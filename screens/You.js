@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Dimensions, StyleSheet, Text } from "react-native";
-import { SafeAreaView, ScrollView } from "react-native-safe-area-context";
+import { View, Dimensions} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { DataContext } from "../context/DataContext";
 import { Header } from "../components/Header";
 import QRCode from "react-native-qrcode-svg";
@@ -11,7 +11,6 @@ import LogoText from "../components/LogoFont";
 import Button from "../components/Buttons/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
-import { isLoading } from "expo-font";
 import Loader from "../components/animations/Loader";
 const { width } = Dimensions.get("screen");
 

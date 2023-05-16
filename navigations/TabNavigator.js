@@ -16,10 +16,13 @@ import ZahlungsScreen from "../screens/Antrag/ZahlungsScreen";
 import HomeScreen from "../screens/MainScreenFlow/HomeScreen";
 import You from "../screens/You";
 import Settings from "../screens/Settings";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
+
 const BottomTabNavigator = () => {
+  const navigation = useNavigation();
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -39,6 +42,13 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="You"
         component={You}
+        listeners={{
+          tabPress: e => {
+            // Prevent default action
+            e.preventDefault();
+            navigation.navigate("You")
+          },
+        }}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

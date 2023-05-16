@@ -11,7 +11,7 @@ let html;
 
 export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params.antragData;
-  const {addToListe} = useContext(AntragContext)
+  const {addToListe, getAntrag } = useContext(AntragContext)
   const { getUserData } = useContext(DataContext);
 
   function getCheckBoxValue(boolean) {
@@ -405,6 +405,7 @@ export default function ExportPDFTestScreen({ route, navigation }) {
     });
     const uriFile = file.uri
     addToListe(uriFile)
+   // getAntrag()
     await shareAsync(file.uri);
   };
 

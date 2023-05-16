@@ -14,7 +14,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
-    let respond = await fetch("http://192.168.178.24:3000/user/save/antrag", {
+    let respond = await fetch("http://192.168.178.195:3000/user/save/antrag", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -32,33 +32,37 @@ export function AntragProvider({ children }) {
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      getAntrag();
       console.log("respond contains true => success... YUHU");
       Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
     }
-
     console.log("addToListeTriggered");
-    console.log("file: " + file);
-    setAntragFile((prevState) => [...prevState, { file }]);
   };
 
   const getAntrag = async () => {
     isVarifiedVar = isVerified;
     console.log("guten tag.");
 
-    let respond = await fetch("http://192.168.178.24:3000/user/identify/antrag");
+    let respond = await fetch(
+      "http://192.168.178.195:3000/user/identify/antrag"
+    );
 
-    console.log("MY RESPONSE is ready");
     const responseJSON = await respond.json();
-    //console.log("MY RESPONSE : " + JSON.stringify(respond));
-    console.log("MY RESPONSE JSON: " + responseJSON.body.result[0].ANTRAG);
-    setAntragFile(responseJSON.body.result[0].ANTRAG);
-    setAntragFileId(responseJSON.body.result[0].ID);
 
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      setAntragFile(responseJSON.body.result);
+      setAntragFileId(responseJSON.body.result.length);
+
+      console.log(responseJSON.body.result.length);
       console.log("respond contains true => success... YUHU");
       Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
+    } else if (
+      verificationStatus == "verified" &&
+      responseJSON.body.value == false
+    ) {
+      setAntragFileId(0);
     }
   };
 

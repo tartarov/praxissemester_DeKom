@@ -19,10 +19,13 @@ function ModalTester() {
   console.log("ICH BIN IM MODAL")
 
   const toggleModal = () => {
+    console.log("ICH BIN IM MODAL2")
     setModalVisible(!isModalVisible);
   };
+  console.log("ICH BIN IM MODAL3")
 
   if(data.length){
+    console.log("ICH BIN IM MODAL4")
   return (
     <View style={{ flex: 1 }}>
       <Modal isVisible={isModalVisible}>

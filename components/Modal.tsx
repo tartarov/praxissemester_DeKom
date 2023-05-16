@@ -19,6 +19,7 @@ export const Modal = ({
       animationOutTiming={500}
       backdropTransitionInTiming={800}
       backdropTransitionOutTiming={800}
+      useNativeDriver= {true}
       {...props}>
       {children}
     </RNModal>
