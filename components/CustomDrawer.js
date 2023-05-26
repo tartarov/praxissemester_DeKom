@@ -41,13 +41,14 @@ function CustomDrawer( props ) {
               borderBottomRightRadius: 20,
             }}
           >
+               <Pressable onPress={()=>{navigation.navigate("Settings")}}>
             {/* <Image source={require('../assets/images/pngwing.com.png')} style={{height:80, width: 80, margin: 20}} />  */}
             <Ionicons
               name="person-circle-outline"
               size={122}
               style={{ margin: 10 }}
             />
-            <Pressable onPress={()=>{navigation.navigate("You")}}>
+         
               <CustomText
                 style={{
                   color: "#DCD7C9",

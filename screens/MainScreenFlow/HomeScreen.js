@@ -87,9 +87,7 @@ function HomeScreen({ navigation }) {
             keyExtractor={(data) => data.title}
             onScroll={Animated.event(
               [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              {
-                useNativeDriver: false,
-              }
+              {useNativeDriver: false}
             )}
           />
         </View>

@@ -17,6 +17,7 @@ import HomeScreen from "../screens/MainScreenFlow/HomeScreen";
 import You from "../screens/You";
 import Settings from "../screens/Settings";
 import { useNavigation } from "@react-navigation/native";
+import FertigeAntragListe from "../screens/FertigeAntragListe";
 
 const Tab = createBottomTabNavigator();
 
@@ -148,6 +149,14 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="ZahlungsScreen"
         component={ZahlungsScreen}
+        options={{
+          headerShown: false,
+          tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+        }}
+      />
+            <Tab.Screen
+        name="FertigeAntragListe"
+        component={FertigeAntragListe}
         options={{
           headerShown: false,
           tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,

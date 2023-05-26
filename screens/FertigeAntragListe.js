@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,28 +8,31 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Animated,
+  Vibration,
+  Alert
 } from "react-native";
 import { Header } from "../components/Header";
 import { AntragProvider } from "../context/AntragContext";
 import AntragContext from "../context/AntragContext";
 import { Ionicons } from "@expo/vector-icons";
 import CustomText from "../components/Font";
+import LogoText from "../components/LogoFont";
+import Paginator from "../components/Paginator";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
 
 const FertigeAntragListe = ({ navigation, isExpanded }) => {
+  const scrollX = useRef(new Animated.Value(0)).current;
   const [selectedId, setSelectedId] = useState(null);
   const { antragFile, antragFileId, getAntrag } = useContext(AntragContext);
   const [items, setItems] = useState([]);
-
+  
   useEffect(() => {
     getAntrag();
     const updatedItems = [];
     for (let i = 0; i < antragFileId; i++) {
-      console.log("i: " + i);
-      console.log("i: " + antragFileId);
-      console.log("antragFile: " + JSON.stringify(antragFile[i].ANTRAG));
       updatedItems.push({
         id: i,
         title: "Führungszeugnis",
@@ -40,6 +43,8 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
     setItems(updatedItems);
   }, [antragFileId]);
 
+  //"#e94832"
+
   const renderItem = ({ item }) => {
     const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
     const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
@@ -48,22 +53,71 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
       <TouchableOpacity
         onPress={onPress}
         style={[styles.item, backgroundColor]}
+        onLongPress={() => {
+            console.log("pressed"), Vibration.vibrate(100), Alert.alert("Willst du diesen Antrag löschen?");
+          }}
       >
-        <CustomText style={[styles.title, textColor]}>{item.title}</CustomText>
-        <CustomText style={[styles.body, textColor]}>
-          eingereicht am: {item.body.length ? item.body : "nicht erkannt"}
+        <CustomText
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 20,
+            textAlign: "center",
+            color: "#A27B5C",
+          }}
+        >
+          {item.title}
         </CustomText>
-        <CustomText style={[styles.body, textColor]}>
-          bearbeitungsstatus:{" "}
+        <CustomText
+          style={{
+            alignItems: "center",
+            fontSize: 14,
+            color: "grey",
+            paddingHorizontal: 10,
+            paddingTop: 20,
+          }}
+        >
+          eingereicht am:
+        </CustomText>
+        <LogoText
+          style={{
+            alignItems: "center",
+            fontSize: 14,
+            color: "white",
+            paddingHorizontal: 10,
+          }}
+        >
+          {item.body.length ? item.body : "nicht erkannt"}
+        </LogoText>
+
+        <CustomText
+          style={{
+            alignItems: "center",
+            fontSize: 14,
+            color: "grey",
+            paddingHorizontal: 10,
+          }}
+        >
+          bearbeitungsstatus:
+        </CustomText>
+        <LogoText
+          style={{
+            alignItems: "center",
+            fontSize: 14,
+            color: "gray",
+            paddingHorizontal: 10,
+          }}
+        >
+          {" "}
           {
             <Ionicons
               name="remove-circle"
-              size={24}
-              style={{ color: "orange" }}
+              size={14}
+              style={{ color: "gray" }}
             />
           }{" "}
           in Bearbeitung
-        </CustomText>
+        </LogoText>
       </TouchableOpacity>
     );
 
@@ -89,21 +143,35 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
         <FlatList
           horizontal
           pagingEnabled
-          showsHorizontalScrollIndicator={true}
+          showsHorizontalScrollIndicator={false}
           bounces={true}
-          snapToAlignment="start"
-          decelerationRate={"normal"}
+          snapToAlignment="center"
+          decelerationRate={"fast"}
           style={styles.flatlist}
           data={items}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
           extraData={selectedId}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+              useNativeDriver: false
+            }
+          )}
         />
       ) : (
-        <CustomText style={[styles.title, { color: "grey" }]}>
+        <CustomText
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 24,
+            textAlign: "center",
+          }}
+        >
           du hast derzeit keine Anträge beantragt.
         </CustomText>
       )}
+      <Paginator data={items} scrollX={scrollX} />
     </SafeAreaView>
   );
 };
@@ -116,7 +184,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   item: {
-    paddingHorizontal: 22,
+    paddingHorizontal: 80,
     paddingVertical: 30,
     marginVertical: 10,
     marginBottom: 250,

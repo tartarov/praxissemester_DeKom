@@ -14,7 +14,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
-    let respond = await fetch("http://192.168.178.195:3000/user/save/antrag", {
+    let respond = await fetch("http://192.168.178.196:3000/user/save/antrag", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -34,7 +34,7 @@ export function AntragProvider({ children }) {
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       getAntrag();
       console.log("respond contains true => success... YUHU");
-      Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
+    //  Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
     }
     console.log("addToListeTriggered");
   };
@@ -44,7 +44,7 @@ export function AntragProvider({ children }) {
     console.log("guten tag.");
 
     let respond = await fetch(
-      "http://192.168.178.195:3000/user/identify/antrag"
+      "http://192.168.178.196:3000/user/identify/antrag"
     );
 
     const responseJSON = await respond.json();
@@ -57,7 +57,6 @@ export function AntragProvider({ children }) {
 
       console.log(responseJSON.body.result.length);
       console.log("respond contains true => success... YUHU");
-      Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
     } else if (
       verificationStatus == "verified" &&
       responseJSON.body.value == false

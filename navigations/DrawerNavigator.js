@@ -52,6 +52,20 @@ const DrawerNavigator = () => {
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons
+              name="documents-outline"
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+<Drawer.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons
               name="ellipsis-horizontal-outline"
               size={28}
               color={color}
