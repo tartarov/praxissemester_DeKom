@@ -29,13 +29,13 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
-  const ipAddress = "192.168.178.196";
+  const ipAddress = "192.168.1.213";
 
   const login = async (userPin, userId) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
       const response = await fetch(
-        `http://192.168.178.196:3000/testdb.userdaten?pin=${userPin}&id=${userId}`
+        `http://192.168.1.213:3000/testdb.userdaten?pin=${userPin}&id=${userId}`
       );
       const requiredToken = await response.json();
       const token = requiredToken.token

@@ -22,6 +22,9 @@ import { Header } from "../../components/Header";
 import BottomDrawerScreen from "../../components/BottomDrawer.js";
 import { Modal } from "../../components/Modal";
 import Button from "../../components/Buttons/Button.js";
+import FertigeAntragListe from "../FertigeAntragListe.js";
+//import HelloYtModule from "../CustomModule"
+import {NativeModules} from 'react-native';
 
 const { width } = Dimensions.get("screen");
 
@@ -49,9 +52,11 @@ function HomeScreen({ navigation }) {
     setModalVisible(() => !isModalVisible);
   };
 
+  const {HelloYtModule} = NativeModules;
+
   function DocumentList() {
     const handleItemPress = ({ item }) => {
-      console.log(item.title);
+     HelloYtModule.createCalendarEvent('testName', 'testLocation'); // <- Java module 
       setSelectedItemIndex(item.title);
       setModalVisible(true);
     };

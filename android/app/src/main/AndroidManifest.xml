@@ -28,6 +28,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.minechess123.ProjectLaunch_DeKom"/>
         <data android:scheme="exp+projectlaunchdekom"/>
+        <action android:name="android.intent.action.RUN"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

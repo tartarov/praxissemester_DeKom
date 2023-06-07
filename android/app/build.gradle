@@ -142,6 +142,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    namespace "com.minechess123.ProjectLaunch_DeKom"
     defaultConfig {
         applicationId 'com.minechess123.ProjectLaunch_DeKom'
         minSdkVersion rootProject.ext.minSdkVersion
