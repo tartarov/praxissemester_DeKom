@@ -25,6 +25,9 @@ import Button from "../../components/Buttons/Button.js";
 import FertigeAntragListe from "../FertigeAntragListe.js";
 //import HelloYtModule from "../CustomModule"
 import {NativeModules} from 'react-native';
+import { NativeEventEmitter } from 'react-native';
+import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
+
 
 const { width } = Dimensions.get("screen");
 
@@ -41,6 +44,8 @@ function HomeScreen({ navigation }) {
   const { data, getWalletData } = useContext(DataContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
+  const [hasNfc, setHasNFC ] = useState(null);
+ 
 
   useEffect(() => {
     setIsLoading(true);
@@ -52,11 +57,31 @@ function HomeScreen({ navigation }) {
     setModalVisible(() => !isModalVisible);
   };
 
-  const {HelloYtModule} = NativeModules;
+  const {Aa2_Connector} = NativeModules;
+  console.log("Aa2_Connector: " + JSON.stringify(Aa2_Connector))
 
-  function DocumentList() {
+  /*
+  componentDidMount()
+
+ function componentDidMount ()  {
+    const eventEmitter = new NativeEventEmitter();
+    eventEmitter.addListener('receivedJson', this.handleReceivedJson);
+  }
+
+  handleReceivedJson = (pJson) => {
+    // Handle the received pJson string here
+    console.log('Received JSON:', pJson);
+  }
+
+ function componentWillUnmount() {
+    // Remove the event listener when the component unmounts
+    eventEmitter.removeListener('receivedJson', this.handleReceivedJson);
+  }
+  */
+
+  function DocumentList () {
+
     const handleItemPress = ({ item }) => {
-     HelloYtModule.createCalendarEvent('testName', 'testLocation'); // <- Java module 
       setSelectedItemIndex(item.title);
       setModalVisible(true);
     };

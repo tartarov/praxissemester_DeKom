@@ -14,7 +14,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
-    let respond = await fetch("http://192.168.1.213:3000/user/save/antrag", {
+    let respond = await fetch("http://192.168.178.24:3000/user/save/antrag", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -43,7 +43,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
 
     let respond = await fetch(
-      "http://192.168.1.213:3000/user/identify/antrag"
+      "http://192.168.178.24:3000/user/identify/antrag"
     );
 
     const responseJSON = await respond.json();

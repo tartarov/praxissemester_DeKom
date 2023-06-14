@@ -36,7 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
-      packages.add(new HelloYtPackage());
+     // packages.add(new Aa2_ConnectorPackage());
       return packages;
     }
 
@@ -60,13 +60,19 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public void onCreate() {
+    System.out.println("MainApplication activated! <><><><><><><><><> 1");
     super.onCreate();
+    System.out.println("MainApplication activated! <><><><><><><><><> 2");
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+    System.out.println("MainApplication activated! <><><><><><><><><> 3");
     SoLoader.init(this, /* native exopackage */ false);
+    System.out.println("MainApplication activated! <><><><><><><><><> 4");
 
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    System.out.println("MainApplication activated! <><><><><><><><><> 5");
     ApplicationLifecycleDispatcher.onApplicationCreate(this);
+    System.out.println("MainApplication activated! <><><><><><><><><> 6");
   }
 
   @Override

@@ -139,8 +139,14 @@ def reactNativeArchitectures() {
 
 android {
     ndkVersion rootProject.ext.ndkVersion
-
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    packagingOptions {
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+    }
 
     namespace "com.minechess123.ProjectLaunch_DeKom"
     defaultConfig {
@@ -240,6 +246,13 @@ android {
             keyPassword 'android'
         }
     }
+
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -291,6 +304,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'com.governikus:ausweisapp:1.26.4'
 
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

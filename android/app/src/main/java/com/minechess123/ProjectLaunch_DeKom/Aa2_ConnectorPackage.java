@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HelloYtPackage implements ReactPackage {
+public class Aa2_ConnectorPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
@@ -21,7 +21,7 @@ public class HelloYtPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new HelloYtModule(reactContext));
+        modules.add(new Aa2_ConnectorModule(reactContext));
         return modules;
     }
 }

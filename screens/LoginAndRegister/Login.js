@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useContext, useEffect } from "react";
 import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Image } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,6 +7,7 @@ import TextInput from "../../components/TextInput.js";
 import { AuthContext } from "../../context/AuthContext";
 import CustomText from "../../components/Font.js";
 import LogoText from "../../components/LogoFont.js";
+import { DeviceEventEmitter, NativeModules } from 'react-native';
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -41,6 +42,17 @@ export default function Login({ navigation }) {
   const fetchData = async () => {};
 
   const pin = useRef(null);
+
+// ...
+
+
+useEffect(() => {   
+DeviceEventEmitter.addListener('eventName', (data) => {     // Обработка полученных данных     
+console.log(data.key)})
+},[])
+
+
+console.log("after Received JSON");
 
   return (
     <DismissKeyboard>
