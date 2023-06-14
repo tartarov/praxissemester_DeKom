@@ -1,5 +1,5 @@
-import React, { useRef, useContext, useEffect } from "react";
-import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Image } from "react-native"; //some imports not in use (yet)
+import React, { useRef, useContext, useEffect, useState } from "react";
+import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Image, Vibration} from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../../components/Buttons/Button.js";
@@ -7,7 +7,9 @@ import TextInput from "../../components/TextInput.js";
 import { AuthContext } from "../../context/AuthContext";
 import CustomText from "../../components/Font.js";
 import LogoText from "../../components/LogoFont.js";
-import { DeviceEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+import Nfc_tutorial from "../../components/animations/Nfc_tutorial.js";
+import Correct from "../../components/animations/Correct.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -28,6 +30,7 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
+  const [idCardData, setidCardData] = useState({});
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -45,13 +48,23 @@ export default function Login({ navigation }) {
 
 // ...
 
+const {Aa2_Conntector} = NativeModules;
+const eventEmitter = new NativeEventEmitter(Aa2_Conntector)
 
 useEffect(() => {   
-DeviceEventEmitter.addListener('eventName', (data) => {     // Обработка полученных данных     
-console.log(data.key)})
+eventEmitter.addListener('pJson', data => { 
+  console.log('Received pJson: ' + data);
+  gotTheData(data)
+})
+return () => {
+  eventEmitter.removeListener('pJson');
+};
 },[])
 
-
+const gotTheData = async (data) => {
+  console.log("Got The Data! : " + data)
+  setidCardData(data);
+}
 console.log("after Received JSON");
 
   return (
@@ -72,11 +85,12 @@ console.log("after Received JSON");
           style={{
             color: "#A27B5C",
             fontSize: 10,
-            marginBottom: 200,
+            marginBottom: 0,
           }}
         >
           All bueraucracies. One app.
         </CustomText>
+        {idCardData.length ?  <Correct/> : <Nfc_tutorial/>}
         <View
           style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
         >

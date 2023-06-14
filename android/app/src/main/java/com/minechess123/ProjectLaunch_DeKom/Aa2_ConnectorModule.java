@@ -15,26 +15,34 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.governikus.ausweisapp2.IAusweisApp2Sdk;
 import com.governikus.ausweisapp2.IAusweisApp2SdkCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Aa2_ConnectorModule extends ReactContextBaseJavaModule {
+public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
     private static final String AA2_PROCESS = "ausweisapp2_service";
     IAusweisApp2Sdk mSdk;
     ServiceConnection mConnection;
     ReactApplicationContext reactContext;
+    LocalCallback mCallback;
 
     public Aa2_ConnectorModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        reactContext.addActivityEventListener(this);
 
         if (isAA2Process()) {
             System.out.println("anwendung läuft schon!");
@@ -47,7 +55,7 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule {
                 try {
                     mSdk = IAusweisApp2Sdk.Stub.asInterface(service);
                     System.out.println("init success! ");
-                    LocalCallback mCallback = new LocalCallback(mSdk); //mSdk
+                    mCallback = new LocalCallback(mSdk); //mSdk
                     System.out.println("callBack init: " + mCallback);
 
                     mSdk.connectSdk(mCallback);
@@ -129,6 +137,23 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule {
         Log.d("Aa2_Connector", "Create event called with name: " + name + " and location: " + location);
     }
 
+    @Override
+    public void onActivityResult(Activity activity, int i, int i1, @Nullable Intent intent) {
+
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        handleIntent(intent, mCallback);
+    }
+
+    public static void sendEvent(ReactContext reactContext, String eventName, String params) {
+        System.out.println("<<<<<<<sendEvent:   params>>>>>>>>: " + params);
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
     class LocalCallback extends IAusweisApp2SdkCallback.Stub {
         public String mSessionID = null;
         public IAusweisApp2Sdk mSdk;
@@ -162,6 +187,9 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule {
                     String cmdFour = "{\"cmd\": \"SET_CAN\", \"value\": \"491908\"}";
                     mSdk.send(this.mSessionID, cmdFour);
                 }
+                System.out.println("<<<<<<<pJSON>>>>>>>>: " + pJson);
+                Aa2_ConnectorModule.sendEvent(getReactApplicationContext(),"pJson", pJson);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

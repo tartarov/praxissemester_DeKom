@@ -35,27 +35,17 @@ import expo.modules.ReactActivityDelegateWrapper;
 public class MainActivity extends ReactActivity {
 
   private static final String AA2_PROCESS = "ausweisapp2_service";
-  IAusweisApp2Sdk mSdk;
-  LocalCallback mCallback;
-  private ReactContext reactContext;
-
-  public void sendDataToReactNative(String data) {
-    WritableMap params = Arguments.createMap();
-    params.putString("key", data);
-
-    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("eventName", params);
-}
-
+ // IAusweisApp2Sdk mSdk;
+  //LocalCallback mCallback;
 
     @Override
   public void onCreate(Bundle savedInstanceState)
   {
-
-      reactContext = getReactInstanceManager().getCurrentReactContext();
-    System.out.println("aaaaaaaaaaaaaa-------");
       setTheme(R.style.AppTheme);
       super.onCreate(savedInstanceState);
+/*
+    System.out.println("aaaaaaaaaaaaaa-------");
+
 
       if (isAA2Process()) {
         System.out.println("anwendung läuft schon!");
@@ -72,7 +62,6 @@ public class MainActivity extends ReactActivity {
             System.out.println("callBack init: " + mCallback);
 
             mSdk.connectSdk(mCallback);
-            sendDataToReactNative(" <<<<<<< pJson >>>>>>>");
 
             handleIntent(getIntent(), mCallback);
             String cmd = "{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}";
@@ -96,16 +85,18 @@ public class MainActivity extends ReactActivity {
       serviceIntent.setPackage(pkg);
       bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
       // Perform one-time initialization of YOUR app, e.g. Firebase connection
-
+*/
   }
 
     @Override
     public void onNewIntent(Intent intent) {
         System.out.println("currentIntent: " + intent);
+        setIntent(intent);
         super.onNewIntent(intent);
-        handleIntent(intent, mCallback);
+      //  handleIntent(intent, mCallback);
     }
 
+    /*
       private boolean isAA2Process()
     {
         if (Build.VERSION.SDK_INT >= 28)
@@ -137,7 +128,7 @@ public class MainActivity extends ReactActivity {
             }
         }
     }
-
+*/
 
 
   /**
@@ -203,6 +194,7 @@ public class MainActivity extends ReactActivity {
   }
 }
 
+/*
 class LocalCallback extends IAusweisApp2SdkCallback.Stub
 {
     public String mSessionID = null;
@@ -260,3 +252,4 @@ class LocalCallback extends IAusweisApp2SdkCallback.Stub
     }
 
 }
+ */

@@ -60,25 +60,6 @@ function HomeScreen({ navigation }) {
   const {Aa2_Connector} = NativeModules;
   console.log("Aa2_Connector: " + JSON.stringify(Aa2_Connector))
 
-  /*
-  componentDidMount()
-
- function componentDidMount ()  {
-    const eventEmitter = new NativeEventEmitter();
-    eventEmitter.addListener('receivedJson', this.handleReceivedJson);
-  }
-
-  handleReceivedJson = (pJson) => {
-    // Handle the received pJson string here
-    console.log('Received JSON:', pJson);
-  }
-
- function componentWillUnmount() {
-    // Remove the event listener when the component unmounts
-    eventEmitter.removeListener('receivedJson', this.handleReceivedJson);
-  }
-  */
-
   function DocumentList () {
 
     const handleItemPress = ({ item }) => {
@@ -101,7 +82,7 @@ function HomeScreen({ navigation }) {
               <Pressable
                 onPress={() => handleItemPress({ item })}
                 onLongPress={() => {
-                  console.log("pressed"), Vibration.vibrate(100), Alert.alert("Willst du die Daten bearbeiten?");
+                  console.log("pressed"), Vibration.vibrate(1000), Alert.alert("Willst du die Daten bearbeiten?");
                 }}
               >
                 <View>

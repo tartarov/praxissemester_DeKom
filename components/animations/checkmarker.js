@@ -6,7 +6,7 @@ import {
     Text
   } from "react-native";
 
-export default function checkmark({navigation}) {
+export default function checkmarker({navigation}) {
 
     return (
     <View style={styles.animationContainer}>
