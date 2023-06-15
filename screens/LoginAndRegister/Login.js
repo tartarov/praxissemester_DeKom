@@ -1,5 +1,20 @@
-import React, { useRef, useContext, useEffect, useState } from "react";
-import { Text, View, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Image, Vibration} from "react-native"; //some imports not in use (yet)
+import React, {
+  useRef,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import {
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Image,
+  Vibration,
+  useWindowDimensions,
+} from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../../components/Buttons/Button.js";
@@ -7,9 +22,12 @@ import TextInput from "../../components/TextInput.js";
 import { AuthContext } from "../../context/AuthContext";
 import CustomText from "../../components/Font.js";
 import LogoText from "../../components/LogoFont.js";
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules } from "react-native";
 import Nfc_tutorial from "../../components/animations/Nfc_tutorial.js";
 import Correct from "../../components/animations/Correct.js";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import BottomSheet from "../../components/BottomSheet.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -32,6 +50,16 @@ export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
   const [idCardData, setidCardData] = useState({});
 
+  const bottomSheetRef = useRef(null);
+  const { height } = useWindowDimensions();
+  const openHandler = useCallback(() => {
+    bottomSheetRef.current.expand();
+  },[]);
+
+  const closeHandler = useCallback(() => {
+    bottomSheetRef.current.close();
+  },[]);
+
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
@@ -46,98 +74,119 @@ export default function Login({ navigation }) {
 
   const pin = useRef(null);
 
-// ...
+  // ...
 
-const {Aa2_Conntector} = NativeModules;
-const eventEmitter = new NativeEventEmitter(Aa2_Conntector)
+  const { Aa2_Conntector } = NativeModules;
+  const eventEmitter = new NativeEventEmitter(Aa2_Conntector);
 
-useEffect(() => {   
-eventEmitter.addListener('pJson', data => { 
-  console.log('Received pJson: ' + data);
-  gotTheData(data)
-})
-return () => {
-  eventEmitter.removeListener('pJson');
-};
-},[])
+  useEffect(() => {
+    eventEmitter.addListener("pJson", (data) => {
+      console.log("Received pJson: " + data);
+      gotTheData(data);
+    });
+    return () => {
+      eventEmitter.removeListener("pJson");
+    };
+  }, []);
 
-const gotTheData = async (data) => {
-  console.log("Got The Data! : " + data)
-  setidCardData(data);
-}
-console.log("after Received JSON");
+  const gotTheData = async (data) => {
+    console.log("Got The Data! : " + data);
+    setidCardData(data);
+  };
+  console.log("after Received JSON");
+  console.log(height * 0.5)
+  console.log(JSON.stringify(idCardData))
+  console.log(typeof idCardData)
+
+  if(idCardData.length){
+      openHandler()
+  } else if(idCardData.length && idCardData.includes('{"attached":true,"card":null,"insertable":false,"keypad":false,"msg":"READER","name":"NFC"}')){
+      closeHandler()
+  }
 
   return (
     <DismissKeyboard>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#2C3639",
-          alignItems: "center",
-          paddingTop:150
-         // justifyContent: "center",
-        }}
-      >
-        <LogoText style={{ color: "#A27B5C", fontSize: 40}}>
-          |DeKom.
-        </LogoText>
-        <CustomText
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View
           style={{
-            color: "#A27B5C",
-            fontSize: 10,
-            marginBottom: 0,
+            flex: 1,
+            backgroundColor: "#2C3639",
+            alignItems: "center",
+            paddingTop: 150,
+            // justifyContent: "center",
           }}
         >
-          All bueraucracies. One app.
-        </CustomText>
-        {idCardData.length ?  <Correct/> : <Nfc_tutorial/>}
-        <View
-          style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
-        >
-          <TextInput
-            style={{ color: "#DCD7C9"}}
-            icon="user"
-            placeholder="Enter your ID"
-            autoCapitalize="none"
-            autoCompleteType="cc-number"
-            keyboardAppearance="dark"
-            returnKeyType="next"
-            returnKeyLabel="next"
-            onChangeText={handleChange("id")}
-            onBlur={handleBlur("id")}
-            error={errors.id}
-            touched={touched.id}
-            onSubmitEditing={() => pin.current?.focus()}
+          <LogoText style={{ color: "#A27B5C", fontSize: 40 }}>
+            |DeKom.
+          </LogoText>
+          <CustomText
+            style={{
+              color: "#A27B5C",
+              fontSize: 10,
+              marginBottom: 0,
+            }}
+          >
+           All bueraucracies. One app.
+          </CustomText>
+          {idCardData.length ? <Correct /> : <Nfc_tutorial />}
+          <View
+            style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
+          >
+            <TextInput
+              style={{ color: "#DCD7C9" }}
+              icon="user"
+              placeholder="Enter your ID"
+              autoCapitalize="none"
+              autoCompleteType="cc-number"
+              keyboardAppearance="dark"
+              returnKeyType="next"
+              returnKeyLabel="next"
+              onChangeText={handleChange("id")}
+              onBlur={handleBlur("id")}
+              error={errors.id}
+              touched={touched.id}
+              onSubmitEditing={() => pin.current?.focus()}
+            />
+          </View>
+          <View
+            style={{ paddingHorizontal: 32, marginBottom: 0, width: "100%" }}
+          >
+            <TextInput
+              style={{ color: "#DCD7C9" }}
+              icon="key"
+              placeholder="Enter your PIN"
+              secureTextEntry
+              autoCompleteType="password"
+              keyboardType="number-pad"
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              returnKeyType="go"
+              returnKeyLabel="go"
+              onChangeText={handleChange("pin")}
+              onBlur={handleBlur("pin")}
+              error={errors.pin}
+              touched={touched.pin}
+              ref={pin}
+              onSubmitEditing={() => handleSubmit()}
+            />
+          </View>
+          {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
+          <View style={{ felx: 1, paddingHorizontal: 40, marginBottom: 70 }}>
+            <Image
+              source={require("../../assets/images/AusweisApp2_Bildmarke_transparent.png")}
+              style={{ height: 30, width: 180, marginVertical: 20 }}
+            />
+          </View>
+          <Button
+            label="Authentifizieren"
+            onPress={() => {
+              openHandler();
+            }}
           />
         </View>
-        <View
-          style={{ paddingHorizontal: 32, marginBottom: 0, width: "100%" }}
-        >
-          <TextInput
-            style={{ color: "#DCD7C9"}}
-            icon="key"
-            placeholder="Enter your PIN"
-            secureTextEntry
-            autoCompleteType="password"
-            keyboardType="number-pad"
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            returnKeyType="go"
-            returnKeyLabel="go"
-            onChangeText={handleChange("pin")}
-            onBlur={handleBlur("pin")}
-            error={errors.pin}
-            touched={touched.pin}
-            ref={pin}
-            onSubmitEditing={() => handleSubmit()}
-          />
-        </View>
-       {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
-        <View style={{felx:1, paddingHorizontal:40, marginBottom:70}}>
-        <Image source={require('../../assets/images/AusweisApp2_Bildmarke_transparent.png')} style={{height:30, width: 180, marginVertical:20}}/>
-        </View>
-        <Button label="Authentifizieren" onPress={handleSubmit} />
-      </View>
+
+        <BottomSheet activeHeight={height * 0.5} ref={bottomSheetRef} />
+      </GestureHandlerRootView>
     </DismissKeyboard>
   );
 }
