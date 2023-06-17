@@ -28,6 +28,8 @@ import Correct from "../../components/animations/Correct.js";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheet from "../../components/BottomSheet.js";
+import BottomSheetPUK from "../../components/BottomSheetPUK.js";
+import BottomSheetCAN from "../../components/BottomSheetCAN.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -50,15 +52,28 @@ export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
   const [idCardData, setidCardData] = useState({});
 
-  const bottomSheetRef = useRef(null);
   const { height } = useWindowDimensions();
-  const openHandler = useCallback(() => {
+
+  const bottomSheetRef = useRef(null);
+  const bottomSheetPukRef = useRef(null);
+  const bottomSheetCanRef = useRef(null);
+  const openPinInput = useCallback(() => {
     bottomSheetRef.current.expand();
-  },[]);
+  }, []);
+
+  const openPukInput = useCallback(() => {
+    bottomSheetPukRef.current.expand();
+  }, []);
+
+  const openCanInput = useCallback(() => {
+    bottomSheetCanRef.current.expand();
+  }, []);
 
   const closeHandler = useCallback(() => {
     bottomSheetRef.current.close();
-  },[]);
+    bottomSheetPukRef.current.close();
+    bottomSheetCanRef.current.close();
+  }, []);
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     useFormik({
@@ -76,8 +91,8 @@ export default function Login({ navigation }) {
 
   // ...
 
-  const { Aa2_Conntector } = NativeModules;
-  const eventEmitter = new NativeEventEmitter(Aa2_Conntector);
+  const { Aa2_Connector } = NativeModules;
+  const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
   useEffect(() => {
     eventEmitter.addListener("pJson", (data) => {
@@ -90,18 +105,24 @@ export default function Login({ navigation }) {
   }, []);
 
   const gotTheData = async (data) => {
-    console.log("Got The Data! : " + data);
-    setidCardData(data);
+    console.log("Got The Data! : " + JSON.parse(data));
+    let fromAa2 = JSON.parse(data);
+    console.log("Got The Data! : " + fromAa2.msg);
+    setidCardData(fromAa2.msg);
   };
   console.log("after Received JSON");
-  console.log(height * 0.5)
-  console.log(JSON.stringify(idCardData))
-  console.log(typeof idCardData)
+  console.log(height * 0.5);
+  console.log(JSON.stringify(idCardData));
+  console.log(typeof idCardData);
 
-  if(idCardData.length){
-      openHandler()
-  } else if(idCardData.length && idCardData.includes('{"attached":true,"card":null,"insertable":false,"keypad":false,"msg":"READER","name":"NFC"}')){
-      closeHandler()
+  if (idCardData === "ENTER_PIN") {
+    openPinInput();
+  } else if (idCardData === "ENTER_PUK") {
+    openPukInput();
+  } else if (idCardData === "ENTER_CAN") {
+    openCanInput();
+  } else if (idCardData === "READER") {
+    closeHandler();
   }
 
   return (
@@ -126,7 +147,7 @@ export default function Login({ navigation }) {
               marginBottom: 0,
             }}
           >
-           All bueraucracies. One app.
+            All bueraucracies. One app.
           </CustomText>
           {idCardData.length ? <Correct /> : <Nfc_tutorial />}
           <View
@@ -180,12 +201,17 @@ export default function Login({ navigation }) {
           <Button
             label="Authentifizieren"
             onPress={() => {
-              openHandler();
+              openPinInput();
             }}
           />
         </View>
 
         <BottomSheet activeHeight={height * 0.5} ref={bottomSheetRef} />
+        <BottomSheetPUK activeHeight={height * 0.5} ref={bottomSheetPukRef} />
+        <BottomSheetCAN
+          activeHeight={height * 0.5}
+          ref={bottomSheetCanRef}
+        ></BottomSheetCAN>
       </GestureHandlerRootView>
     </DismissKeyboard>
   );

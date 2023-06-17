@@ -32,6 +32,8 @@ import com.governikus.ausweisapp2.IAusweisApp2SdkCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.CountDownLatch;
+
 public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
     private static final String AA2_PROCESS = "ausweisapp2_service";
@@ -39,10 +41,13 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     ServiceConnection mConnection;
     ReactApplicationContext reactContext;
     LocalCallback mCallback;
+   // CountDownLatch pinLatch;
+    String pin;
 
     public Aa2_ConnectorModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(this);
+      //  this.pinLatch = new CountDownLatch(1);
 
         if (isAA2Process()) {
             System.out.println("anwendung läuft schon!");
@@ -56,17 +61,14 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                     mSdk = IAusweisApp2Sdk.Stub.asInterface(service);
                     System.out.println("init success! ");
                     mCallback = new LocalCallback(mSdk); //mSdk
-                    System.out.println("callBack init: " + mCallback);
-
                     mSdk.connectSdk(mCallback);
 
                     Activity currentActivity = reactContext.getCurrentActivity();
+
                     if( currentActivity != null) {
-                        System.out.println(">>>>>>> HANDLE INTENT SHOULD RUN <<<<<<");
                         handleIntent(currentActivity.getIntent(), mCallback);
-                    } else{
-                        System.out.println("CURRENT ACTIVITY IS NULL ----------");
                     }
+
                     String cmd = "{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}";
                     System.out.println("before send");
                     System.out.println("command?: " + cmd + " -> " + mSdk.send(mCallback.mSessionID, cmd));
@@ -133,8 +135,11 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     }
 
     @ReactMethod
-    public void createCalendarEvent(String name, String location){
-        Log.d("Aa2_Connector", "Create event called with name: " + name + " and location: " + location);
+    public void getPinFromRn(String pin){
+        this.pin = pin;
+        Log.d("Aa2_Connector", "Create event called with name: " + pin);
+        mCallback.setPin(pin);
+      //  pinLatch.countDown();
     }
 
     @Override
@@ -157,6 +162,7 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     class LocalCallback extends IAusweisApp2SdkCallback.Stub {
         public String mSessionID = null;
         public IAusweisApp2Sdk mSdk;
+        public String pin;
 
         @Override
         public void sessionIdGenerated(String pSessionId, boolean pIsSecureSessionId) throws RemoteException {
@@ -167,6 +173,11 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
             this.mSdk = mSdk;
         }
 
+        public void setPin(String pin) {
+            this.pin = pin;
+        }
+
+
         @Override
         public void receive(String pJson) throws RemoteException {
             try {
@@ -176,17 +187,25 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                 if (msg.equals("ACCESS_RIGHTS")) {
                     System.out.println("Access rights are done! Congrats");
                     String cmdTwo = "{\"cmd\": \"ACCEPT\"}";
-                    mSdk.send(this.mSessionID, cmdTwo);
+                    sendCommand(cmdTwo);
                 }
+                /*
                 if (msg.equals("ENTER_PIN")) {
-                    String cmdThree = "{\"cmd\": \"SET_PIN\", \"value\": \"451086\"}";
-                    mSdk.send(this.mSessionID, cmdThree);
+                    pinLatch.await();
+                    String cmdThree = "{\"cmd\": \"SET_PIN\", \"value\": \"" + pin + "\"}";
+                    sendCommand(cmdThree);
                 }
 
                 if (msg.equals("ENTER_CAN")) {
                     String cmdFour = "{\"cmd\": \"SET_CAN\", \"value\": \"491908\"}";
-                    mSdk.send(this.mSessionID, cmdFour);
+                    sendCommand(cmdFour);
                 }
+
+                if (msg.equals("ENTER_PUK")) {
+                    String cmdFive = "{\"cmd\": \"SET_PUK\", \"value\": \"WT2YXNYHVW\"}";
+                    sendCommand(cmdFive);
+                }
+                */
                 System.out.println("<<<<<<<pJSON>>>>>>>>: " + pJson);
                 Aa2_ConnectorModule.sendEvent(getReactApplicationContext(),"pJson", pJson);
 
@@ -194,11 +213,18 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                 e.printStackTrace();
             }
             // handle message from SDK
+
+
         }
 
         @Override
         public void sdkDisconnected() throws RemoteException {
 
         }
+    }
+
+    @ReactMethod
+    public void sendCommand (String command) throws RemoteException {
+        mSdk.send(mCallback.mSessionID, command);
     }
 }

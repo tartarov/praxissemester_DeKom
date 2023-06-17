@@ -49,6 +49,10 @@ const getHash = async (value) => {
 };
 
 const authorized = async (id, pin) => {
+  console.log("in Authorized ist folgende Pin: " + pin)
+  let mock = true;
+
+  if(mock == true){
   try {
     const response = await fetch(
       `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
@@ -60,6 +64,7 @@ const authorized = async (id, pin) => {
     console.error(`Error during authorization: ${error.message}`);
     throw error;
   }
+}
 };
 
 app.get("/auth.behoerde", (req, res) => {
