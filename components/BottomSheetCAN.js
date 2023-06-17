@@ -64,8 +64,8 @@ import React, {
   
     const LoginSchema = Yup.object().shape({
       can: Yup.string()
-        .min(10, "Too Short!")
-        .max(10, "Too Long!")
+        .min(6, "Too Short!")
+        .max(6, "Too Long!")
         .required("Required"),
     });
   
@@ -103,7 +103,7 @@ import React, {
             alignSelf: "center",
             paddingVertical: 10,
             paddingHorizontal: 20,
-            color: "#CC3D3F",
+            color: "#8B8000",
             textAlign: 'center'
           }}>
         ATTENTION: You have now entered the PIN incorrectly twice. To proceed, please enter your CAN first. You can find the 6-digit CAN on the bottom right of your ID card.
@@ -128,8 +128,8 @@ import React, {
         >
           <TextInputBlack
             style={{ color: "#3F4E4F" }}
-            icon="key"
-            placeholder="          *    *    *    *    *    *     *     *     *     *"
+            icon="v-card"
+            placeholder="                   *    *    *    *    *    *"
             secureTextEntry
             autoCompleteType="password"
             keyboardType="number-pad"

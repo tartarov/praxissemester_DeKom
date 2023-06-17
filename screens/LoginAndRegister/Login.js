@@ -25,7 +25,9 @@ import LogoText from "../../components/LogoFont.js";
 import { NativeEventEmitter, NativeModules } from "react-native";
 import Nfc_tutorial from "../../components/animations/Nfc_tutorial.js";
 import Correct from "../../components/animations/Correct.js";
+import Processer from "../../components/animations/Processer.js";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SomethingWentWrong from "../../components/animations/SomethingWentWrong.js";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheet from "../../components/BottomSheet.js";
 import BottomSheetPUK from "../../components/BottomSheetPUK.js";
@@ -50,7 +52,7 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
-  const [idCardData, setidCardData] = useState({});
+  const [idCardData, setidCardData] = useState("");
 
   const { height } = useWindowDimensions();
 
@@ -100,7 +102,7 @@ export default function Login({ navigation }) {
       gotTheData(data);
     });
     return () => {
-      eventEmitter.removeListener("pJson");
+      eventEmitter.removeAllListeners("pJson");
     };
   }, []);
 
@@ -118,9 +120,11 @@ export default function Login({ navigation }) {
   if (idCardData === "ENTER_PIN") {
     openPinInput();
   } else if (idCardData === "ENTER_PUK") {
+    //openCanInput();
     openPukInput();
   } else if (idCardData === "ENTER_CAN") {
     openCanInput();
+   // openPukInput();
   } else if (idCardData === "READER") {
     closeHandler();
   }
@@ -149,7 +153,15 @@ export default function Login({ navigation }) {
           >
             All bueraucracies. One app.
           </CustomText>
-          {idCardData.length ? <Correct /> : <Nfc_tutorial />}
+          {(idCardData === "" || idCardData === "READER"  || idCardData === "INSERT_CARD") && (<Nfc_tutorial />)}
+        
+        {(idCardData === "ENTER_PIN" || idCardData === "ENTER_PUK" || idCardData === "ENTER_CAN") && (
+          <Processer />
+        )}
+
+        {idCardData === "STATUS" && <SomethingWentWrong />}
+
+        {idCardData === "AUTH" && <Correct />}
           <View
             style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
           >

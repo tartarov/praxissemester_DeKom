@@ -9,6 +9,7 @@ import { AntragProvider } from "./context/AntragContext";
 import { LogBox } from "react-native";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 ///// +++REMOVE IF DEPENDECY FIXED++++
 
 const App = () => {

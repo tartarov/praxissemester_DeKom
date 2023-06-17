@@ -128,7 +128,7 @@ import React, {
         >
           <TextInputBlack
             style={{ color: "#3F4E4F" }}
-            icon="key"
+            icon="lock-open"
             placeholder="          *    *    *    *    *    *     *     *     *     *"
             secureTextEntry
             autoCompleteType="password"
