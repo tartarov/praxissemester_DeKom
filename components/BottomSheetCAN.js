@@ -30,12 +30,14 @@ import { AuthContext } from "../context/AuthContext";
 import Button from "./Buttons/Button.js";
 import CustomText from "./Font";
 import { Linking } from "react-native";
+import { Entypo as Icon } from '@expo/vector-icons';
 
 const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
   const topAnimation = useSharedValue(height);
   const [enteredNumbers, setEnteredNumbers] = useState("");
   const [isTouched, setIsTouched] = useState(false);
+  const [showDigits, setShowDigits] = useState(false);
 
   const numberPad = [
     { value: "1" },
@@ -126,6 +128,10 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
 
   const can = useRef(null);
 
+  const toggleShowDigits = () => {
+    setShowDigits(!showDigits);
+  };
+
   return (
     <Animated.View style={[styles.container, animationStyle]}>
       <LogoText
@@ -172,12 +178,28 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
       >
         Can't find your CAN?
       </Text>
+
+      <TouchableOpacity
+            style={{   alignSelf: "center", marginTop:20}}
+            onPress={toggleShowDigits}
+          >
+            <Text style={styles.toggleButtonText}>
+              {showDigits ?   <Icon
+                name={"eye"}
+                size={18}
+              /> : <Icon
+              name={"eye-with-line"}
+              size={18}
+            />} 
+            </Text>
+          </TouchableOpacity>
+
       <View
         style={{
           paddingHorizontal: 32,
           marginBottom: 0,
           width: "100%",
-          paddingTop: 45,
+          paddingTop: 15,
         }}
       >
         <TextInputBlack
@@ -187,7 +209,7 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
           ]}
           letterSpacing={37}
           icon="v-card"
-          placeholder="******"
+          placeholder="______"
           secureTextEntry
           autoCompleteType="password"
           keyboardType="number-pad"
@@ -223,7 +245,8 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
             style={styles.backspaceButton}
             onPress={handleBackspace}
           >
-            <Text style={styles.backspaceButtonText}>{"<"}</Text>
+
+            <Icon name={"erase"} style={styles.backspaceButtonText} size={16}/>
           </TouchableOpacity>
         </View>
 
@@ -257,8 +280,8 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   numberPadButton: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 37,
     borderRadius: 40,
     marginRight: 50,
     marginBottom: 10,

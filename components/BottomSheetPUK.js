@@ -30,12 +30,14 @@ import Button from "./Buttons/Button.js";
 import CustomText from "./Font";
 import { Linking } from "react-native";
 import NumberPad from "./NumberPad";
+import { Entypo as Icon } from "@expo/vector-icons";
 
 const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
   const topAnimation = useSharedValue(height);
   const [enteredNumbers, setEnteredNumbers] = useState("");
   const [isTouched, setIsTouched] = useState(false);
+  const [showDigits, setShowDigits] = useState(false);
 
   const numberPad = [
     { value: "1" },
@@ -126,6 +128,10 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
 
   const puk = useRef(null);
 
+  const toggleShowDigits = () => {
+    setShowDigits(!showDigits);
+  };
+
   return (
     <Animated.View style={[styles.container, animationStyle]}>
       <View style={{ flex: 1 }}>
@@ -172,12 +178,28 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
           Forgotten or lost your PUK?
         </Text>
 
+        <TouchableOpacity
+            style={{   alignSelf: "center", marginTop:20}}
+            onPress={toggleShowDigits}
+          >
+            <Text style={styles.toggleButtonText}>
+              {showDigits ?   <Icon
+                name={"eye"}
+                size={18}
+              /> : <Icon
+              name={"eye-with-line"}
+              size={18}
+            />} 
+            </Text>
+          </TouchableOpacity>
+
+
         <View
           style={{
             paddingHorizontal: 32,
             marginBottom: 0,
             width: "100%",
-            marginTop: 45,
+            marginTop: 15,
           }}
         >
           <TextInputBlack
@@ -185,10 +207,10 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
               { color: enteredNumbers.length === 10 ? "green" : "#3F4E4F" },
               { fontSize: 18 },
             ]}
-            letterSpacing={19.5}
+            letterSpacing={18}
             icon="lock-open"
-            placeholder="**********"
-            secureTextEntry
+            placeholder="__________"
+            secureTextEntry = {!showDigits}
             autoCompleteType="password"
             keyboardType="number-pad"
             autoCapitalize="none"
@@ -210,9 +232,12 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
               <TouchableOpacity
                 key={button.value}
                 style={[
-                    styles.numberPadButton,
-                    { backgroundColor: enteredNumbers.length === 10 ? "#A0AAA0" : "#2C3639" },
-                  ]}
+                  styles.numberPadButton,
+                  {
+                    backgroundColor:
+                      enteredNumbers.length === 10 ? "#A0AAA0" : "#2C3639",
+                  },
+                ]}
                 onPress={() => handleNumberPress(button.value)}
                 disabled={enteredNumbers.length === 10}
               >
@@ -223,7 +248,11 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
               style={styles.backspaceButton}
               onPress={handleBackspace}
             >
-              <Text style={styles.backspaceButtonText}>{"<"}</Text>
+              <Icon
+                name={"erase"}
+                style={styles.backspaceButtonText}
+                size={16}
+              />
             </TouchableOpacity>
           </View>
 
@@ -258,11 +287,11 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   numberPadButton: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 37,
     borderRadius: 40,
     marginRight: 50,
-    marginBottom: 10,
+    marginBottom: 15,
     justifyContent: "center",
     alignItems: "center",
   },

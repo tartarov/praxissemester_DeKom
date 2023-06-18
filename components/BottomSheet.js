@@ -32,12 +32,14 @@ import { AuthContext } from "../context/AuthContext";
 import Button from "./Buttons/Button.js";
 import CustomText from "./Font";
 import { Linking } from "react-native";
+import { Entypo as Icon } from '@expo/vector-icons';
 
 const BottomSheet = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
   const topAnimation = useSharedValue(height);
   const [enteredNumbers, setEnteredNumbers] = useState("");
   const [isTouched, setIsTouched] = useState(false);
+  const [showDigits, setShowDigits] = useState(false);
 
   const numberPad = [
     { value: "1" },
@@ -68,12 +70,6 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
   };
 
   const { login } = useContext(AuthContext);
-
-  const DismissKeyboard = ({ children }) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {children}
-    </TouchableWithoutFeedback>
-  );
 
   const animationStyle = useAnimatedStyle(() => {
     const top = topAnimation.value;
@@ -135,6 +131,10 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
 
   const pin = useRef(null);
 
+  const toggleShowDigits = () => {
+    setShowDigits(!showDigits);
+  };
+
   return (
     <Animated.View style={[styles.container, animationStyle]}>
       <LogoText
@@ -178,12 +178,28 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
       >
         Forgotten or lost your PIN?
       </Text>
+
+      <TouchableOpacity
+            style={{   alignSelf: "center", marginTop:20}}
+            onPress={toggleShowDigits}
+          >
+            <Text style={styles.toggleButtonText}>
+              {showDigits ?   <Icon
+                name={"eye"}
+                size={18}
+              /> : <Icon
+              name={"eye-with-line"}
+              size={18}
+            />} 
+            </Text>
+          </TouchableOpacity>
+
       <View
         style={{
           paddingHorizontal: 32,
           marginBottom: 0,
           width: "100%",
-          marginTop: 45,
+          marginTop: 15,
         }}
       >
         <TextInputBlack
@@ -193,7 +209,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
           ]}
           letterSpacing={37}
           icon="key"
-          placeholder="******"
+          placeholder="______"
           secureTextEntry
           autoCompleteType="password"
           keyboardType="number-pad"
@@ -229,7 +245,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
             style={styles.backspaceButton}
             onPress={handleBackspace}
           >
-            <Text style={styles.backspaceButtonText}>{"<"}</Text>
+            <Icon name={"erase"} style={styles.backspaceButtonText} size={16}/>
           </TouchableOpacity>
         </View>
 
@@ -263,8 +279,8 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   numberPadButton: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 37,
     borderRadius: 40,
     marginRight: 50,
     marginBottom: 10,

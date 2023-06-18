@@ -58,6 +58,7 @@ export default function Login({ navigation }) {
   const bottomSheetRef = useRef(null);
   const bottomSheetPukRef = useRef(null);
   const bottomSheetCanRef = useRef(null);
+  
   const openPinInput = useCallback(() => {
     bottomSheetRef.current.expand();
   }, []);
