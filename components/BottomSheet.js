@@ -5,8 +5,19 @@ import React, {
   useImperativeHandle,
   useRef,
   useContext,
+  useState,
 } from "react";
-import { StyleSheet, View, Text, useWindowDimensions, NativeModules } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  useWindowDimensions,
+  NativeModules,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -20,13 +31,49 @@ import * as Yup from "yup";
 import { AuthContext } from "../context/AuthContext";
 import Button from "./Buttons/Button.js";
 import CustomText from "./Font";
-import { Linking } from 'react-native';
+import { Linking } from "react-native";
 
 const BottomSheet = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
   const topAnimation = useSharedValue(height);
+  const [enteredNumbers, setEnteredNumbers] = useState("");
+  const [isTouched, setIsTouched] = useState(false);
+
+  const numberPad = [
+    { value: "1" },
+    { value: "2" },
+    { value: "3" },
+    { value: "4" },
+    { value: "5" },
+    { value: "6" },
+    { value: "7" },
+    { value: "8" },
+    { value: "9" },
+    { value: "0" },
+  ];
+
+  const handleNumberPress = (number) => {
+    setEnteredNumbers(enteredNumbers + number);
+    console.log(enteredNumbers.length);
+    if (enteredNumbers.length === 5) {
+      setIsTouched(true);
+    }
+  };
+
+  const handleBackspace = () => {
+    setEnteredNumbers(enteredNumbers.slice(0, -1));
+    if (enteredNumbers.length <= 6) {
+      setIsTouched(false);
+    }
+  };
 
   const { login } = useContext(AuthContext);
+
+  const DismissKeyboard = ({ children }) => (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      {children}
+    </TouchableWithoutFeedback>
+  );
 
   const animationStyle = useAnimatedStyle(() => {
     const top = topAnimation.value;
@@ -74,12 +121,14 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
       validationSchema: LoginSchema,
       initialValues: { pin: "" },
       onSubmit: (values) => {
-        console.log("values.Pin: " + values.pin)
-        const ourPin = values.pin.toString()
-        console.log("ourPin: " + ourPin)
-        console.log("ourPin is the type of: " + typeof ourPin)
-       // Aa2_Connector.getPinFromRn(ourPin);
-        Aa2_Connector.sendCommand("{\"cmd\": \"SET_PIN\", \"value\": \"" + ourPin  + "\"}")
+        console.log("values.Pin: " + values.pin);
+        const ourPin = values.pin.toString();
+        console.log("ourPin: " + ourPin);
+        console.log("ourPin is the type of: " + typeof ourPin);
+        // Aa2_Connector.getPinFromRn(ourPin);
+        Aa2_Connector.sendCommand(
+          '{"cmd": "SET_PIN", "value": "' + ourPin + '"}'
+        );
         login(values.pin, values.id);
       },
     });
@@ -99,38 +148,52 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
         {" "}
         Please enter your PIN{" "}
       </LogoText>
-      <CustomText      style={{
+      <CustomText
+        style={{
           fontSize: 11,
           alignSelf: "center",
           paddingVertical: 10,
           paddingHorizontal: 20,
           color: "#2C3639",
-          textAlign: 'center'
-        }}>
-      You will find the 6-digit transport pin in your PIN letter, which was delivered at the time you received your ID card.
+          textAlign: "center",
+        }}
+      >
+        You will find the 6-digit transport pin in your PIN letter, which was
+        delivered at the time you received your ID card.
       </CustomText>
-      <Text style={{
+      <Text
+        style={{
           fontSize: 11,
+          fontWeight: "bold",
+          textDecorationLine: "underline",
           alignSelf: "center",
           paddingVertical: 1,
           paddingHorizontal: 20,
           color: "#2C3639",
-          textAlign: 'center'
-        }} onPress={() => Linking.openURL('https://www.pin-ruecksetzbrief-bestellen.de/')}>
-      Forgotten or lost your PIN?
-        </Text>
+          textAlign: "center",
+        }}
+        onPress={() =>
+          Linking.openURL("https://www.pin-ruecksetzbrief-bestellen.de/")
+        }
+      >
+        Forgotten or lost your PIN?
+      </Text>
       <View
         style={{
           paddingHorizontal: 32,
           marginBottom: 0,
           width: "100%",
-          paddingTop: 20,
+          marginTop: 45,
         }}
       >
         <TextInputBlack
-          style={{ color: "#3F4E4F" }}
+          style={[
+            { color: enteredNumbers.length === 10 ? "green" : "#3F4E4F" },
+            { fontSize: 18 },
+          ]}
+          letterSpacing={37}
           icon="key"
-          placeholder="                     *    *    *    *    *    *"
+          placeholder="******"
           secureTextEntry
           autoCompleteType="password"
           keyboardType="number-pad"
@@ -138,21 +201,41 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
           keyboardAppearance="dark"
           returnKeyType="go"
           returnKeyLabel="go"
+          editable={false}
+          value={enteredNumbers}
           onChangeText={handleChange("pin")}
           onBlur={handleBlur("pin")}
           error={errors.pin}
-          touched={touched.pin}
+          touched={isTouched}
           ref={pin}
           onSubmitEditing={() => handleSubmit()}
         ></TextInputBlack>
 
-        <View style={{alignSelf: "center", marginTop:100}}>
-        <Button
-          label="Authentifizieren"
-          onPress={handleSubmit}
-        />
+        <View style={styles.numberPad}>
+          {numberPad.map((button) => (
+            <TouchableOpacity
+              key={button.value}
+              style={[
+                styles.numberPadButton,
+                { backgroundColor: enteredNumbers.length === 6 ? "#A0AAA0" : "#2C3639" },
+              ]}
+              onPress={() => handleNumberPress(button.value)}
+              disabled={enteredNumbers.length === 6}
+            >
+              <Text style={styles.numberPadButtonText}>{button.value}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.backspaceButton}
+            onPress={handleBackspace}
+          >
+            <Text style={styles.backspaceButtonText}>{"<"}</Text>
+          </TouchableOpacity>
         </View>
 
+        <View style={{ alignSelf: "center", marginTop: 50 }}>
+          <Button label="Authentifizieren" onPress={handleSubmit} />
+        </View>
       </View>
     </Animated.View>
   );
@@ -170,5 +253,40 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
+  },
+  numberPad: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginTop: 30,
+    marginLeft: 40,
+    marginRight: 0,
+  },
+  numberPadButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    marginRight: 50,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  numberPadButtonText: {
+    fontSize: 22,
+    color: "#DCD7C9",
+  },
+  backspaceButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    marginRight: -40,
+    marginBottom: 10,
+    backgroundColor: "#DCD7C9",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backspaceButtonText: {
+    fontSize: 22,
+    color: "#2C3639",
   },
 });

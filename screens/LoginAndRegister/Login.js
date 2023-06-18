@@ -10,7 +10,6 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
   Image,
   Vibration,
   useWindowDimensions,
@@ -120,13 +119,14 @@ export default function Login({ navigation }) {
   if (idCardData === "ENTER_PIN") {
     openPinInput();
   } else if (idCardData === "ENTER_PUK") {
-    //openCanInput();
+  //openCanInput();
+   // openPinInput();
     openPukInput();
   } else if (idCardData === "ENTER_CAN") {
     openCanInput();
    // openPukInput();
   } else if (idCardData === "READER") {
-    closeHandler();
+    //closeHandler();
   }
 
   return (
@@ -137,7 +137,7 @@ export default function Login({ navigation }) {
             flex: 1,
             backgroundColor: "#2C3639",
             alignItems: "center",
-            paddingTop: 150,
+            paddingTop: 50,
             // justifyContent: "center",
           }}
         >
@@ -218,10 +218,10 @@ export default function Login({ navigation }) {
           />
         </View>
 
-        <BottomSheet activeHeight={height * 0.5} ref={bottomSheetRef} />
-        <BottomSheetPUK activeHeight={height * 0.5} ref={bottomSheetPukRef} />
+        <BottomSheet activeHeight={height * 0.2} ref={bottomSheetRef} />
+        <BottomSheetPUK activeHeight={height * 0.2} ref={bottomSheetPukRef} />
         <BottomSheetCAN
-          activeHeight={height * 0.5}
+          activeHeight={height * 0.2}
           ref={bottomSheetCanRef}
         ></BottomSheetCAN>
       </GestureHandlerRootView>

@@ -9,11 +9,11 @@ const TextInputBlack = forwardRef(({ icon, error, touched, ...otherProps }, ref)
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        height: 48,
+        height: 68,
         borderRadius: 8,
         borderColor: validationColor,
         borderWidth: 2, //StyleSheet.hairlineWidth
-        padding: 8,
+        padding: 10,
       }}
     >
       <View style={{ padding: 2}}>
@@ -23,7 +23,7 @@ const TextInputBlack = forwardRef(({ icon, error, touched, ...otherProps }, ref)
         <RNTextInput
           underlineColorAndroid='transparent'
           placeholderTextColor='#3F4E4F'
-          color='#DCD7C9'
+          color='#3F4E4F'
           ref={ref}
           {...otherProps}
         />
