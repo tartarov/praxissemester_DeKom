@@ -69,6 +69,12 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
     }
   };
 
+  const handlePinChange = (value) => {
+    console.log("value: " + value)
+    setEnteredNumbers(value);
+    handleChange("pin")(value);
+  };
+
   const { login } = useContext(AuthContext);
 
   const animationStyle = useAnimatedStyle(() => {
@@ -99,36 +105,50 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
     () => ({
       expand,
       close,
+      sendToLogin
     }),
-    [expand, close]
+    [expand, close, sendToLogin]
   );
 
   const { Aa2_Connector } = NativeModules;
 
   const LoginSchema = Yup.object().shape({
     pin: Yup.string()
-      .min(6, "Too Short!")
-      .max(6, "Too Long!")
+
       .required("Required"),
   });
 
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
+  const { handleChange, handleSubmit, handleBlur, errors, touched } =
     useFormik({
       validationSchema: LoginSchema,
-      initialValues: { pin: "" },
+      initialValues: { pin: enteredNumbers },
       onSubmit: (values) => {
-        console.log("values.Pin: " + values.pin);
-        const ourPin = values.pin.toString();
+        console.log("values.Pin: " + enteredNumbers);
+        const ourPin = enteredNumbers.toString();
         console.log("ourPin: " + ourPin);
         console.log("ourPin is the type of: " + typeof ourPin);
         // Aa2_Connector.getPinFromRn(ourPin);
         Aa2_Connector.sendCommand(
           '{"cmd": "SET_PIN", "value": "' + ourPin + '"}'
         );
-        login(values.pin, values.id);
+      
       },
     });
 
+    const sendToAa2 = (value) => {
+      console.log("value: " + value)
+      const ourPin = value.toString();
+      console.log("ourPin: " + ourPin);
+      Aa2_Connector.sendCommand(
+        '{"cmd": "SET_PIN", "value": "' + ourPin + '"}'
+      );
+      close()
+    };
+
+    const sendToLogin = () => {
+      login(enteredNumbers);
+    }
+    
   const pin = useRef(null);
 
   const toggleShowDigits = () => {
@@ -210,7 +230,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
           letterSpacing={37}
           icon="key"
           placeholder="______"
-          secureTextEntry
+          secureTextEntry = {!showDigits}
           autoCompleteType="password"
           keyboardType="number-pad"
           autoCapitalize="none"
@@ -219,7 +239,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
           returnKeyLabel="go"
           editable={false}
           value={enteredNumbers}
-          onChangeText={handleChange("pin")}
+          onChangeText={handlePinChange}
           onBlur={handleBlur("pin")}
           error={errors.pin}
           touched={isTouched}
@@ -250,7 +270,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
         </View>
 
         <View style={{ alignSelf: "center", marginTop: 50 }}>
-          <Button label="Authentifizieren" onPress={handleSubmit} />
+          <Button label="Authentifizieren" onPress={() => sendToAa2(enteredNumbers)} />
         </View>
       </View>
     </Animated.View>

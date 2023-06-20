@@ -13,6 +13,7 @@ import {
   Image,
   Vibration,
   useWindowDimensions,
+  Alert
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -71,6 +72,11 @@ export default function Login({ navigation }) {
     bottomSheetCanRef.current.expand();
   }, []);
 
+  const processLogin = useCallback(() => {
+    bottomSheetRef.current.sendToLogin();
+  }, []);
+
+
   const closeHandler = useCallback(() => {
     bottomSheetRef.current.close();
     bottomSheetPukRef.current.close();
@@ -110,24 +116,28 @@ export default function Login({ navigation }) {
     console.log("Got The Data! : " + JSON.parse(data));
     let fromAa2 = JSON.parse(data);
     console.log("Got The Data! : " + fromAa2.msg);
-    setidCardData(fromAa2.msg);
+    setidCardData(fromAa2);
   };
   console.log("after Received JSON");
   console.log(height * 0.5);
-  console.log(JSON.stringify(idCardData));
-  console.log(typeof idCardData);
+  //console.log(JSON.stringify(idCardData));
+  console.log(idCardData.result?.description);
 
-  if (idCardData === "ENTER_PIN") {
+  if (idCardData.msg === "ENTER_PIN") {
     openPinInput();
-  } else if (idCardData === "ENTER_PUK") {
+  } else if (idCardData.msg === "ENTER_PUK") {
   //openCanInput();
    // openPinInput();
     openPukInput();
-  } else if (idCardData === "ENTER_CAN") {
+  } else if (idCardData.msg === "ENTER_CAN") {
     openCanInput();
    // openPukInput();
-  } else if (idCardData === "READER") {
+  } else if (idCardData.msg === "READER") {
     //closeHandler();
+  } else if (idCardData.result?.description === "An internal error has occurred during processing.") {
+    //closeHandler();
+    Alert.alert("Oh no, " + idCardData.result?.description, idCardData.result?.message)
+    processLogin()
   }
 
   return (
@@ -205,7 +215,8 @@ export default function Login({ navigation }) {
             />
           </View>
           {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
-          <View style={{ felx: 1, paddingHorizontal: 40, marginBottom: 70 }}>
+          <View style={{ felx: 1, paddingHorizontal: 40, marginBottom: 70,  flexDirection: "row"}}>
+            <CustomText style={{ height: 30, marginVertical: 20, marginTop: 25, color: "#DCD7C9", fontSize:17  }}>Scured by</CustomText>
             <Image
               source={require("../../assets/images/AusweisApp2_Bildmarke_transparent.png")}
               style={{ height: 30, width: 180, marginVertical: 20 }}

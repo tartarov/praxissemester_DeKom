@@ -210,7 +210,7 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
           letterSpacing={37}
           icon="v-card"
           placeholder="______"
-          secureTextEntry
+          secureTextEntry = {!showDigits}
           autoCompleteType="password"
           keyboardType="number-pad"
           autoCapitalize="none"

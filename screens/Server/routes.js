@@ -88,27 +88,27 @@ app.get("/auth.behoerde", (req, res) => {
 });
 
 app.get("/testdb.userdaten", async (req, res) => {
-  const { id, pin } = req.query;
+  const { pin } = req.query;
 
-  const isAuthenticated = await authorized(id, pin);
+ // const isAuthenticated = await authorized(id, pin);
 
-  if (isAuthenticated) {
-    let user = { id: id, pin: pin };
+ // if (isAuthenticated) {
+    let user = { pin: pin };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
 
     res.cookie("token", token, { httpOnly: true });
     res.send(formattingResponse(token, { value: true }));
-  } else {
-    res.send(formattingResponse(null, { value: null }));
-  }
+ // } else {
+//    res.send(formattingResponse(null, { value: null }));
+//  }
 });
 
 app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
   const token = req.cookies.token; //so bekommen wir den Token
   const decoded = jwt_decode(token);
-  const userIdHash = await getHash(decoded.user.id);
+  const userIdHash = await getHash(decoded.user.pin);
 
   const query = `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
   connectionDekomdb.getConnection((err, ourConnection) => {
@@ -147,7 +147,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 
   const token = req.cookies.token;
   const decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.id);
+  const hash = await getHash(decoded.user.pin);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -183,7 +183,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.id);
+  const hash = await getHash(decoded.user.pin);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -203,7 +203,7 @@ app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.id);
+  const hash = await getHash(decoded.user.pin);
 
   let date_ob = new Date();
 
@@ -255,7 +255,7 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
 app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.id);
+  const hash = await getHash(decoded.user.pin);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(

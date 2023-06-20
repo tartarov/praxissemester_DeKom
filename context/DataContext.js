@@ -46,7 +46,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     const respond = await fetch(
-      `http://192.168.178.24/dekomdb.dekom_user/identify`,
+      `http://192.168.1.213:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }
