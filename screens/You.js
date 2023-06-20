@@ -27,9 +27,9 @@ function You({ navigation }) {
         console.log("AsyncStorage JWT token: " + data);
         const decodedToken = jwtDecode(data);
 
-        serUserId(decodedToken.user.id);
-        console.log("encodedTOKEN: " + userId);
-        return decodedToken.user.id;
+        serUserId(decodedToken.user.pin);
+        console.log("encodedTOKEN: " + userPin);
+        return decodedToken.user.pin;
       }
     } catch (error) {
       console.log(error);

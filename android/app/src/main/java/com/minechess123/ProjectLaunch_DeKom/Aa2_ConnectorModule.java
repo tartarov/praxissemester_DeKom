@@ -41,31 +41,31 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     ServiceConnection mConnection;
     ReactApplicationContext reactContext;
     LocalCallback mCallback;
-   // CountDownLatch pinLatch;
+    // CountDownLatch pinLatch;
     String pin;
 
     public Aa2_ConnectorModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(this);
-      //  this.pinLatch = new CountDownLatch(1);
+        // this.pinLatch = new CountDownLatch(1);
 
         if (isAA2Process()) {
             System.out.println("anwendung läuft schon!");
             return;
         }
 
-            mConnection= new ServiceConnection() {
+        mConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName className, IBinder service) {
                 try {
                     mSdk = IAusweisApp2Sdk.Stub.asInterface(service);
                     System.out.println("init success! ");
-                    mCallback = new LocalCallback(mSdk); //mSdk
+                    mCallback = new LocalCallback(mSdk); // mSdk
                     mSdk.connectSdk(mCallback);
 
                     Activity currentActivity = reactContext.getCurrentActivity();
 
-                    if( currentActivity != null) {
+                    if (currentActivity != null) {
                         handleIntent(currentActivity.getIntent(), mCallback);
                     }
 
@@ -84,30 +84,25 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
 
             }
         };
-            String pkg =  reactContext.getPackageName();
-            String name = "com.governikus.ausweisapp2.START_SERVICE";
-            Intent serviceIntent = new Intent(name);
-            serviceIntent.setPackage(pkg);
-            reactContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
-            //boolean success =
-            // callback.invoke(success);
+        String pkg = reactContext.getPackageName();
+        String name = "com.governikus.ausweisapp2.START_SERVICE";
+        Intent serviceIntent = new Intent(name);
+        serviceIntent.setPackage(pkg);
+        reactContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        // boolean success =
+        // callback.invoke(success);
     }
 
-
     @ReactMethod
-    private boolean isAA2Process()
-    {
-        if (Build.VERSION.SDK_INT >= 28)
-        {
+    private boolean isAA2Process() {
+        if (Build.VERSION.SDK_INT >= 28) {
             return Application.getProcessName().endsWith(AA2_PROCESS);
         }
 
         final int pid = android.os.Process.myPid();
         ActivityManager manager = (ActivityManager) reactContext.getSystemService(reactContext.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : manager.getRunningAppProcesses())
-        {
-            if (appProcess.pid == pid)
-            {
+        for (ActivityManager.RunningAppProcessInfo appProcess : manager.getRunningAppProcesses()) {
+            if (appProcess.pid == pid) {
                 return appProcess.processName.endsWith(AA2_PROCESS);
             }
         }
@@ -115,11 +110,9 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     }
 
     @ReactMethod
-    void handleIntent(Intent intent, LocalCallback mCallback)
-    {
+    void handleIntent(Intent intent, LocalCallback mCallback) {
         final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if (tag != null)
-        {
+        if (tag != null) {
             try {
                 mSdk.updateNfcTag(mCallback.mSessionID, tag);
             } catch (RemoteException e) {
@@ -135,11 +128,11 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     }
 
     @ReactMethod
-    public void getPinFromRn(String pin){
+    public void getPinFromRn(String pin) {
         this.pin = pin;
         Log.d("Aa2_Connector", "Create event called with name: " + pin);
         mCallback.setPin(pin);
-      //  pinLatch.countDown();
+        // pinLatch.countDown();
     }
 
     @Override
@@ -177,7 +170,6 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
             this.pin = pin;
         }
 
-
         @Override
         public void receive(String pJson) throws RemoteException {
             try {
@@ -190,30 +182,29 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                     sendCommand(cmdTwo);
                 }
                 /*
-                if (msg.equals("ENTER_PIN")) {
-                    pinLatch.await();
-                    String cmdThree = "{\"cmd\": \"SET_PIN\", \"value\": \"" + pin + "\"}";
-                    sendCommand(cmdThree);
-                }
-
-                if (msg.equals("ENTER_CAN")) {
-                    String cmdFour = "{\"cmd\": \"SET_CAN\", \"value\": \"491908\"}";
-                    sendCommand(cmdFour);
-                }
-
-                if (msg.equals("ENTER_PUK")) {
-                    String cmdFive = "{\"cmd\": \"SET_PUK\", \"value\": \"WT2YXNYHVW\"}";
-                    sendCommand(cmdFive);
-                }
-                */
+                 * if (msg.equals("ENTER_PIN")) {
+                 * pinLatch.await();
+                 * String cmdThree = "{\"cmd\": \"SET_PIN\", \"value\": \"" + pin + "\"}";
+                 * sendCommand(cmdThree);
+                 * }
+                 * 
+                 * if (msg.equals("ENTER_CAN")) {
+                 * String cmdFour = "{\"cmd\": \"SET_CAN\", \"value\": \"491908\"}";
+                 * sendCommand(cmdFour);
+                 * }
+                 * 
+                 * if (msg.equals("ENTER_PUK")) {
+                 * String cmdFive = "{\"cmd\": \"SET_PUK\", \"value\": \"WT2YXNYHVW\"}";
+                 * sendCommand(cmdFive);
+                 * }
+                 */
                 System.out.println("<<<<<<<pJSON>>>>>>>>: " + pJson);
-                Aa2_ConnectorModule.sendEvent(getReactApplicationContext(),"pJson", pJson);
+                Aa2_ConnectorModule.sendEvent(getReactApplicationContext(), "pJson", pJson);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             // handle message from SDK
-
 
         }
 
@@ -224,7 +215,7 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
     }
 
     @ReactMethod
-    public void sendCommand (String command) throws RemoteException {
+    public void sendCommand(String command) throws RemoteException {
         mSdk.send(mCallback.mSessionID, command);
     }
 }

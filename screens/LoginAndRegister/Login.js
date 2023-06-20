@@ -13,7 +13,7 @@ import {
   Image,
   Vibration,
   useWindowDimensions,
-  Alert
+  Alert,
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
   const bottomSheetRef = useRef(null);
   const bottomSheetPukRef = useRef(null);
   const bottomSheetCanRef = useRef(null);
-  
+
   const openPinInput = useCallback(() => {
     bottomSheetRef.current.expand();
   }, []);
@@ -75,7 +75,6 @@ export default function Login({ navigation }) {
   const processLogin = useCallback(() => {
     bottomSheetRef.current.sendToLogin();
   }, []);
-
 
   const closeHandler = useCallback(() => {
     bottomSheetRef.current.close();
@@ -126,18 +125,32 @@ export default function Login({ navigation }) {
   if (idCardData.msg === "ENTER_PIN") {
     openPinInput();
   } else if (idCardData.msg === "ENTER_PUK") {
-  //openCanInput();
-   // openPinInput();
+    //openCanInput();
+    // openPinInput();
     openPukInput();
   } else if (idCardData.msg === "ENTER_CAN") {
     openCanInput();
-   // openPukInput();
+    // openPukInput();
   } else if (idCardData.msg === "READER") {
     //closeHandler();
-  } else if (idCardData.result?.description === "An internal error has occurred during processing.") {
+  } else if (
+    idCardData.result?.description ===
+    "An internal error has occurred during processing."
+  ) {
     //closeHandler();
-    Alert.alert("Oh no, " + idCardData.result?.description, idCardData.result?.message)
-    processLogin()
+    Alert.alert(
+      "Oh no, " + idCardData.result?.description,
+      idCardData.result?.message
+    );
+    processLogin();
+  } else if (
+    idCardData.result?.description === "A trusted channel could not be opened."
+  ) {
+    //closeHandler();
+    Alert.alert(
+      "Oh no, " + idCardData.result?.description,
+      idCardData.result?.message
+    );
   }
 
   return (
@@ -149,7 +162,7 @@ export default function Login({ navigation }) {
             backgroundColor: "#2C3639",
             alignItems: "center",
             paddingTop: 50,
-            // justifyContent: "center",
+            justifyContent: "center",
           }}
         >
           <LogoText style={{ color: "#A27B5C", fontSize: 40 }}>
@@ -158,25 +171,42 @@ export default function Login({ navigation }) {
           <CustomText
             style={{
               color: "#A27B5C",
-              fontSize: 10,
+              fontSize: 11,
               marginBottom: 0,
             }}
           >
             All bueraucracies. One app.
           </CustomText>
-          {(idCardData === "" || idCardData === "READER"  || idCardData === "INSERT_CARD") && (<Nfc_tutorial />)}
-        
-        {(idCardData === "ENTER_PIN" || idCardData === "ENTER_PUK" || idCardData === "ENTER_CAN") && (
-          <Processer />
-        )}
+          <View>
+            <CustomText
+              style={{
+                color: "#DCD7C9",
+                alignSelf: "center",
+                fontSize: 12,
+                marginTop: 80,
+                textAlign: "center",
+              }}
+            >
+              Halte dein Personalausweis auf die Rückseite deines handys bis
+              eine Aktion erscheint
+            </CustomText>
 
-        {idCardData === "STATUS" && <SomethingWentWrong />}
+            {(idCardData === "" ||
+              idCardData === "READER" ||
+              idCardData === "INSERT_CARD") && <Nfc_tutorial />}
 
-        {idCardData === "AUTH" && <Correct />}
-          <View
+            {(idCardData === "ENTER_PIN" ||
+              idCardData === "ENTER_PUK" ||
+              idCardData === "ENTER_CAN") && <Processer />}
+
+            {idCardData === "STATUS" && <SomethingWentWrong />}
+
+            {idCardData === "AUTH" && <Correct />}
+          </View>
+          {/*  <View
             style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
           >
-            <TextInput
+        }   <TextInput
               style={{ color: "#DCD7C9" }}
               icon="user"
               placeholder="Enter your ID"
@@ -213,21 +243,31 @@ export default function Login({ navigation }) {
               ref={pin}
               onSubmitEditing={() => handleSubmit()}
             />
-          </View>
+          </View> /*}
           {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
-          <View style={{ felx: 1, paddingHorizontal: 40, marginBottom: 70,  flexDirection: "row"}}>
-            <CustomText style={{ height: 30, marginVertical: 20, marginTop: 25, color: "#DCD7C9", fontSize:17  }}>Scured by</CustomText>
+          <View
+            style={{
+              felx: 1,
+              paddingHorizontal: 40,
+              flexDirection: "row",
+              marginVertical: 100,
+            }}
+          >
+            <CustomText
+              style={{
+                height: 30,
+                marginTop: 5,
+                color: "#DCD7C9",
+                fontSize: 17,
+              }}
+            >
+              secured by
+            </CustomText>
             <Image
               source={require("../../assets/images/AusweisApp2_Bildmarke_transparent.png")}
-              style={{ height: 30, width: 180, marginVertical: 20 }}
+              style={{ height: 30, width: 180 }}
             />
           </View>
-          <Button
-            label="Authentifizieren"
-            onPress={() => {
-              openPinInput();
-            }}
-          />
         </View>
 
         <BottomSheet activeHeight={height * 0.2} ref={bottomSheetRef} />
