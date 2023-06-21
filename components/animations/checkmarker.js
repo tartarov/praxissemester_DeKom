@@ -18,7 +18,7 @@ export default function checkmarker({navigation}) {
         style={{
           width: 300,
           height: 300,
-          backgroundColor: '#eee1',
+          backgroundColor: '#2C3639',
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
         source={require('../../assets/checkmark.json')}

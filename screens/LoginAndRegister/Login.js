@@ -102,6 +102,11 @@ export default function Login({ navigation }) {
   const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
   useEffect(() => {
+    Aa2_Connector.sendCommand(
+      '{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}'
+    );
+    //Aa2_Connector.reconnect();
+
     eventEmitter.addListener("pJson", (data) => {
       console.log("Received pJson: " + data);
       gotTheData(data);
@@ -143,6 +148,7 @@ export default function Login({ navigation }) {
       idCardData.result?.message
     );
     processLogin();
+   // Aa2_Connector.disconnect()
   } else if (
     idCardData.result?.description === "A trusted channel could not be opened."
   ) {
@@ -150,6 +156,13 @@ export default function Login({ navigation }) {
     Alert.alert(
       "Oh no, " + idCardData.result?.description,
       idCardData.result?.message
+    );
+  } else if (
+    idCardData.error === "You must provide 6 digits"
+  ) {
+    //closeHandler();
+    Alert.alert(
+      "Wrong Pin, " + idCardData.error
     );
   }
 
@@ -191,60 +204,17 @@ export default function Login({ navigation }) {
               eine Aktion erscheint
             </CustomText>
 
-            {(idCardData === "" ||
-              idCardData === "READER" ||
-              idCardData === "INSERT_CARD") && <Nfc_tutorial />}
+            {(idCardData.msg === undefined ||
+              idCardData.msg === "INSERT_CARD") && <Nfc_tutorial />}
 
-            {(idCardData === "ENTER_PIN" ||
-              idCardData === "ENTER_PUK" ||
-              idCardData === "ENTER_CAN") && <Processer />}
+            {(idCardData.msg === "ENTER_PIN" ||
+              idCardData.msg === "ENTER_PUK" ||
+              idCardData.msg === "ENTER_CAN") && <Processer />}
 
-            {idCardData === "STATUS" && <SomethingWentWrong />}
+            {idCardData.msg === "STATUS" ||  idCardData.msg === "READER" && <SomethingWentWrong />}
 
-            {idCardData === "AUTH" && <Correct />}
+            {idCardData.msg === "AUTH" && <Correct />}
           </View>
-          {/*  <View
-            style={{ paddingHorizontal: 32, marginBottom: 36, width: "100%" }}
-          >
-        }   <TextInput
-              style={{ color: "#DCD7C9" }}
-              icon="user"
-              placeholder="Enter your ID"
-              autoCapitalize="none"
-              autoCompleteType="cc-number"
-              keyboardAppearance="dark"
-              returnKeyType="next"
-              returnKeyLabel="next"
-              onChangeText={handleChange("id")}
-              onBlur={handleBlur("id")}
-              error={errors.id}
-              touched={touched.id}
-              onSubmitEditing={() => pin.current?.focus()}
-            />
-          </View>
-          <View
-            style={{ paddingHorizontal: 32, marginBottom: 0, width: "100%" }}
-          >
-            <TextInput
-              style={{ color: "#DCD7C9" }}
-              icon="key"
-              placeholder="Enter your PIN"
-              secureTextEntry
-              autoCompleteType="password"
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              returnKeyType="go"
-              returnKeyLabel="go"
-              onChangeText={handleChange("pin")}
-              onBlur={handleBlur("pin")}
-              error={errors.pin}
-              touched={touched.pin}
-              ref={pin}
-              onSubmitEditing={() => handleSubmit()}
-            />
-          </View> /*}
-          {/*} <Image source={require('../../assets/images/AusweisApp2_Bildmarke_Symbol.png')} style={{height:60, width: 60, margin: 20}}/> */}
           <View
             style={{
               felx: 1,

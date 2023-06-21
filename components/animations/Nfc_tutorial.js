@@ -12,7 +12,7 @@ function Nfc_tutorial() {
         style={{
           width: 200,
           height: 400,
-          backgroundColor: "#eee1",
+          backgroundColor: "#2C3639",
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
         source={require("../../assets/Nfc_tutorial.json")}

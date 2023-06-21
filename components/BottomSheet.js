@@ -147,6 +147,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
 
     const sendToLogin = () => {
       login(enteredNumbers);
+    //  Aa2_Connector.disconnect();
     }
     
   const pin = useRef(null);

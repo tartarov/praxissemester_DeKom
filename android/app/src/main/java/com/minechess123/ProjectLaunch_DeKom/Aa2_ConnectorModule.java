@@ -69,9 +69,9 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                         handleIntent(currentActivity.getIntent(), mCallback);
                     }
 
-                    String cmd = "{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}";
+                  //  String cmd = "{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}";
                     System.out.println("before send");
-                    System.out.println("command?: " + cmd + " -> " + mSdk.send(mCallback.mSessionID, cmd));
+                  //  System.out.println("command?: " + cmd + " -> " + mSdk.send(mCallback.mSessionID, cmd));
                     System.out.println("after send");
 
                 } catch (RemoteException e) {
@@ -150,6 +150,28 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
         reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
+    }
+
+    @ReactMethod
+    public void disconnect() {
+        if (mSdk != null) {
+            // Unbind the service
+            reactContext.unbindService(mConnection);
+        }
+    }
+
+    @ReactMethod
+    public void reconnect() {
+        if (isAA2Process()) {
+            System.out.println("Anwendung läuft schon!");
+            return;
+        }
+
+        String pkg = reactContext.getPackageName();
+        String name = "com.governikus.ausweisapp2.START_SERVICE";
+        Intent serviceIntent = new Intent(name);
+        serviceIntent.setPackage(pkg);
+        reactContext.bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     class LocalCallback extends IAusweisApp2SdkCallback.Stub {

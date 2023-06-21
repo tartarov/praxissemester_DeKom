@@ -10,7 +10,7 @@ function SomethingWentWrong() {
         style={{
           width: 100,
           height: 100,
-          backgroundColor: "#eee1",
+          backgroundColor: "#2C3639",
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
         source={require("../../assets/something_went_wrong.json")}
