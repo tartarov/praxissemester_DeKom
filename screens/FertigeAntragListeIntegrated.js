@@ -10,7 +10,8 @@ import {
   Dimensions,
   Animated,
   Vibration,
-  Alert
+  Alert,
+  Image,
 } from "react-native";
 import { Header } from "../components/Header";
 import { AntragProvider } from "../context/AntragContext";
@@ -28,7 +29,7 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
   const [selectedId, setSelectedId] = useState(null);
   const { antragFile, antragFileId, getAntrag } = useContext(AntragContext);
   const [items, setItems] = useState([]);
-  
+
   useEffect(() => {
     getAntrag();
     const updatedItems = [];
@@ -46,16 +47,18 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
   //"#e94832"
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
-    const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
+    const backgroundColor = item.id === selectedId ? "#3F4E4F" : "#DCD7C9";
+    const color = item.id === selectedId ? "#DCD7C9" : "#DCD7C9";
 
     const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <TouchableOpacity
         onPress={onPress}
         style={[styles.item, backgroundColor]}
         onLongPress={() => {
-            console.log("pressed"), Vibration.vibrate(100), Alert.alert("Willst du diesen Antrag löschen?");
-          }}
+          console.log("pressed"),
+            Vibration.vibrate(100),
+            Alert.alert("Willst du diesen Antrag löschen?");
+        }}
       >
         <CustomText
           style={{
@@ -68,56 +71,65 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
         >
           {item.title}
         </CustomText>
-        <CustomText
-          style={{
-            alignItems: "center",
-            fontSize: 14,
-            color: "grey",
-            paddingHorizontal: 10,
-            paddingTop: 20,
-          }}
-        >
-          eingereicht am:
-        </CustomText>
-        <LogoText
-          style={{
-            alignItems: "center",
-            fontSize: 14,
-            color: "white",
-            paddingHorizontal: 10,
-          }}
-        >
-          {item.body.length ? item.body : "nicht erkannt"}
-        </LogoText>
+        <View style={{ flexDirection: "row" }}>
+          <Image
+            source={require("../assets/images/fuehrungszeugnis.png")}
+            style={{ height: 120, width: 70, margin:10, borderRadius: 5, borderWidth: 1, borderColor: "#2C3639" }}
+          />
+          <View style={{ flexDirection: "column" }}>
+            <CustomText
+              style={{
+                alignItems: "center",
+                fontSize: 14,
+                color: "#2C3639",
+                paddingHorizontal: 10,
+                marginTop: 10,
+              }}
+            >
+              eingereicht am:
+            </CustomText>
+            <LogoText
+              style={{
+                alignItems: "center",
+                fontSize: 14,
+                color: "white",
+                paddingHorizontal: 10,
+              }}
+            >
+              {item.body.length ? item.body : "nicht erkannt"}
+            </LogoText>
 
-        <CustomText
-          style={{
-            alignItems: "center",
-            fontSize: 14,
-            color: "grey",
-            paddingHorizontal: 10,
-          }}
-        >
-          bearbeitungsstatus:
-        </CustomText>
-        <LogoText
-          style={{
-            alignItems: "center",
-            fontSize: 14,
-            color: "gray",
-            paddingHorizontal: 10,
-          }}
-        >
-          {" "}
-          {
-            <Ionicons
-              name="remove-circle"
-              size={14}
-              style={{ color: "gray" }}
-            />
-          }{" "}
-          in Bearbeitung
-        </LogoText>
+            <CustomText
+              style={{
+                alignItems: "center",
+                fontSize: 14,
+                color: "#2C3639",
+                paddingHorizontal: 10,
+                marginTop: 10,
+              }}
+            >
+              bearbeitungsstatus:
+            </CustomText>
+            <LogoText
+              style={{
+                alignItems: "center",
+                fontSize: 14,
+                color: "#2C3639",
+                paddingHorizontal: 10,
+              }}
+            >
+              {" "}
+              {
+                <Ionicons
+                  name="remove-circle"
+                  size={14}
+                  style={{ color: "yellow" }}
+                />
+              }{" "}
+              in Bearbeitung
+            </LogoText>
+          </View>
+        </View>
       </TouchableOpacity>
     );
 
@@ -154,7 +166,7 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             {
-              useNativeDriver: false
+              useNativeDriver: false,
             }
           )}
         />
@@ -164,7 +176,7 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
             fontSize: 24,
             textAlign: "center",
             color: "#DCD7C9",
-            alignSelf:"center"
+            alignSelf: "center",
           }}
         >
           du hast derzeit keine Anträge beantragt.
@@ -182,10 +194,10 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: "center",
-    marginHorizontal: 39,
-    marginVertical:20,
+    marginHorizontal: 38,
+    marginVertical:10,
     paddingVertical: 30,
-    paddingHorizontal: 59,
+    paddingHorizontal: 10,
     borderRadius: 6,
     elevation: 1,
   },

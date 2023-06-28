@@ -212,7 +212,7 @@ export default function Login({ navigation }) {
               idCardData.msg === "ENTER_PUK" ||
               idCardData.msg === "ENTER_CAN") && <Processer />}
 
-            {idCardData.msg === "STATUS" ||  idCardData.msg === "READER" && <SomethingWentWrong />}
+            {idCardData.msg === "STATUS"  && <Correct />}
 
             {idCardData.msg === "AUTH" && <Correct />}
           </View>
