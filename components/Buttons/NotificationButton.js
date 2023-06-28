@@ -4,7 +4,7 @@ import React from "react";
 
 function NotificationButton({ onPress }) {
   return (
-    <View style={styles.container}>
+    <View>
       <Pressable
         style={({ pressed }) =>
           pressed
@@ -14,7 +14,8 @@ function NotificationButton({ onPress }) {
         onPress={onPress}
         android_ripple={{ color: "#3F4E4F" }}
       >
-        <Ionicons name="notifications" size={15} color="#A27B5C" />
+        <Ionicons name="notifications-circle-outline"  size={34}
+            style={{  color: "#A27B5C" }} />
       </Pressable>
     </View>
   );
@@ -23,18 +24,7 @@ function NotificationButton({ onPress }) {
 export default NotificationButton;
 
 const styles = StyleSheet.create({
-  container: {
-    marginLeft: 50,
-    marginTop: 12,
-  },
-  buttonInnerContainer: {
-    backgroundColor: "#3F4E4F",
-    paddingVertical: 5,
-    paddingHorizontal: 6,
-    borderColor: "#A27B5C",
-    borderWidth: 1,
-    borderRadius: 16,
-  },
+ 
   pressed: {
     opacity: 0.5,
   },

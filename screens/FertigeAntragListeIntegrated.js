@@ -23,7 +23,7 @@ import Paginator from "../components/Paginator";
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
 
-const FertigeAntragListe = ({ navigation, isExpanded }) => {
+const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [selectedId, setSelectedId] = useState(null);
   const { antragFile, antragFileId, getAntrag } = useContext(AntragContext);
@@ -138,7 +138,6 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
       {items.length ? (
         <FlatList
           horizontal
@@ -178,17 +177,15 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // justifyContent: "center",
     backgroundColor: "#2C3639",
     overflow: "hidden",
   },
   item: {
-    paddingHorizontal: 80,
+    alignItems: "center",
+    marginHorizontal: 39,
+    marginVertical:20,
     paddingVertical: 30,
-    marginVertical: 10,
-    marginBottom: 250,
-    marginHorizontal: 10,
+    paddingHorizontal: 59,
     borderRadius: 6,
     elevation: 1,
   },
@@ -203,8 +200,8 @@ const styles = StyleSheet.create({
   },
 
   flatlist: {
-    height: ITEM_WIDTH * 1.5,
+    height: ITEM_WIDTH * 0.6,
   },
 });
 
-export default FertigeAntragListe;
+export default FertigeAntragListeIntegrated;

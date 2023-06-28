@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ImageBackground, Dimensions } from "react-nativ
 const { width } = Dimensions.get('screen');
 
 const ImageWidth = width * 0.95;
-const ImageHeight = ImageWidth * 0.7;
+const ImageHeight = ImageWidth * 0.6;
 
 function Ausweis ({data}){
     return(
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#223e4b',
-        fontSize: 18,
+        fontSize: 14,
         fontFamily: 'Nexa-Heavy',
         paddingHorizontal: 10,
     }

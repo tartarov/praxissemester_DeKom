@@ -22,7 +22,7 @@ import { Header } from "../../components/Header";
 import BottomDrawerScreen from "../../components/BottomDrawer.js";
 import { Modal } from "../../components/Modal";
 import Button from "../../components/Buttons/Button.js";
-import FertigeAntragListe from "../FertigeAntragListe.js";
+import FertigeAntragListeIntegrated from "../FertigeAntragListeIntegrated";
 //import HelloYtModule from "../CustomModule"
 import {NativeModules} from 'react-native';
 import { NativeEventEmitter } from 'react-native';
@@ -104,8 +104,11 @@ function HomeScreen({ navigation }) {
         </View>
 
         <Paginator data={data} scrollX={scrollX} />
+       
 
-        <View style={{ flex: 1 }}>
+        <FertigeAntragListeIntegrated/>
+
+        <View>
           <Modal isVisible={isModalVisible}>
             <Modal.Container>
               {!data.length ? (
@@ -160,7 +163,6 @@ const styles = StyleSheet.create({
     // marginTop:10
   },
   buttonContainer: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flatListContainer: {
-    height: ITEM_WIDTH * 0.8,
+    height: ITEM_WIDTH * 0.7,
     marginTop: ITEM_HEIGHT * 0.1,
   },
   animationContainer: {
@@ -191,8 +193,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "500",
-    fontSize: 24,
+    fontSize: 14,
     fontFamily: "Nexa-ExtraLight",
-    color: "#3F4E4F",
+    color: "#2C3639",
   },
 });

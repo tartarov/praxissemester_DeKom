@@ -28,7 +28,6 @@ function You({ navigation }) {
         const decodedToken = jwtDecode(data);
 
         serUserId(decodedToken.user.pin);
-        console.log("encodedTOKEN: " + userPin);
         return decodedToken.user.pin;
       }
     } catch (error) {
@@ -68,7 +67,7 @@ function You({ navigation }) {
 
  // if (userId.length) {
     return (
-      <SafeAreaView style={{ backgroundColor: "#3F4E4F" }}>
+      <SafeAreaView style={{ backgroundColor: "#3F4E4F", flex:1 }}>
         <Header navigation={navigation} />
         <View
           style={{

@@ -13,10 +13,8 @@ import {
   Text,
   useWindowDimensions,
   NativeModules,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
   TouchableOpacity,
+  Vibration
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Animated, {
@@ -33,6 +31,7 @@ import Button from "./Buttons/Button.js";
 import CustomText from "./Font";
 import { Linking } from "react-native";
 import { Entypo as Icon } from '@expo/vector-icons';
+import Processer from "./animations/Processer";
 
 const BottomSheet = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
@@ -85,6 +84,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
   });
 
   const expand = useCallback(() => {
+    Vibration.vibrate(1000)
     "worklet";
     topAnimation.value = withSpring(activeHeight, {
       damping: 100,

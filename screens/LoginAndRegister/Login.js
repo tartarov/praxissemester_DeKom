@@ -162,7 +162,7 @@ export default function Login({ navigation }) {
   ) {
     //closeHandler();
     Alert.alert(
-      "Wrong Pin, " + idCardData.error
+      "Wrong Pin ", idCardData.error
     );
   }
 
@@ -198,6 +198,7 @@ export default function Login({ navigation }) {
                 fontSize: 12,
                 marginTop: 80,
                 textAlign: "center",
+                marginHorizontal: 40,
               }}
             >
               Halte dein Personalausweis auf die Rückseite deines handys bis
