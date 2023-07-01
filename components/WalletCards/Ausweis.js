@@ -24,7 +24,7 @@ function Ausweis ({data}){
                         <Text style={styles.heading}>Geburtstag</Text>
                         <Text style={styles.text}>{data.document.geburtstag}</Text>
                     </View>
-                    <View style={styles.textContainer}> 
+                    <View style={[styles.textContainer , {marginLeft: 15}]}> 
                         <Text style={styles.heading}>Staatsangehörigkeit</Text>
                         <Text style={styles.text}>{data.document.staatsangehoerigkeit}</Text>
                     </View>
@@ -38,8 +38,8 @@ function Ausweis ({data}){
                       <Text style={styles.heading}>Gültig bis</Text>
                       <Text style={styles.text}>{data.document.gueltigBis}</Text>
                    </View>
-                   <View style={[styles.textContainer, {paddingLeft: 50}]}> 
-                      <Text style={styles.text}>{data.document.nummer}</Text>
+                   <View style={[styles.textContainer, {marginLeft: 5, marginTop:0}]}> 
+                      <Text style={styles.textCAN}>{data.document.nummer}</Text>
                    </View>
                 </View>
                 </View>
@@ -66,16 +66,17 @@ const styles = StyleSheet.create({
     },
     dataContainer: {
         padding: 20,
-        paddingTop: 8
+        paddingTop: 50
     },
     group: {
         flexDirection: 'row',
     },
     textContainer: {
-        paddingTop: 4,
+        paddingTop: 1,
+        marginLeft:140,
     },
     heading: {
-        fontSize: 12,
+        fontSize: 8,
         fontStyle: 'italic',
         fontFamily: 'Nexa-ExtraLight',
         color: '#223e4b',
@@ -83,7 +84,13 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#223e4b',
-        fontSize: 14,
+        fontSize: 12,
+        fontFamily: 'Nexa-Heavy',
+        paddingHorizontal: 10,
+    },
+    textCAN: {
+        color: '#223e4b',
+        fontSize: 16,
         fontFamily: 'Nexa-Heavy',
         paddingHorizontal: 10,
     }

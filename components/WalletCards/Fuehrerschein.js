@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     padding: 10,
+    marginLeft: 85,
+    marginTop:10
   },
   group: {
     flexDirection: "row",
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#223e4b",
-    fontSize: Platform.OS === "android" ? 14 : 16,
+    fontSize: Platform.OS === "android" ? 10 : 12,
     fontFamily: 'Nexa-Heavy',
     paddingHorizontal: 10,
   },
