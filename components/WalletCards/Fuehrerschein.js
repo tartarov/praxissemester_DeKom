@@ -16,7 +16,7 @@ function Ausweis({ data }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../../assets/images/fuehrerscheinBg.png")}
+        source={require("../../assets/images/fuehrerscheinBg2.png")}
         style={styles.image}
       >
         <View style={styles.dataContainer}>

@@ -9,7 +9,7 @@ const ImageHeight = ImageWidth * 0.6;
 function Ausweis ({data}){
     return(
         <View style={styles.container}>
-            <ImageBackground source={require('../../assets/images/persoBackground.png')} style={styles.image}>
+            <ImageBackground source={require('../../assets/images/persoBackground2.png')} style={styles.image}>
                 <View style={styles.dataContainer}>
                 <View style={styles.textContainer}>
                     <Text style={styles.heading}>Name</Text>

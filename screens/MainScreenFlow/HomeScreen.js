@@ -148,7 +148,7 @@ function HomeScreen({ navigation }) {
       <Header navigation={navigation} />
       {isLoading ? <Loader /> : <DocumentList />}
       {isLoading ? <Loader /> : <ModalTester />}
-      <BottomDrawerScreen navigation={navigation} icon />
+   {/*   <BottomDrawerScreen navigation={navigation} icon /> */}
     </SafeAreaView>
   );
 }

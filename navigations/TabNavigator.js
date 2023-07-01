@@ -4,8 +4,6 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Menu from "../screens/Menü/Menu";
-import Antragmenue from "../screens/MainScreenFlow/AntragListe";
 import ErteilungScreen from "../screens/Antrag/ErteilungScreen";
 import FragenScreen from "../screens/Antrag/FragenScreen";
 import { ScreenDoesNotExist } from "../screens/Error404/ScreenDoesNotExist";
@@ -18,9 +16,10 @@ import You from "../screens/You";
 import Settings from "../screens/Settings";
 import { useNavigation } from "@react-navigation/native";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import PagerView from "react-native-pager-view";
 
 const Tab = createBottomTabNavigator();
-
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
@@ -29,31 +28,32 @@ const BottomTabNavigator = () => {
       initialRouteName="Home"
       screenOptions={{
         swipeEnabled: true,
+        tabBarShowLabel: false,
         tabBarStyle: {
-          height: 50,
-          paddingHorizontal: 5,
-          paddingTop: 0,
+          height: 60,
+          marginHorizontal:20,
+          marginBottom:20,
+          borderRadius:100,
           backgroundColor: "#2C3639",
-          position: "relative",
-          borderTopWidth: 1,
-          borderColor: "#DCD7C9",
+          position: "absolute",
         },
       }}
+
     >
       <Tab.Screen
         name="You"
         component={You}
         listeners={{
-          tabPress: e => {
+          tabPress: (e) => {
             // Prevent default action
-            e.preventDefault();
-            navigation.navigate("You")
+           // e.preventDefault();
+            navigation.navigate("You");
           },
         }}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color="#3F4E4F" size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="person" color= {focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
@@ -69,8 +69,8 @@ const BottomTabNavigator = () => {
         component={HomeScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color="#3F4E4F" size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="home" color={focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
@@ -86,8 +86,8 @@ const BottomTabNavigator = () => {
         component={Settings}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="menu" color="#3F4E4F" size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="menu" color={focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
@@ -154,7 +154,7 @@ const BottomTabNavigator = () => {
           tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
         }}
       />
-            <Tab.Screen
+      <Tab.Screen
         name="FertigeAntragListe"
         component={FertigeAntragListe}
         options={{

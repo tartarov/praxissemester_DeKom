@@ -150,7 +150,7 @@ function Settings({ navigation }) {
           keyExtractor={(item) => item.id}
           extraData={selectedId}
         ></FlatList>
-        <TouchableOpacity
+     {/*   <TouchableOpacity
           onPress={() => {
             navigation.navigate(logout());
           }}
@@ -173,6 +173,7 @@ function Settings({ navigation }) {
             />
           </View>
         </TouchableOpacity>
+        */}
       </SafeAreaView>
     );
   }
