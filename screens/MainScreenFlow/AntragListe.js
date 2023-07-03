@@ -10,6 +10,7 @@ import {
   Dimensions
 } from "react-native";
 import { HeaderBottomdrawer } from "../../components/HeaderBottomDrawer";
+import { Header } from "../../components/Header";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -101,7 +102,8 @@ const Antragmenue = ({ navigation  , isExpanded}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-     <HeaderBottomdrawer navigation={navigation} isExpanded={isExpanded}/>
+      <Header/>
+    {/* <HeaderBottomdrawer navigation={navigation} isExpanded={isExpanded}/> */}
       <FlatList style={styles.flatlist}
         data={DATA}
         renderItem={renderItem}
@@ -117,9 +119,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#2C3639",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    overflow:'hidden'
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    overflow:'hidden',
+    position: "relative",
   },
   item: {
     padding: 20,

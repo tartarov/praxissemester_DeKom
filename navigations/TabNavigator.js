@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import PagerView from "react-native-pager-view";
+import Antragmenue from "../screens/MainScreenFlow/AntragListe";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,33 @@ const BottomTabNavigator = () => {
       }}
 
     >
+
+<Tab.Screen
+        name="Anträge"
+        component={Antragmenue}
+        listeners={{
+          tabPress: (e) => {
+            // Prevent default action
+          
+          },
+        }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={{backgroundColor:  "#A27B5C" , borderRadius:40, paddingHorizontal:5, paddingRight: 0, elevation:9, height:60, width: 60, justifyContent:'center', alignItems:'center'}}>
+            <Ionicons name="add-outline" color= {focused ? "#DCD7C9" : "#3F4E4F"} size={50}  />
+            </View>
+          ),
+          tabBarLabel: ({ focused, color, size }) => (
+            <Text
+              style={{ color: focused ? "#A27B5C" : "#DCD7C9", fontSize: 12 }}
+            >
+              Anträge
+            </Text>
+          ),
+        }}
+      />
+
       <Tab.Screen
         name="You"
         component={You}

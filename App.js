@@ -8,8 +8,9 @@ import { AntragProvider } from "./context/AntragContext";
 ///// <- ignores this Log because I dont have control over the deprecation of the removeListener. +++REMOVE IF DEPENDECY FIXED++++
 import { LogBox } from "react-native";
 
-LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+LogBox.ignoreLogs(["EventEmitter.removeListener('didUpdateDimensions', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`."]);
 LogBox.ignoreLogs(['new NativeEventEmitter']);
+LogBox.ignoreLogs(['Animated.event'])
 ///// +++REMOVE IF DEPENDECY FIXED++++
 
 const App = () => {

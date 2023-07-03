@@ -23,8 +23,8 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: "#DCD7C9",
         drawerLabelStyle: {
           fontFamily: "Nexa-ExtraLight",
-        }, unmountOnBlur: true
-        //drawerInactiveTintColor:'dark-grey'
+        }, unmountOnBlur: true,
+        drawerInactiveTintColor:'#DCD7C9'
       }}
       initialRouteName="Wallet"
     >
@@ -33,7 +33,7 @@ const DrawerNavigator = () => {
         component={You}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="person-circle-outline" size={28} color={color} />
+            <Ionicons name="person-circle-outline" size={28} color="#DCD7C9" />
           ),
         }}
       />
@@ -42,7 +42,7 @@ const DrawerNavigator = () => {
         component={BottomTabNavigator}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="albums-outline" size={28} color={color} />
+            <Ionicons name="albums-outline" size={28} color="#DCD7C9" />
           ),
         }}
       />
@@ -54,7 +54,7 @@ const DrawerNavigator = () => {
             <Ionicons
               name="documents-outline"
               size={28}
-              color={color}
+              color="#DCD7C9"
             />
           ),
         }}
@@ -68,7 +68,7 @@ const DrawerNavigator = () => {
             <Ionicons
               name="ellipsis-horizontal-outline"
               size={28}
-              color={color}
+              color="#DCD7C9"
             />
           ),
         }}

@@ -94,8 +94,8 @@ function CustomDrawer( props ) {
         >
           <Pressable onPress={() => {}} style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons name="bandage-outline" size={28} />
-              <CustomText style={{ fontSize: 22, marginLeft: 25 }}>
+              <Ionicons name="bandage-outline" size={28} color="#A27B5C" />
+              <CustomText style={{ fontSize: 22, marginLeft: 25, color:'#DCD7C9'  }}>
                 Support
               </CustomText>
             </View>
@@ -107,8 +107,8 @@ function CustomDrawer( props ) {
             style={{ paddingVertical: 15 }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons name="exit-outline" size={28} />
-              <CustomText style={{ fontSize: 22, marginLeft: 25 }}>Log out</CustomText>
+              <Ionicons name="exit-outline" size={28} color="#A27B5C" />
+              <CustomText style={{ fontSize: 22, marginLeft: 25, color:'#DCD7C9' }}>Log out</CustomText>
             </View>
           </Pressable>
         </View>
