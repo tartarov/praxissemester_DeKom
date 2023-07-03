@@ -23,6 +23,7 @@ export const DataProvider = ({ children }) => {
         geburtsort: "KÖLN",
         gueltigBis: "10.12.2030",
         nummer: "K591MLO6G",
+        can: "1 3 5 0 9 9",
       },
     },
     {
@@ -38,6 +39,7 @@ export const DataProvider = ({ children }) => {
         geburtsort: "KÖLN",
         ablaufdatum: "12.03.32",
         nummer: "K591MLO6G",
+        can: "135799",
         ausstellungsbehoerde: "Kreis Köln",
         type: "AM/B/L",
       },
@@ -46,7 +48,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     const respond = await fetch(
-      `http://192.168.178.161:3000/dekomdb.dekom_user/identify`,
+      `http://192.168.178.140:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }

@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, Dimensions, Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 
 const { width } = Dimensions.get('screen');
@@ -10,7 +11,17 @@ function Ausweis ({data}){
     return(
         <View style={styles.container}>
             <ImageBackground source={require('../../assets/images/persoBackground2.png')} style={styles.image}>
+                <View style={{ flexDirection: 'row',}}>
+              { data.document.vorname == "Tim" ?  <Image source={require('../../assets/images/TimA.jpeg')} 
+                        style={{height:170,width:120, margin:0, marginLeft: 15, marginTop:50, borderRadius:2}}/> :  <Ionicons
+                        name="person-circle-outline"
+                        size={100}
+                        style={{ marginTop: 70, color: '#2C3639', marginRight:10, marginLeft: 30}}
+                      /> }
                 <View style={styles.dataContainer}>
+                <View style={styles.textNummer}>
+                    <Text style={styles.text}>{data.document.nummer}</Text>
+                </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.heading}>Name</Text>
                     <Text style={styles.text}>{data.document.name}</Text>
@@ -39,8 +50,9 @@ function Ausweis ({data}){
                       <Text style={styles.text}>{data.document.gueltigBis}</Text>
                    </View>
                    <View style={[styles.textContainer, {marginLeft: 5, marginTop:0}]}> 
-                      <Text style={styles.textCAN}>{data.document.nummer}</Text>
+                      <Text style={styles.textCAN}>{data.document.can}</Text>
                    </View>
+                </View>
                 </View>
                 </View>
             </ImageBackground>
@@ -73,7 +85,6 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         paddingTop: 1,
-        marginLeft:140,
     },
     heading: {
         fontSize: 8,
@@ -93,5 +104,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Nexa-Heavy',
         paddingHorizontal: 10,
+    },
+    textNummer: {
+        color: '#223e4b',
+        fontSize: 12,
+        fontFamily: 'Nexa-Heavy',
+        paddingHorizontal: 10,
+        marginLeft:100,
+        marginTop: -10,
     }
 })

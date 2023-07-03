@@ -5,7 +5,9 @@ import {
   ImageBackground,
   Dimensions,
   Platform,
+  Image
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("screen");
 
@@ -19,6 +21,13 @@ function Ausweis({ data }) {
         source={require("../../assets/images/fuehrerscheinBg2.png")}
         style={styles.image}
       >
+         <View style={{ flexDirection: 'row',}}>
+            { data.document.vorname == "Tim" ?  <Image source={require('../../assets/images/TimA.jpeg')} 
+                        style={{height:120,width:80, margin:0, marginLeft: 10, marginTop: 60, borderRadius:2}}/> :   <Ionicons
+                        name="person-circle-outline"
+                        size={100}
+                        style={{ marginTop: 70, color: '#2C3639' }}
+                      /> } 
         <View style={styles.dataContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.heading}>Name</Text>
@@ -66,6 +75,7 @@ function Ausweis({ data }) {
             </View>
           </View>
         </View>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     padding: 10,
-    marginLeft: 85,
+    marginLeft: 0,
     marginTop:10
   },
   group: {
