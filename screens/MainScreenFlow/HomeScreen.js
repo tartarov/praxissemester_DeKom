@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useCallback,} from "react";
 import {
   FlatList,
   Dimensions,
@@ -10,6 +10,7 @@ import {
   Pressable,
   Vibration,
   Alert,
+  useWindowDimensions
 } from "react-native";
 import { dataSample } from "../../data/DataSample.js";
 import WalletHandler from "../../components/WalletHandler.js";
@@ -25,8 +26,10 @@ import Button from "../../components/Buttons/Button.js";
 import FertigeAntragListeIntegrated from "../FertigeAntragListeIntegrated";
 //import HelloYtModule from "../CustomModule"
 import {NativeModules} from 'react-native';
+import Antragmenue from "../../components/AntragListeDrawer.js";
 import { NativeEventEmitter } from 'react-native';
 import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
+import AntragContext from "../../context/AntragContext.js";
 
 
 const { width } = Dimensions.get("screen");
@@ -42,16 +45,32 @@ function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
+  //const{openAntragListe, closeHandler, AntragListeRef} = useContext(AntragContext)
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
   const [hasNfc, setHasNFC ] = useState(null);
+
+  const { height } = useWindowDimensions();
  
+
+  const AntragListeRef = useRef(null);
+
+  const openAntragListe = useCallback(() => {
+    console.log("triggered")
+    AntragListeRef.current.expand();
+  }, []);
+
+  const closeHandler = useCallback(() => {
+    AntragListeRef.current.close();
+
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
     getWalletData();
     setIsLoading(false);
   }, []);
+
 
   const toggleModal = () => {
     setModalVisible(() => !isModalVisible);
@@ -80,7 +99,7 @@ function HomeScreen({ navigation }) {
             data={data}
             renderItem={({ item, index }) => (
               <Pressable
-                onPress={() => handleItemPress({ item })}
+                onPress={() => handleItemPress({ item })} // handleItemPress({ item }
                 onLongPress={() => {
                   console.log("pressed"), Vibration.vibrate(1000), Alert.alert("Willst du die Daten bearbeiten?");
                 }}
@@ -149,6 +168,9 @@ function HomeScreen({ navigation }) {
       {isLoading ? <Loader /> : <DocumentList />}
       {isLoading ? <Loader /> : <ModalTester />}
    {/*   <BottomDrawerScreen navigation={navigation} icon /> */}
+   <View style={{position:"absolute", alignItems:"center"}}>
+   <Antragmenue  activeHeight={height*0.1} ref={AntragListeRef}/>
+   </View>
     </SafeAreaView>
   );
 }

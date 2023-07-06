@@ -1,8 +1,8 @@
 // ./navigation/TabNavigator.js
 
-import React from "react";
+import React, {useRef, useCallback, useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text } from "react-native";
+import { View, Text, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ErteilungScreen from "../screens/Antrag/ErteilungScreen";
 import FragenScreen from "../screens/Antrag/FragenScreen";
@@ -14,17 +14,36 @@ import ZahlungsScreen from "../screens/Antrag/ZahlungsScreen";
 import HomeScreen from "../screens/MainScreenFlow/HomeScreen";
 import You from "../screens/You";
 import Settings from "../screens/Settings";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused   } from "@react-navigation/native";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import PagerView from "react-native-pager-view";
-import Antragmenue from "../screens/MainScreenFlow/AntragListe";
+import Antragmenue from "../components/AntragListeDrawer";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
+  const [expanded, isExpanded] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState("HomeScreen");
+  const { height } = useWindowDimensions();
+  const AntragListeRef = useRef(null)
+  const isFocused = useIsFocused();
+ const openAntragListe = useCallback(() => {
+    console.log("triggered")
+    AntragListeRef.current.expand();
+    isExpanded(true)
+  }, []);
+
+  const closeHandler = useCallback(() => {
+    AntragListeRef.current.close();
+    isExpanded(false)
+
+  }, []);
+
+  console.log(expanded)
+
   return (
+    <>
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
@@ -44,12 +63,9 @@ const BottomTabNavigator = () => {
 
 <Tab.Screen
         name="Anträge"
-        component={Antragmenue}
+        component={You} //CURRENT SCREEN
         listeners={{
-          tabPress: (e) => {
-            // Prevent default action
-          
-          },
+          tabPress: () => {expanded == true ? closeHandler(): openAntragListe()},
         }}
         options={{
           headerShown: false,
@@ -191,6 +207,7 @@ const BottomTabNavigator = () => {
         }}
       />
     </Tab.Navigator>
+   <Antragmenue activeHeight={height * 0.1} ref={AntragListeRef} navigation={navigation}/></>
   );
 };
 

@@ -1,5 +1,5 @@
-import { createContext, useState, useContext } from "react";
-import { Alert } from "react-native";
+import { createContext, useState, useContext, useRef, useCallback } from "react";
+import { Alert, useWindowDimensions } from "react-native";
 import { AuthContext } from "./AuthContext";
 
 const AntragContext = createContext();
@@ -14,7 +14,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
-    let respond = await fetch("http://192.168.178.140:3000/user/save/antrag", {
+    let respond = await fetch("http://192.168.178.129:3000/user/save/antrag", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -43,7 +43,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
 
     let respond = await fetch(
-      "http://192.168.178.140:3000/user/identify/antrag"
+      "http://192.168.178.129:3000/user/identify/antrag"
     );
 
     const responseJSON = await respond.json();
@@ -63,6 +63,22 @@ export function AntragProvider({ children }) {
       setAntragFileId(0);
     }
   };
+
+ /* const { height } = useWindowDimensions();
+
+  const AntragListeRef = useRef(null);
+
+  const openAntragListe = useCallback(() => {
+    console.log("triggered")
+    AntragListeRef.current.expand();
+  }, []);
+
+  const closeHandler = useCallback(() => {
+    AntragListeRef.current.close();
+
+  }, []);
+ 
+  */
 
   return (
     <AntragContext.Provider
