@@ -64,22 +64,6 @@ export function AntragProvider({ children }) {
     }
   };
 
- /* const { height } = useWindowDimensions();
-
-  const AntragListeRef = useRef(null);
-
-  const openAntragListe = useCallback(() => {
-    console.log("triggered")
-    AntragListeRef.current.expand();
-  }, []);
-
-  const closeHandler = useCallback(() => {
-    AntragListeRef.current.close();
-
-  }, []);
- 
-  */
-
   return (
     <AntragContext.Provider
       value={{

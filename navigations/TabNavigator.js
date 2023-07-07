@@ -63,9 +63,9 @@ const BottomTabNavigator = () => {
 
 <Tab.Screen
         name="Anträge"
-        component={You} //CURRENT SCREEN
+        component={HomeScreen} //CURRENT SCREEN
         listeners={{
-          tabPress: () => {expanded == true ? closeHandler(): openAntragListe()},
+          tabPress: () => {openAntragListe()},
         }}
         options={{
           headerShown: false,
@@ -207,7 +207,8 @@ const BottomTabNavigator = () => {
         }}
       />
     </Tab.Navigator>
-   <Antragmenue activeHeight={height * 0.1} ref={AntragListeRef} navigation={navigation}/></>
+   <Antragmenue activeHeight={height * 0.77} ref={AntragListeRef} navigation={navigation}/>
+   </>
   );
 };
 

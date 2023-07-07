@@ -45,7 +45,6 @@ function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
-  //const{openAntragListe, closeHandler, AntragListeRef} = useContext(AntragContext)
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
   const [hasNfc, setHasNFC ] = useState(null);
@@ -166,11 +165,8 @@ function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} />
       {isLoading ? <Loader /> : <DocumentList />}
-      {isLoading ? <Loader /> : <ModalTester />}
+    {/*    {isLoading ? <Loader /> : <ModalTester />}
    {/*   <BottomDrawerScreen navigation={navigation} icon /> */}
-   <View style={{position:"absolute", alignItems:"center"}}>
-   <Antragmenue  activeHeight={height*0.1} ref={AntragListeRef}/>
-   </View>
     </SafeAreaView>
   );
 }
@@ -180,9 +176,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     backgroundColor: "#2C3639",
-    // marginTop:10
   },
   buttonContainer: {
     alignItems: "center",

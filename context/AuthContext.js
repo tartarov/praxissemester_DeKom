@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }) => {
       if (result.body.value == "logout") {
         console.log("User session ended.");
         logout();
-        Alert.alert("Session wurde beendet. Bitte logge dich nochmal ein.");
+        Alert.alert("Session wurde beendet.", "Bitte authentifiziere dich nochmal.");
       } else {
         return "verified";
       }

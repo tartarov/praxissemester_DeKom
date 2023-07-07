@@ -39,8 +39,8 @@ export function HeaderBottomdrawer({ isExpanded }) {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
     paddingBottom: 0,
     paddingTop: 0,
     borderTopWidth: 1,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     //flex:1,
-    height: ITEM_HEIGHT/6.5,
+    height: ITEM_HEIGHT/11,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
