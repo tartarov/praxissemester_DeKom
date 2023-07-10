@@ -266,7 +266,6 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
           throw err;
         } else if (res.length) {
           console.log("Documents found! +++");
-          console.log("Docuemnts are: " + JSON.stringify(res));
           resData.send(
             formattingResponse(token, {
               value: true,

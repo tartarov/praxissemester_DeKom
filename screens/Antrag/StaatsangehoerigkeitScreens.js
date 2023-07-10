@@ -16,7 +16,7 @@ const mockData = [
 ];
 
 export default function StaatsangehoerigkeitsScreen({ route, navigation }) {
-  let antragData = route.params.antragData;
+  let antragData = route.params?.antragData || null;
 
   const countriesList = countries;
   const [selected, setSelected] = React.useState([]);

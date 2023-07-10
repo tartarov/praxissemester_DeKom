@@ -10,7 +10,7 @@ import AntragContext from "../../context/AntragContext";
 let html;
 
 export default function ExportPDFTestScreen({ route, navigation }) {
-  const antragData = route.params.antragData;
+  const antragData = route.params?.antragData || null;
   const {addToListe, getAntrag } = useContext(AntragContext)
   const { getUserData } = useContext(DataContext);
 

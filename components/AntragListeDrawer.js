@@ -106,7 +106,7 @@ const Antragmenue = forwardRef(
       const opacity = interpolate(
         topAnimation.value,
         [height, newActiveHeight],
-        [0, 0.5]
+        [0, 0.7]
       );
 
       const display = opacity === 0 ? "none" : "flex";
@@ -150,7 +150,6 @@ const Antragmenue = forwardRef(
     });
 
     const expand = useCallback(() => {
-      console.log("I am here :(");
       ("worklet");
       topAnimation.value = withSpring(newActiveHeight, {
         damping: 100,
@@ -214,8 +213,8 @@ const Antragmenue = forwardRef(
           <Animated.View style={[styles.backDrop, backDropAnimation]} />
         </TouchableWithoutFeedback>
         <PanGestureHandler
-          failOffsetY={[-0.1, 0.1]}
-          activeOffsetX={[-0.1, 0.1]}
+          failOffsetY={[-5, 5]}
+          activeOffsetX={[-1, 1]}
           onGestureEvent={gestureHandler}
         >
           <Animated.View style={[styles.container, animationStyle]}>

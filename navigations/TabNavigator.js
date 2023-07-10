@@ -2,6 +2,7 @@
 
 import React, {useRef, useCallback, useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ErteilungScreen from "../screens/Antrag/ErteilungScreen";
@@ -18,18 +19,36 @@ import { useNavigation, useIsFocused   } from "@react-navigation/native";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Antragmenue from "../components/AntragListeDrawer";
+import ScanMe from "../screens/ScanMe";
 
-const Tab = createBottomTabNavigator();
+
+const Tab = Platform.OS === 'ios' ? createMaterialTopTabNavigator() : createBottomTabNavigator();
+
+const getNavigationOptions = () => {
+  if (Platform.OS === 'ios') {
+    //Props for the ios navigator
+    return {
+      labeled: false,
+      initialRouteName: 'Settings',
+      activeColor: 'red',
+      inactiveColor: 'white'
+    };
+  }
+  //Props for any other OS navigator
+  return {
+    initialRouteName: 'Home',
+    tabBarOptions: { activeTintColor: 'red' },
+  };
+};
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
   const [expanded, isExpanded] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState("HomeScreen");
   const { height } = useWindowDimensions();
   const AntragListeRef = useRef(null)
-  const isFocused = useIsFocused();
+
+
  const openAntragListe = useCallback(() => {
-    console.log("triggered")
     AntragListeRef.current.expand();
     isExpanded(true)
   }, []);
@@ -40,19 +59,20 @@ const BottomTabNavigator = () => {
 
   }, []);
 
-  console.log(expanded)
 
   return (
     <>
     <Tab.Navigator
       initialRouteName="Home"
+      animationEnabled = {true}
+      tabBarPosition = "bottom"
       screenOptions={{
         swipeEnabled: true,
         tabBarShowLabel: false,
         tabBarStyle: {
           height: 60,
           marginHorizontal:20,
-          marginBottom:20,
+          marginBottom:10,
           borderRadius:100,
           backgroundColor: "#2C3639",
           position: "absolute",
@@ -65,7 +85,7 @@ const BottomTabNavigator = () => {
         name="Anträge"
         component={HomeScreen} //CURRENT SCREEN
         listeners={{
-          tabPress: () => {openAntragListe()},
+          tabPress: () => {setTimeout(() => {openAntragListe()}, 250)},
         }}
         options={{
           headerShown: false,
@@ -91,7 +111,7 @@ const BottomTabNavigator = () => {
           tabPress: (e) => {
             // Prevent default action
            // e.preventDefault();
-            navigation.navigate("You");
+          //  navigation.navigate("You");
           },
         }}
         options={{
@@ -147,7 +167,7 @@ const BottomTabNavigator = () => {
         component={ScreenDoesNotExist}
         options={{
           headerShown: false,
-          tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          tabBarButton: () => null,
         }}
       />
       <Tab.Screen
@@ -155,7 +175,7 @@ const BottomTabNavigator = () => {
         component={ErteilungScreen}
         options={{
           headerShown: false,
-          tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+          tabBarButton: () => null,
         }}
       />
       <Tab.Screen
@@ -206,10 +226,19 @@ const BottomTabNavigator = () => {
           tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
         }}
       />
+
+<Tab.Screen
+        name="ScanMe"
+        component={ScanMe}
+        options={{
+          headerShown: false,
+          tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+        }}
+      />
     </Tab.Navigator>
    <Antragmenue activeHeight={height * 0.77} ref={AntragListeRef} navigation={navigation}/>
    </>
   );
 };
 
-export default BottomTabNavigator;
+export default React.memo(BottomTabNavigator);

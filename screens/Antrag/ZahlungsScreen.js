@@ -11,7 +11,7 @@ let dateValue = "Bezahldatum";
 let dateTextColor = "#DCD7C9";
 
 function ZahlungsScreen({ route, navigation }) {
-  let antragData = route.params.antragData;
+  let antragData = route.params?.antragData || null;;
   console.log(
     "Antrag Data im ZahlungsScreen ==========>   " + JSON.stringify(antragData)
   );
@@ -168,6 +168,7 @@ function ZahlungsScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
+    flex:1,
     color: "#3F4E4F",
   },
   headerContainer: {

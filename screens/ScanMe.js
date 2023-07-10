@@ -14,7 +14,7 @@ import jwtDecode from "jwt-decode";
 import Loader from "../components/animations/Loader";
 const { width } = Dimensions.get("screen");
 
-function You({ navigation }) {
+function ScanMe({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
   const [nameVar, setNameVar] = useState("");
@@ -67,17 +67,15 @@ function You({ navigation }) {
 
  // if (userId.length) {
     return (
-      <SafeAreaView style={{ backgroundColor: "#2C3639", flex:1 }}>
-        <Header navigation={navigation} />
+      <SafeAreaView style={{ backgroundColor: "#2C3639", flex:1}}>
         <View
           style={{
             backgroundColor: "#3F4E4F",
-            width: 190,
-            height: 230,
+            width: 410,
+            height: 530,
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 30,
-            marginLeft: width / 3.8,
             marginTop: width / 12,
             elevation: 8,
           }}
@@ -85,8 +83,8 @@ function You({ navigation }) {
           <View
             style={{
               backgroundColor: "#fff",
-              width: 150,
-              height: 160,
+              width: 380,
+              height: 380,
               alignItems: "center",
               justifyContent: "center",
               borderRadius: 30,
@@ -94,7 +92,7 @@ function You({ navigation }) {
               elevation: 9,
             }}
           >
-           {userId.length ?  <QRCode value={userId} size={120}  /> : <Loader/>}
+           {userId.length ?  <QRCode value={userId} size={350}  /> : <Loader/>}
           </View>
           <LogoText
             style={{ marginTop: 5, color: "#DCD7C9", alignItems: "center" }}
@@ -114,28 +112,6 @@ function You({ navigation }) {
             width: "100%",
           }}
         >
-          <CustomText style={{ marginLeft: 10, color: "#DCD7C9" }}>
-            Name
-          </CustomText>
-          <TextInput
-            style={{ color: "#fff" }}
-            placeholder={
-              data[0].document.vorname +
-              " " +
-              data[0].document.name.charAt(0) +
-              "."
-            }
-            autoCapitalize="none"
-            autoCompleteType="cc-number"
-            keyboardAppearance="dark"
-            returnKeyType="next"
-            returnKeyLabel="next"
-            error={errors.name}
-            onBlur={handleBlur("name")}
-            onChangeText={handleChange("name")}
-            value={values.name}
-            onSubmitEditing={() => handleSubmit()}
-          />
         </View>
         {/* <View style={{marginTop: 15, borderBottomColor: '#DCD7C9',borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
         <View
@@ -146,10 +122,9 @@ function You({ navigation }) {
             paddingBottom: 95,
           }}
         >
-          <Button title="signate" label="Code generieren"></Button>
         </View>
       </SafeAreaView>
     );
   } 
 
-export default You;
+export default ScanMe;

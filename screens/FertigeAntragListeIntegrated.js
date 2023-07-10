@@ -74,7 +74,14 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
         <View style={{ flexDirection: "row" }}>
           <Image
             source={require("../assets/images/fuehrungszeugnis.png")}
-            style={{ height: 120, width: 70, margin:10, borderRadius: 5, borderWidth: 1, borderColor: "#2C3639" }}
+            style={{
+              height: 120,
+              width: 70,
+              margin: 10,
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: "#2C3639",
+            }}
           />
           <View style={{ flexDirection: "column" }}>
             <CustomText
@@ -134,6 +141,7 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
     );
 
     return (
+     
       <Item
         item={item}
         onPress={() => {
@@ -150,13 +158,14 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header navigation={navigation}/>
       {items.length ? (
         <FlatList
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           bounces={true}
-          snapToAlignment="center"
+          snapToAlignment="start"
           decelerationRate={"fast"}
           style={styles.flatlist}
           data={items}
@@ -191,11 +200,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#2C3639",
     overflow: "hidden",
+    flex:1
   },
   item: {
     alignItems: "center",
     marginHorizontal: 38,
-    marginVertical:10,
+    marginVertical: 10,
     paddingVertical: 30,
     paddingHorizontal: 10,
     borderRadius: 6,

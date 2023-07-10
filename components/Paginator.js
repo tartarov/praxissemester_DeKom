@@ -18,7 +18,7 @@ function Paginator({ data, scrollX }) {
           const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
           const dotWidth = scrollX.interpolate({
             inputRange,
-            outputRange: [10, 200, 10],
+            outputRange: [10, 10, 10],
             extrapolate: "clamp",
           });
 
@@ -30,7 +30,7 @@ function Paginator({ data, scrollX }) {
 
           const color = scrollX.interpolate({
             inputRange,
-            outputRange: ["#DCD7C9", "#3F4E4F", "#DCD7C9"],
+            outputRange: ["#3F4E4F", "#DCD7C9", "#3F4E4F"],
             extrapolate: "clamp",
           });
 
@@ -53,14 +53,16 @@ export default Paginator;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
+    marginTop: 0,
     justifyContent: "center",
     alignItems: "center",
   },
   dot: {
-    height: 6,
+    height: 10,
     borderRadius: 5,
     backgroundColor: "blue",
     marginHorizontal: 8,
+    borderWidth:2,
+    borderColor: "balck"
   },
 });

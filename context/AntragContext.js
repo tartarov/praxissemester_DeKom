@@ -8,13 +8,14 @@ export function AntragProvider({ children }) {
   const [antragFile, setAntragFile] = useState(null);
   const [antragFileId, setAntragFileId] = useState(null);
   const { isVerified } = useContext(AuthContext);
+  const ipAddress = "192.168.178.115";
   let isVarifiedVar;
 
   const addToListe = async (file) => {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
-    let respond = await fetch("http://192.168.178.129:3000/user/save/antrag", {
+    let respond = await fetch(`http://${ipAddress}:3000/user/save/antrag`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -43,7 +44,7 @@ export function AntragProvider({ children }) {
     isVarifiedVar = isVerified;
 
     let respond = await fetch(
-      "http://192.168.178.129:3000/user/identify/antrag"
+      `http://${ipAddress}:3000/user/identify/antrag`
     );
 
     const responseJSON = await respond.json();

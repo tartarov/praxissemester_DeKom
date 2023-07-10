@@ -147,6 +147,7 @@ export default function Login({ navigation }) {
       "Oh no, " + idCardData.result?.description,
       idCardData.result?.message
     );
+    console.log("loooooop.")
     processLogin();
    // Aa2_Connector.disconnect()
   } else if (

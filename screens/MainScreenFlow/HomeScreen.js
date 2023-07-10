@@ -17,19 +17,12 @@ import WalletHandler from "../../components/WalletHandler.js";
 import { useRef, useState, useContext, useEffect } from "react";
 import Paginator from "../../components/Paginator.js";
 import { DataContext } from "../../context/DataContext";
-import ModalTester from "../Modals/GeertingsModal.js";
 import Loader from "../../components/animations/Loader.js";
 import { Header } from "../../components/Header";
-import BottomDrawerScreen from "../../components/BottomDrawer.js";
 import { Modal } from "../../components/Modal";
 import Button from "../../components/Buttons/Button.js";
 import FertigeAntragListeIntegrated from "../FertigeAntragListeIntegrated";
-//import HelloYtModule from "../CustomModule"
-import {NativeModules} from 'react-native';
-import Antragmenue from "../../components/AntragListeDrawer.js";
-import { NativeEventEmitter } from 'react-native';
-import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
-import AntragContext from "../../context/AntragContext.js";
+import BottomQRCode from "../../components/BottomQRCode.js";
 
 
 const { width } = Dimensions.get("screen");
@@ -75,9 +68,6 @@ function HomeScreen({ navigation }) {
     setModalVisible(() => !isModalVisible);
   };
 
-  const {Aa2_Connector} = NativeModules;
-  console.log("Aa2_Connector: " + JSON.stringify(Aa2_Connector))
-
   function DocumentList () {
 
     const handleItemPress = ({ item }) => {
@@ -108,7 +98,7 @@ function HomeScreen({ navigation }) {
                     <Text style={styles.text}>{item.title}</Text>
                   </View>
                   <View style={styles.documentContainer}>
-                    <WalletHandler data={item} />
+                    <WalletHandler data={item} refrence={AntragListeRef} />
                   </View>
                 </View>
               </Pressable>
@@ -122,9 +112,6 @@ function HomeScreen({ navigation }) {
         </View>
 
         <Paginator data={data} scrollX={scrollX} />
-       
-
-        <FertigeAntragListeIntegrated/>
 
         <View>
           <Modal isVisible={isModalVisible}>
@@ -188,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flatListContainer: {
-    height: ITEM_WIDTH * 0.7,
+    height: ITEM_WIDTH * 1.6,
     marginTop: ITEM_HEIGHT * 0.1,
   },
   animationContainer: {
@@ -201,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#3F4E4F",
-    marginLeft: ITEM_WIDTH / 9,
+    marginLeft: ITEM_WIDTH / 11,
     marginRight: ITEM_WIDTH / 9,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,

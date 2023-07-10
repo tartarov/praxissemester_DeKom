@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2C3639",
     //  borderBottomLeftRadius: 20,
     //  borderBottomRightRadius: 20
-    elevation: 7,
+    //elevation: 7,
   },
   headerContainer: {
     marginTop: 0,

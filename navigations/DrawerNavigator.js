@@ -10,6 +10,7 @@ import Settings from "../screens/Settings";
 import CustomDrawer from "../components/CustomDrawer";
 import You from "../screens/You";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
+import FertigeAntragListeIntegrated from "../screens/FertigeAntragListeIntegrated";
 
 const Drawer = createDrawerNavigator();
 
@@ -48,7 +49,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Docs in process"
-        component={FertigeAntragListe}
+        component={FertigeAntragListeIntegrated}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons
