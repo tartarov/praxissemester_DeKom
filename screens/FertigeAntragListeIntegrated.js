@@ -22,7 +22,9 @@ import LogoText from "../components/LogoFont";
 import Paginator from "../components/Paginator";
 
 const { width } = Dimensions.get("screen");
-const ITEM_WIDTH = width * 0.95;
+
+const ImageWidth = width * 0.9;
+const ImageHeight = ImageWidth * 0.6;
 
 const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -158,7 +160,7 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation}/>
+    
       {items.length ? (
         <FlatList
           horizontal
@@ -197,17 +199,23 @@ const FertigeAntragListeIntegrated = ({ navigation, isExpanded }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#2C3639",
-    overflow: "hidden",
-    flex:1
-  },
+    container: {
+      width: ImageWidth,
+      height: ImageHeight + 350,
+      elevation: 16,
+      borderRadius: 10,
+      backgroundColor: "#3F4E4F",
+      opacity: 1,
+      borderWidth:1,
+      borderColor: "#3F4E4F",
+      alignSelf:"center"
+    },
   item: {
     alignItems: "center",
     marginHorizontal: 38,
     marginVertical: 10,
     paddingVertical: 30,
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     borderRadius: 6,
     elevation: 1,
   },
@@ -220,10 +228,11 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 14,
   },
+    flatlist: {
+      height: ImageWidth * 1.6,
+      marginTop: ImageHeight * 0.05,
+    },
 
-  flatlist: {
-    height: ITEM_WIDTH * 0.6,
-  },
 });
 
 export default FertigeAntragListeIntegrated;

@@ -6,10 +6,41 @@ const AntragContext = createContext();
 
 export function AntragProvider({ children }) {
   const [antragFile, setAntragFile] = useState(null);
+  const [antragAusstellerDaten, setAntragAusstellerDaten] = useState([]);
   const [antragFileId, setAntragFileId] = useState(null);
+  const [kommulierteAnträge, setKommulierteAnträge] = useState({});
   const { isVerified } = useContext(AuthContext);
   const ipAddress = "192.168.178.115";
   let isVarifiedVar;
+
+  let initAntragAusstellerDaten = [
+    {
+      title: "Fuehrungszeugnis",
+      document: {
+        ausstellDatum: "none",
+        ausstellerName: "Mustermann",
+        ausstellerVorname: "Max",
+        ausstellerNummer: "K4BN2912A",
+        einreichungsbehoerde: "keine Angabe",
+        bearbeiitungsStatus: "keine Angabe",
+        rueckverfolgungsnummer: "1357924680",
+        antragFileId: "123"
+      },
+    },
+    {
+      title: "ErwFuehrungszeugnis",
+      document: {
+        ausstellDatum: "none",
+        ausstellerName: "Mustermann",
+        ausstellerVorname: "Max",
+        ausstellerNummer: "K4BN2912A",
+        einreichungsbehoerde: "keine Angabe",
+        bearbeiitungsStatus: "keineAngabe",
+        rueckverfolgungsnummer: "1357924680",
+        antragFileId: "123"
+      },
+    },
+  ];
 
   const addToListe = async (file) => {
     isVarifiedVar = isVerified;
@@ -55,7 +86,8 @@ export function AntragProvider({ children }) {
       setAntragFile(responseJSON.body.result);
       setAntragFileId(responseJSON.body.result.length);
 
-      console.log(responseJSON.body.result.length);
+    //  console.log(responseJSON.body.result[0].ID);
+    //  console.log(responseJSON.body.result[0].DATUM);
       console.log("respond contains true => success... YUHU");
     } else if (
       verificationStatus == "verified" &&
@@ -63,6 +95,32 @@ export function AntragProvider({ children }) {
     ) {
       setAntragFileId(0);
     }
+
+
+    const updatedItems = [];
+    for (let i = 0; i < responseJSON.body.result.length; i++) {
+      updatedItems.push({
+          title: "Fuehrungszeugnis",
+          document: {
+            ausstellDatum: responseJSON.body.result[i].DATUM,
+            ausstellerName: "Mustermann",
+            ausstellerVorname: "Max",
+            ausstellerNummer: "K4BN2912A",
+            einreichungsbehoerde: "keine Angabe",
+            bearbeiitungsStatus: "keine Angabe",
+            rueckverfolgungsnummer: "1357924680",
+            antragFileId: "123"
+          },
+      });
+
+      updatedItems.document = {
+        ...updatedItems.document, 
+        antragFileId: responseJSON.body.result.length
+      };  
+    }
+  
+
+    setAntragAusstellerDaten(updatedItems);
   };
 
   return (
@@ -70,6 +128,7 @@ export function AntragProvider({ children }) {
       value={{
         antragFile,
         antragFileId,
+        antragAusstellerDaten,
         addToListe,
         getAntrag,
       }}

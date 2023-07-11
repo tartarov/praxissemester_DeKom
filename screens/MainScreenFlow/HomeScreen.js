@@ -1,4 +1,4 @@
-import React, {useCallback,} from "react";
+import React, { useCallback } from "react";
 import {
   FlatList,
   Dimensions,
@@ -10,7 +10,8 @@ import {
   Pressable,
   Vibration,
   Alert,
-  useWindowDimensions
+  useWindowDimensions,
+  SectionList,
 } from "react-native";
 import { dataSample } from "../../data/DataSample.js";
 import WalletHandler from "../../components/WalletHandler.js";
@@ -23,7 +24,9 @@ import { Modal } from "../../components/Modal";
 import Button from "../../components/Buttons/Button.js";
 import FertigeAntragListeIntegrated from "../FertigeAntragListeIntegrated";
 import BottomQRCode from "../../components/BottomQRCode.js";
-
+import { ScrollView } from "react-native-gesture-handler";
+import AntragContext from "../../context/AntragContext.js";
+import AntragHandler from "../../components/Antraghandler.js";
 
 const { width } = Dimensions.get("screen");
 
@@ -38,28 +41,28 @@ function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
+  const {antragAusstellerDaten, getAntrag, antragFileId} = useContext(AntragContext)
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
-  const [hasNfc, setHasNFC ] = useState(null);
+  const [hasNfc, setHasNFC] = useState(null);
 
   const { height } = useWindowDimensions();
- 
 
   const AntragListeRef = useRef(null);
 
   const openAntragListe = useCallback(() => {
-    console.log("triggered")
+    console.log("triggered");
     AntragListeRef.current.expand();
   }, []);
 
   const closeHandler = useCallback(() => {
     AntragListeRef.current.close();
-
   }, []);
 
   useEffect(() => {
     setIsLoading(true);
     getWalletData();
+    getAntrag();
     setIsLoading(false);
   }, []);
 
@@ -68,50 +71,101 @@ function HomeScreen({ navigation }) {
     setModalVisible(() => !isModalVisible);
   };
 
-  function DocumentList () {
-
+  function DocumentList() {
     const handleItemPress = ({ item }) => {
       setSelectedItemIndex(item.title);
       setModalVisible(true);
     };
 
+    console.log("antragAusstellerDaten: " + JSON.stringify(antragAusstellerDaten))
+
     return (
       <>
-        <View style={styles.flatListContainer}>
-          <FlatList
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            bounces={true}
-            snapToAlignment="start"
-            decelerationRate={"fast"}
-            data={data}
-            renderItem={({ item, index }) => (
-              <Pressable
-                onPress={() => handleItemPress({ item })} // handleItemPress({ item }
-                onLongPress={() => {
-                  console.log("pressed"), Vibration.vibrate(1000), Alert.alert("Willst du die Daten bearbeiten?");
-                }}
-              >
-                <View>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.text}>{item.title}</Text>
+        <ScrollView
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          bounces={true}
+          decelerationRate={"fast"}
+        >
+          <View style={styles.flatListContainer}>
+            <FlatList
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              bounces={true}
+              snapToAlignment="start"
+              decelerationRate={"fast"}
+              data={data}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  onPress={() => handleItemPress({ item })}
+                  onLongPress={() => {
+                    console.log("pressed"),
+                      Vibration.vibrate(1000),
+                      Alert.alert("Willst du die Daten bearbeiten?");
+                  }}
+                >
+                  <View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.text}>{item.title}</Text>
+                    </View>
+                    <View style={styles.documentContainer}>
+                      <WalletHandler data={item} />
+                    </View>
                   </View>
-                  <View style={styles.documentContainer}>
-                    <WalletHandler data={item} refrence={AntragListeRef} />
-                  </View>
-                </View>
-              </Pressable>
-            )}
-            keyExtractor={(data) => data.title}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              {useNativeDriver: false}
-            )}
-          />
-        </View>
+                </Pressable>
+              )}
+              keyExtractor={(data) => data.title}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            />
+          </View>
 
-        <Paginator data={data} scrollX={scrollX} />
+          <Paginator data={data} scrollX={scrollX} />
+
+          <View style={styles.flatListContainer2}>
+            <FlatList
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              bounces={true}
+              snapToAlignment="start"
+              decelerationRate={"fast"}
+              data={antragAusstellerDaten}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  onPress={() => handleItemPress({ item })}
+                  onLongPress={() => {
+                    console.log("pressed"),
+                      Vibration.vibrate(1000),
+                      Alert.alert("Willst du die Daten bearbeiten?");
+                  }}
+                >
+                  <View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.text}>{item.title}</Text>
+                    </View>
+                    <View style={styles.documentContainer}>
+                      <AntragHandler antragAusstellerDaten={item} />
+                    </View>
+                  </View>
+                </Pressable>
+              )}
+             // keyExtractor={(antragAusstellerDaten) => antragAusstellerDaten.document.antragFileId}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            />
+            
+          </View>
+          <Paginator data={antragAusstellerDaten} scrollX={scrollX}  />
+          <View style={{marginTop:80}}>
+          </View>
+        
+        </ScrollView>
 
         <View>
           <Modal isVisible={isModalVisible}>
@@ -119,9 +173,7 @@ function HomeScreen({ navigation }) {
               {!data.length ? (
                 <Loader />
               ) : (
-                <Modal.Header
-                  title={selectedItemIndex}
-                />
+                <Modal.Header title={selectedItemIndex} />
               )}
               <Modal.Body>
                 <Text
@@ -152,7 +204,7 @@ function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} />
       {isLoading ? <Loader /> : <DocumentList />}
-    {/*    {isLoading ? <Loader /> : <ModalTester />}
+      {/*    {isLoading ? <Loader /> : <ModalTester />}
    {/*   <BottomDrawerScreen navigation={navigation} icon /> */}
     </SafeAreaView>
   );
@@ -176,7 +228,12 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     height: ITEM_WIDTH * 1.6,
-    marginTop: ITEM_HEIGHT * 0.1,
+    marginTop: ITEM_HEIGHT * 0.05,
+  },
+  flatListContainer2: {
+    height: ITEM_WIDTH * 1.6,
+    marginTop: ITEM_HEIGHT * 0.05,
+    marginBottom:0
   },
   animationContainer: {
     justifyContent: "center",

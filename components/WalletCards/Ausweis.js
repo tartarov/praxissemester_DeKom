@@ -43,6 +43,7 @@ function Ausweis({ data, refrence }) {
                 margin: 0,
                 marginLeft: 15,
                 marginTop: 35,
+                marginBottom:20,
                 borderRadius: 2,
               }}
             />
@@ -51,7 +52,8 @@ function Ausweis({ data, refrence }) {
               name="person-circle-outline"
               size={100}
               style={{
-                marginTop: 70,
+                marginTop: 30,
+                marginBottom: 70,
                 color: "#2C3639",
                 marginRight: 10,
                 marginLeft: 30,
@@ -98,7 +100,7 @@ function Ausweis({ data, refrence }) {
                 marginLeft: -120,
                 borderBottomWidth: 1,
                 width: 350,
-                borderBottomColor: "black",
+                borderBottomColor: "#2C3639",
                 // borderBottomWidth: StyleSheet.hairlineWidth,
               }}
             />
@@ -113,7 +115,7 @@ function Ausweis({ data, refrence }) {
               <Pressable  onPress={() =>{navigation.navigate("ScanMe")}}>
                 <Ionicons
                   name="qr-code-outline"
-                  size={40}
+                  size={60}
                   style={{
                     paddingLeft: 70,
                     paddingTop: 30,
@@ -140,10 +142,12 @@ const styles = StyleSheet.create({
   container: {
     width: ImageWidth,
     height: ImageHeight + 350,
-    elevation: 10,
+    elevation: 16,
     borderRadius: 10,
     backgroundColor: "#DCD7C9",
     opacity: 1,
+    borderWidth:1,
+    borderColor: "#3F4E4F"
   },
   image: {
     flex: 1,
@@ -152,6 +156,7 @@ const styles = StyleSheet.create({
     borderColor: "#3F4E4F",
     overflow: "hidden",
     backgroundColor: "#A27B5C",
+    marginBottom:20
   },
   dataContainer: {
     padding: 20,
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
     fontFamily: "Nexa-Heavy",
     flexDirection: "row",
     paddingHorizontal: 10,
-    marginLeft: 30,
+    marginLeft: 20,
     marginTop: 0,
   },
 });
