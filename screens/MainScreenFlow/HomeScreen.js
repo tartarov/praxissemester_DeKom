@@ -39,11 +39,14 @@ const VISIBLE_ITEMS = 3;
 
 function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
-  const {antragAusstellerDaten, getAntrag, antragFileId} = useContext(AntragContext)
+  const { antragAusstellerDaten, getAntrag, antragFileId } =
+    useContext(AntragContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("#DCD7C9");
   const [hasNfc, setHasNFC] = useState(null);
 
   const { height } = useWindowDimensions();
@@ -66,10 +69,21 @@ function HomeScreen({ navigation }) {
     setIsLoading(false);
   }, []);
 
-
   const toggleModal = () => {
     setModalVisible(() => !isModalVisible);
   };
+
+  const interpolateColorX = scrollX.interpolate({
+    inputRange: [0, ITEM_WIDTH],
+    outputRange: ["#DCD7C9", "#2C3639"],
+    extrapolate: "clamp",
+  });
+
+  const interpolateColorY = scrollY.interpolate({
+    inputRange: [0, height],
+    outputRange: ["#2C3639", "#8b7e74"],
+    extrapolate: "clamp",
+  });
 
   function DocumentList() {
     const handleItemPress = ({ item }) => {
@@ -77,94 +91,102 @@ function HomeScreen({ navigation }) {
       setModalVisible(true);
     };
 
-    console.log("antragAusstellerDaten: " + JSON.stringify(antragAusstellerDaten))
+    console.log(
+      "antragAusstellerDaten: " + JSON.stringify(antragAusstellerDaten)
+    );
 
     return (
       <>
+       
         <ScrollView
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           bounces={true}
           decelerationRate={"fast"}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX, y: scrollY } } }],
+            { useNativeDriver: false }
+          )}
         >
-          <View style={styles.flatListContainer}>
-            <FlatList
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              bounces={true}
-              snapToAlignment="start"
-              decelerationRate={"fast"}
-              data={data}
-              renderItem={({ item, index }) => (
-                <Pressable
-                  onPress={() => handleItemPress({ item })}
-                  onLongPress={() => {
-                    console.log("pressed"),
-                      Vibration.vibrate(1000),
-                      Alert.alert("Willst du die Daten bearbeiten?");
-                  }}
-                >
-                  <View>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.text}>{item.title}</Text>
+          <Animated.View
+            style={[styles.container, { backgroundColor: interpolateColorY }]}
+          >
+            <View style={styles.flatListContainer}>
+              <FlatList
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                bounces={true}
+                snapToAlignment="start"
+                decelerationRate={"fast"}
+                data={data}
+                renderItem={({ item, index }) => (
+                  <Pressable
+                    onPress={() => handleItemPress({ item })}
+                    onLongPress={() => {
+                      console.log("pressed"),
+                        Vibration.vibrate(1000),
+                        Alert.alert("Willst du die Daten bearbeiten?");
+                    }}
+                  >
+                    <View>
+                      <View style={styles.textContainer}>
+                     {/*}   <Text style={styles.text}>{item.title}</Text> */}
+                      </View>
+                      <View style={styles.documentContainer}>
+                        <WalletHandler data={item} scrollX = {scrollX} />
+                      </View>
                     </View>
-                    <View style={styles.documentContainer}>
-                      <WalletHandler data={item} />
-                    </View>
-                  </View>
-                </Pressable>
-              )}
-              keyExtractor={(data) => data.title}
-              onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                { useNativeDriver: false }
-              )}
-            />
-          </View>
+                  </Pressable>
+                )}
+                keyExtractor={(data) => data.title}
+                onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                  { useNativeDriver: false }
+                )}
+              />
+            </View>
 
-          <Paginator data={data} scrollX={scrollX} />
+            <Paginator data={data} scrollX={scrollX} />
 
-          <View style={styles.flatListContainer2}>
-            <FlatList
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              bounces={true}
-              snapToAlignment="start"
-              decelerationRate={"fast"}
-              data={antragAusstellerDaten}
-              renderItem={({ item, index }) => (
-                <Pressable
-                  onPress={() => handleItemPress({ item })}
-                  onLongPress={() => {
-                    console.log("pressed"),
-                      Vibration.vibrate(1000),
-                      Alert.alert("Willst du die Daten bearbeiten?");
-                  }}
-                >
-                  <View>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.text}>{item.title}</Text>
+            <View style={styles.flatListContainer2}>
+              <FlatList
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                bounces={true}
+                snapToAlignment="start"
+                decelerationRate={"fast"}
+                data={antragAusstellerDaten}
+                renderItem={({ item, index }) => (
+                  <Pressable
+                    onPress={() => handleItemPress({ item })}
+                    onLongPress={() => {
+                      console.log("pressed"),
+                        Vibration.vibrate(1000),
+                        Alert.alert("Willst du die Daten bearbeiten?");
+                    }}
+                  >
+                    <View>
+                      <View style={styles.textContainer}>
+                     {/*}   <Text style={styles.text}>{item.title}</Text>*/}
+                      </View>
+                      <View style={styles.documentContainer}>
+                        <AntragHandler antragAusstellerDaten={item} scrollY = {scrollY} />
+                      </View>
                     </View>
-                    <View style={styles.documentContainer}>
-                      <AntragHandler antragAusstellerDaten={item} />
-                    </View>
-                  </View>
-                </Pressable>
-              )}
-             // keyExtractor={(antragAusstellerDaten) => antragAusstellerDaten.document.antragFileId}
-              onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                { useNativeDriver: false }
-              )}
-            />
-            
-          </View>
-          <Paginator data={antragAusstellerDaten} scrollX={scrollX}  />
-          <View style={{marginTop:80}}>
-          </View>
-        
+                  </Pressable>
+                )}
+                // keyExtractor={(antragAusstellerDaten) => antragAusstellerDaten.document.antragFileId}
+                onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                  { useNativeDriver: false }
+                )}
+              />
+            </View>
+            <Paginator data={antragAusstellerDaten} scrollX={scrollX} />
+            <View style={{ marginTop: 80 }}></View>
+          </Animated.View>
         </ScrollView>
 
         <View>
@@ -233,14 +255,14 @@ const styles = StyleSheet.create({
   flatListContainer2: {
     height: ITEM_WIDTH * 1.6,
     marginTop: ITEM_HEIGHT * 0.05,
-    marginBottom:0
+    marginBottom: 0,
   },
   animationContainer: {
     justifyContent: "center",
     alignItems: "center",
     // marginTop: 60,
   },
-  textContainer: {
+  /*textContainer: {
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
@@ -251,6 +273,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     backgroundColor: "#DCD7C9",
   },
+  */
   text: {
     fontWeight: "500",
     fontSize: 14,

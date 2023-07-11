@@ -65,7 +65,7 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Home"
       animationEnabled = {true}
-      tabBarPosition = "bottom"
+      tabBarPosition = "top"
       screenOptions={{
         swipeEnabled: true,
         tabBarShowLabel: false,
