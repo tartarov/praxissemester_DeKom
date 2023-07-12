@@ -40,6 +40,7 @@ const VISIBLE_ITEMS = 3;
 function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollValue = useRef(new Animated.ValueXY()).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
   const { antragAusstellerDaten, getAntrag, antragFileId } =
@@ -81,7 +82,16 @@ function HomeScreen({ navigation }) {
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height],
-    outputRange: ["#2C3639", "#8b7e74"],
+    outputRange: ["#2C3639", "#193326"],
+    extrapolate: "clamp",
+  });
+
+  const interpolateColorXY = Animated.add(scrollX, scrollY).interpolate({
+    inputRange: [
+      0,
+      ITEM_WIDTH + height,
+    ],
+    outputRange: ["#DCD7C9", "#193326"],
     extrapolate: "clamp",
   });
 

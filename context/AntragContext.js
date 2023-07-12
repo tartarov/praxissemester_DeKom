@@ -106,9 +106,9 @@ export function AntragProvider({ children }) {
             ausstellerName: "Mustermann",
             ausstellerVorname: "Max",
             ausstellerNummer: "K4BN2912A",
-            einreichungsbehoerde: "keine Angabe",
+            einreichungsbehoerde: "Stadt Köln",
             bearbeiitungsStatus: "keine Angabe",
-            rueckverfolgungsnummer: "1357924680",
+            rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
             antragFileId: "123"
           },
       });

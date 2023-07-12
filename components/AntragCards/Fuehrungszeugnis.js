@@ -37,7 +37,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height/2],
-    outputRange: ["#A27B5C", "#ffff"],
+    outputRange: ["#2C3639", "#ffff"],
     extrapolate: "clamp",
     //, { backgroundColor: interpolateColorY}
   });
@@ -100,24 +100,25 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
               </Text>
             </View>
           </View>
+          <View style={styles.group}>
           <View style={styles.textContainer}>
             <Text style={styles.heading}>Einreichungsbehörde</Text>
             <Text style={styles.text}>
               {antragAusstellerDaten.document.einreichungsbehoerde}
             </Text>
           </View>
-          <View style={styles.group}>
-            <View style={styles.textContainer}>
+            <View style={[styles.textContainer, {marginLeft:0}]}>
               <Text style={styles.heading}>Nummer des Ausstellers</Text>
               <Text style={styles.text}>
                 {antragAusstellerDaten.document.ausstellerNummer}
               </Text>
             </View>
+            </View>
             <View style={{ flexDirection: "column" }}>
               <View
                 style={[
                   styles.textContainer,
-                  { marginLeft: 100, marginTop: 50 },
+                  { paddingLeft: 0, marginTop: 50, bakcgroundColor:"red" },
                 ]}
               >
                 <Text style={styles.textCAN}>
@@ -128,7 +129,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
                 style={{
                   alignItems: "center",
                   paddingTop: 30,
-                  marginLeft: -160,
+                  marginLeft: 10,
                   borderBottomWidth: 1,
                   width: 350,
                   borderBottomColor: "#2C3639",
@@ -161,7 +162,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
                 </Pressable>
               </View>
             </View>
-          </View>
+      
         </View>
         {/* <BottomQRCode activeHeight={height * 0.9} ref={bottomSheetRefQr}/>*/}
       </Animated.View>
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "Nexa-Heavy",
     color: "#223e4b",
-    marginLeft: -160,
+    marginLeft: 10,
     marginTop: 0,
     justifyContent: "center",
   },
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     color: "#223e4b",
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
   },
   textNummer: {
     color: "#223e4b",
