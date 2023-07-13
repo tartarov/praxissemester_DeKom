@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useRef, useCallback } from "react";
+import { createContext, useState, useContext, useRef, useEffect } from "react";
 import { Alert, useWindowDimensions } from "react-native";
 import { AuthContext } from "./AuthContext";
 
@@ -8,9 +8,9 @@ export function AntragProvider({ children }) {
   const [antragFile, setAntragFile] = useState(null);
   const [antragAusstellerDaten, setAntragAusstellerDaten] = useState([]);
   const [antragFileId, setAntragFileId] = useState(null);
-  const [kommulierteAnträge, setKommulierteAnträge] = useState({});
+  const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
-  const ipAddress = "192.168.178.115";
+  const ipAddress = "192.168.0.104";
   let isVarifiedVar;
 
   let initAntragAusstellerDaten = [
@@ -22,9 +22,9 @@ export function AntragProvider({ children }) {
         ausstellerVorname: "Max",
         ausstellerNummer: "K4BN2912A",
         einreichungsbehoerde: "keine Angabe",
-        bearbeiitungsStatus: "keine Angabe",
+        bearbeiitungsStatus: "in Bearbeitung",
         rueckverfolgungsnummer: "1357924680",
-        antragFileId: "123"
+        antragFileId: "123",
       },
     },
     {
@@ -37,10 +37,14 @@ export function AntragProvider({ children }) {
         einreichungsbehoerde: "keine Angabe",
         bearbeiitungsStatus: "keineAngabe",
         rueckverfolgungsnummer: "1357924680",
-        antragFileId: "123"
+        antragFileId: "123",
       },
     },
   ];
+
+  useEffect(() => {
+    setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
+  }, []);
 
   const addToListe = async (file) => {
     isVarifiedVar = isVerified;
@@ -66,7 +70,7 @@ export function AntragProvider({ children }) {
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       getAntrag();
       console.log("respond contains true => success... YUHU");
-    //  Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
+      //  Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
     }
     console.log("addToListeTriggered");
   };
@@ -74,53 +78,103 @@ export function AntragProvider({ children }) {
   const getAntrag = async () => {
     isVarifiedVar = isVerified;
 
-    let respond = await fetch(
-      `http://${ipAddress}:3000/user/identify/antrag`
-    );
+    let respond = await fetch(`http://${ipAddress}:3000/user/identify/antrag`);
 
     const responseJSON = await respond.json();
 
     const verificationStatus = await isVarifiedVar(responseJSON);
+    console.log(" responseJSON.body.value: " + responseJSON.body.value )
+  
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       setAntragFile(responseJSON.body.result);
-      setAntragFileId(responseJSON.body.result.length);
+      setAntragFileId(responseJSON.body.result);
+      const updatedItems = [];
 
-    //  console.log(responseJSON.body.result[0].ID);
-    //  console.log(responseJSON.body.result[0].DATUM);
+      for (let i = 0; i < responseJSON.body.result.length; i++) {
+        let random = Math.floor(Math.random() * bearbeitungsstatus.length);
+        let bearbeitungsStatusValue = bearbeitungsstatus[random];
+        let antragColor;
+  
+        if (bearbeitungsStatusValue === "in Bearbeitung") {
+          antragColor = "yellow"; // Set red color for specific statuses
+        } else if (bearbeitungsStatusValue === "in zustellung") {
+          antragColor = "white"; // Set default color for other statuses
+        } else if (bearbeitungsStatusValue === "zugestellt") {
+          antragColor = "green";
+        }
+        console.log(antragColor);
+  
+        updatedItems.push({
+          title: "Fuehrungszeugnis",
+          document: {
+            ausstellDatum: responseJSON.body.result[i].DATUM,
+            antragId: responseJSON.body.result[i].ID,
+            ausstellerName: "Mustermann",
+            ausstellerVorname: "Max",
+            ausstellerNummer: "K4BN2912A",
+            einreichungsbehoerde: "Stadt Köln",
+            bearbeiitungsStatus: bearbeitungsStatusValue,
+            rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
+            antragColor: antragColor,
+          },
+        });
+  
+        /*
+        updatedItems.document = {
+          ...updatedItems.document, 
+          antragFileId: responseJSON.body.result.length
+        };  
+        */
+      
+  
+      setAntragAusstellerDaten(updatedItems);
+    }
+
       console.log("respond contains true => success... YUHU");
     } else if (
       verificationStatus == "verified" &&
       responseJSON.body.value == false
     ) {
       setAntragFileId(0);
+      setAntragAusstellerDaten([]);
     }
 
+ // if(responseJSON.body.value==true){
+  
+ //   else{
+ //   setAntragAusstellerDaten({title: "Du hast keine Anträge in deiner Sammlung."});
+ // }
+//}
+};
 
-    const updatedItems = [];
-    for (let i = 0; i < responseJSON.body.result.length; i++) {
-      updatedItems.push({
-          title: "Fuehrungszeugnis",
-          document: {
-            ausstellDatum: responseJSON.body.result[i].DATUM,
-            ausstellerName: "Mustermann",
-            ausstellerVorname: "Max",
-            ausstellerNummer: "K4BN2912A",
-            einreichungsbehoerde: "Stadt Köln",
-            bearbeiitungsStatus: "keine Angabe",
-            rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
-            antragFileId: "123"
-          },
+
+  const removeAntrag = async (antragId) => {
+    isVarifiedVar = isVerified;
+    console.log("antragId:  " + antragId);
+    let respond = await fetch(
+      `http://${ipAddress}:3000/user/remove/antrag?antragId=${antragId}`,{
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin"
       });
 
-      updatedItems.document = {
-        ...updatedItems.document, 
-        antragFileId: responseJSON.body.result.length
-      };  
-    }
-  
+    const responseJSON = await respond.json();
 
-    setAntragAusstellerDaten(updatedItems);
+    const verificationStatus = await isVarifiedVar(responseJSON);
+
+    if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      Alert.alert("Document removed successfully!");
+      getAntrag();
+    } else if (
+      verificationStatus == "verified" &&
+      responseJSON.body.value == false
+    ) {
+      Alert.alert("Some Error occured");
+    }
   };
 
   return (
@@ -131,6 +185,7 @@ export function AntragProvider({ children }) {
         antragAusstellerDaten,
         addToListe,
         getAntrag,
+        removeAntrag,
       }}
     >
       {children}

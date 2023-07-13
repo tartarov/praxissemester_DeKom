@@ -43,7 +43,7 @@ function HomeScreen({ navigation }) {
   const scrollValue = useRef(new Animated.ValueXY()).current;
   const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
-  const { antragAusstellerDaten, getAntrag, antragFileId } =
+  const { antragAusstellerDaten, getAntrag, removeAntrag, bearbeitungsstatus } =
     useContext(AntragContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
@@ -74,17 +74,26 @@ function HomeScreen({ navigation }) {
     setModalVisible(() => !isModalVisible);
   };
 
+  
+  const opacity = scrollY.interpolate({
+    inputRange: [0, height/2],
+    outputRange: [1, 0.2],
+    extrapolate: "clamp",
+    //, { backgroundColor: interpolateColorY}
+  });
+
   const interpolateColorX = scrollX.interpolate({
     inputRange: [0, ITEM_WIDTH],
-    outputRange: ["#DCD7C9", "#2C3639"],
+    outputRange: [`rgba(220,	215,	201, 0)`, "#2C3639"],
     extrapolate: "clamp",
   });
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height],
-    outputRange: ["#2C3639", "#193326"],
+    outputRange: ["#2C3639", "#3F4E4F"],  //3F4E4F
     extrapolate: "clamp",
   });
+
 
   const interpolateColorXY = Animated.add(scrollX, scrollY).interpolate({
     inputRange: [
@@ -136,7 +145,7 @@ function HomeScreen({ navigation }) {
                     onLongPress={() => {
                       console.log("pressed"),
                         Vibration.vibrate(1000),
-                        Alert.alert("Willst du die Daten bearbeiten?");
+                        Alert.alert("Willst du diesen Daten bearbeiten?");
                     }}
                   >
                     <View>
@@ -159,7 +168,8 @@ function HomeScreen({ navigation }) {
 
             <Paginator data={data} scrollX={scrollX} />
 
-            <View style={styles.flatListContainer2}>
+            <Animated.View style={[styles.flatListContainer2, {backgroundColor: interpolateColorY }]}>
+            {antragAusstellerDaten.length ? (
               <FlatList
                 horizontal
                 pagingEnabled
@@ -172,9 +182,15 @@ function HomeScreen({ navigation }) {
                   <Pressable
                     onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
-                      console.log("pressed"),
-                        Vibration.vibrate(1000),
-                        Alert.alert("Willst du die Daten bearbeiten?");
+                      console.log(item),
+                        Alert.alert("Löschen?", "Willst du diesen Antrag aus deiner Liste löschen?",  [
+                          {
+                            text: 'Ja',
+                            onPress: () => removeAntrag(item.document.antragId),
+                            style: 'cancel',
+                          },
+                          {text: 'Nein', onPress: () => console.log('Nein Pressed')},
+                        ])
                     }}
                   >
                     <View>
@@ -193,10 +209,24 @@ function HomeScreen({ navigation }) {
                   { useNativeDriver: false }
                 )}
               />
-            </View>
+              ) : (
+                <Text
+          style={{
+            fontSize: 16,
+            textAlign: "center",
+            color: "#DCD7C9",
+            top: height/3,
+            color:"grey"
+          }}
+        >
+          Du hast keine Anträge in deiner Liste.
+          Drücke auf das "+"-Symbol um einen neuen Antrag zu beantragen
+        </Text>
+      )}
+            </Animated.View>
             <Paginator data={antragAusstellerDaten} scrollX={scrollX} />
             <View style={{ marginTop: 80 }}></View>
-          </Animated.View>
+            </Animated.View>
         </ScrollView>
 
         <View>

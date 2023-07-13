@@ -49,6 +49,23 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
     //, { backgroundColor: interpolateColorY}
   });
 
+  let ionicon;
+  let ioniconColor;
+
+  if (
+    antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung" 
+  ) {
+    ionicon = "reload-circle-outline"; // Set red color for specific statuses
+    ioniconColor = "brown"
+  } else if (antragAusstellerDaten.document.bearbeiitungsStatus === "in zustellung") {
+    ionicon = "checkmark-circle-outline";
+    ioniconColor = "orange" // Set default color for other statuses
+  } else if(antragAusstellerDaten.document.bearbeiitungsStatus === "zugestellt"){
+    ionicon = "checkmark-done-circle-outline";
+    ioniconColor = "green"
+  }
+
+
   return (
     <>
       <Animated.View style={[styles.container, {backgroundColor: interpolateColorY, opacity: opacity }]}> 
@@ -58,10 +75,11 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
               <Image
                 source={require("../../assets/images/fuehrungszeugnis.png")}
                 style={{
-                  height: 180,
-                  width: 110,
+                  height: 200,
+                  width: 130,
                   margin: 10,
                   marginTop: 30,
+                  marginBottom: 30,
                   borderRadius: 5,
                   borderWidth: 1,
                   borderColor: "#2C3639",
@@ -128,7 +146,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
               <View
                 style={{
                   alignItems: "center",
-                  paddingTop: 30,
+                  paddingTop: 0,
                   marginLeft: 10,
                   borderBottomWidth: 1,
                   width: 350,
@@ -149,12 +167,12 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
                   }}
                 >
                   <Ionicons
-                    name="qr-code-outline"
+                    name= {ionicon}
                     size={60}
                     style={{
                       paddingLeft: 30,
                       paddingTop: 30,
-                      color: "#2C3639",
+                      color: ioniconColor,
                       marginRight: 10,
                       marginLeft: 30,
                     }}
@@ -200,7 +218,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textContainer: {
-    paddingTop: 5,
+    paddingTop: 10,
     paddingLeft: 10,
   },
   textContainerInitials: {

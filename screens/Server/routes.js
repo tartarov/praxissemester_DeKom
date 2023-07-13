@@ -282,6 +282,38 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
+app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  const { antragId } = req.query;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.pin);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    console.log(`DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`)
+    connectionDekomdb.query(
+      `DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`, (err, res) => { //(values = [antragId])
+        console.log("RES: " + JSON.stringify(res));
+        if (err) {
+          console.log(err)
+          throw err;
+        } else if (res) {
+          console.log("Document Removed ++++ : " + res);
+          resData.send(
+            formattingResponse(token, {
+              value: true,
+              result: res,
+            })
+          );
+        } else {
+          console.log("No Document found to remove -------- ");
+          resData.send(formattingResponse(token, { value: false }));
+        }
+      }
+    );
+    ourConnection.release();
+  });
+});
+
 // Starting our server.
 app.listen(process.env.PORT, process.env.IP, () => {
   console.log(
