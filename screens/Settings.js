@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  Image,
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
@@ -131,11 +132,32 @@ function Settings({ navigation }) {
           }}
         >
           {/* <Image source={require('../assets/images/pngwing.com.png')} style={{height:80, width: 80, margin: 20}} />  */}
-          <Ionicons
-            name="person-circle-outline"
-            size={162}
-            style={{ margin: 10 }}
-          />
+          {data[0].document.vorname == "Tim" ? (
+              <Image
+                source={require("../assets/images/TimA.jpeg")}
+                style={{
+                  height: 160,
+                  width: 150,
+                  margin: 0,
+                  marginLeft: 0,
+                  marginTop: 35,
+                  marginBottom: 20,
+                  borderRadius: 100,
+                }}
+              />
+            ) : (
+              <Ionicons
+                name="person-circle-outline"
+                size={100}
+                style={{
+                  marginTop: 30,
+                  marginBottom: 70,
+                  color: "#2C3639",
+                  marginRight: 10,
+                  marginLeft: 30,
+                }}
+              />
+            )}
           <CustomText style={{ color: "#DCD7C9", fontSize: 25 }}>
             {data[0].document.name + ", " + data[0].document.vorname}
           </CustomText>

@@ -7,7 +7,7 @@ function AntragHandler ({antragAusstellerDaten, scrollY}){
      let document = <Fuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} />
 
 
-     if (antragAusstellerDaten.title == 'Fuehrungszeugnis'){
+     if (antragAusstellerDaten.title == 'Führungszeugnis'){
         document = <Fuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} scrollY = {scrollY} />
      } else if (antragAusstellerDaten.title == 'ErwFuehrungszeugnis') {
         document = <ErwFuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} />

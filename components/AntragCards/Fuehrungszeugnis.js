@@ -21,12 +21,10 @@ import React, {
 } from "react";
 import BottomQRCode from "../BottomQRCode";
 
-
 const { width } = Dimensions.get("screen");
 
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
-
 
 function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
   const navigation = useNavigation();
@@ -36,14 +34,14 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
   const bottomSheetRefQr = useRef(null);
 
   const interpolateColorY = scrollY.interpolate({
-    inputRange: [0, height/2],
+    inputRange: [0, height / 2],
     outputRange: ["#2C3639", "#ffff"],
     extrapolate: "clamp",
     //, { backgroundColor: interpolateColorY}
   });
 
   const opacity = scrollY.interpolate({
-    inputRange: [0, height/2],
+    inputRange: [0, height / 2],
     outputRange: [0, 1],
     extrapolate: "clamp",
     //, { backgroundColor: interpolateColorY}
@@ -52,26 +50,32 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
   let ionicon;
   let ioniconColor;
 
-  if (
-    antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung" 
-  ) {
+  if (antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung") {
     ionicon = "reload-circle-outline"; // Set red color for specific statuses
-    ioniconColor = "brown"
-  } else if (antragAusstellerDaten.document.bearbeiitungsStatus === "in zustellung") {
+    ioniconColor = "brown";
+  } else if (
+    antragAusstellerDaten.document.bearbeiitungsStatus === "in zustellung"
+  ) {
     ionicon = "checkmark-circle-outline";
-    ioniconColor = "orange" // Set default color for other statuses
-  } else if(antragAusstellerDaten.document.bearbeiitungsStatus === "zugestellt"){
+    ioniconColor = "orange"; // Set default color for other statuses
+  } else if (
+    antragAusstellerDaten.document.bearbeiitungsStatus === "zugestellt"
+  ) {
     ionicon = "checkmark-done-circle-outline";
-    ioniconColor = "green"
+    ioniconColor = "green";
   }
-
 
   return (
     <>
-      <Animated.View style={[styles.container, {backgroundColor: interpolateColorY, opacity: opacity }]}> 
+      <Animated.View
+        style={[
+          styles.container,
+          { backgroundColor: interpolateColorY, opacity: opacity },
+        ]}
+      >
         <View style={{ flexDirection: "column", opacity: 1 }}>
           <View style={{ flexDirection: "row", opacity: 1 }}>
-            {antragAusstellerDaten.title == "Fuehrungszeugnis" ? (
+            {antragAusstellerDaten.title == "Führungszeugnis" ? (
               <Image
                 source={require("../../assets/images/fuehrungszeugnis.png")}
                 style={{
@@ -119,68 +123,53 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
             </View>
           </View>
           <View style={styles.group}>
-          <View style={styles.textContainer}>
-            <Text style={styles.heading}>Einreichungsbehörde</Text>
-            <Text style={styles.text}>
-              {antragAusstellerDaten.document.einreichungsbehoerde}
-            </Text>
-          </View>
-            <View style={[styles.textContainer, {marginLeft:0}]}>
+            <View style={styles.textContainer}>
+              <Text style={styles.heading}>Einreichungsbehörde</Text>
+              <Text style={styles.text}>
+                {antragAusstellerDaten.document.einreichungsbehoerde}
+              </Text>
+            </View>
+            <View style={[styles.textContainer, { marginLeft: 0 }]}>
               <Text style={styles.heading}>Nummer des Ausstellers</Text>
               <Text style={styles.text}>
                 {antragAusstellerDaten.document.ausstellerNummer}
               </Text>
             </View>
+          </View>
+          <View style={{ flexDirection: "column" }}>
+            <View
+              style={[
+                styles.textContainer,
+                { paddingLeft: 0, marginTop: 50, bakcgroundColor: "red" },
+              ]}
+            >
+              <Text style={styles.textCAN}>
+                {antragAusstellerDaten.document.can}
+              </Text>
             </View>
-            <View style={{ flexDirection: "column" }}>
-              <View
-                style={[
-                  styles.textContainer,
-                  { paddingLeft: 0, marginTop: 50, bakcgroundColor:"red" },
-                ]}
-              >
-                <Text style={styles.textCAN}>
-                  {antragAusstellerDaten.document.can}
+            <View
+              style={{
+                alignItems: "center",
+                paddingTop: 0,
+                marginLeft: 10,
+                borderBottomWidth: 1,
+                width: 350,
+                borderBottomColor: "#2C3639",
+                // borderBottomWidth: StyleSheet.hairlineWidth,
+              }}
+            />
+
+            <View style={{  alignItems: "center" }}>
+              <View style={styles.textContainerInitials}>
+                <Text style={styles.headingInitials}>
+                  {antragAusstellerDaten.document.bearbeiitungsStatus}
                 </Text>
               </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  paddingTop: 0,
-                  marginLeft: 10,
-                  borderBottomWidth: 1,
-                  width: 350,
-                  borderBottomColor: "#2C3639",
-                  // borderBottomWidth: StyleSheet.hairlineWidth,
-                }}
-              />
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={styles.textContainerInitials}>
-                  <Text style={styles.headingInitials}>
-                    {antragAusstellerDaten.document.bearbeiitungsStatus}
-                  </Text>
-                </View>
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("ScanMe");
-                  }}
-                >
-                  <Ionicons
-                    name= {ionicon}
-                    size={60}
-                    style={{
-                      paddingLeft: 30,
-                      paddingTop: 30,
-                      color: ioniconColor,
-                      marginRight: 10,
-                      marginLeft: 30,
-                    }}
-                  />
-                </Pressable>
+              <View style={styles.ioniconContainer}>
+                <Ionicons name={ionicon} size={60} style={{color:ioniconColor, left:140, bottom:10}} />
               </View>
             </View>
-      
+          </View>
         </View>
         {/* <BottomQRCode activeHeight={height * 0.9} ref={bottomSheetRefQr}/>*/}
       </Animated.View>
@@ -222,8 +211,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   textContainerInitials: {
-    paddingTop: 2,
-    paddingLeft: 10,
+    paddingTop: 0,
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
   heading: {
     fontSize: 12,
@@ -236,8 +227,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "Nexa-Heavy",
     color: "#223e4b",
-    marginLeft: 10,
-    marginTop: 0,
+    marginLeft: 0,
+    top: 40,
+    right:80,
     justifyContent: "center",
   },
   text: {
@@ -260,5 +252,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     marginLeft: 10,
     marginTop: 0,
+  },
+  ioniconContainer: {
+    paddingHorizontal: 0,
   },
 });

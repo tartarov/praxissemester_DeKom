@@ -125,8 +125,6 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
       onSubmit: (values) => {
         console.log("values.Pin: " + enteredNumbers);
         const ourPin = enteredNumbers.toString();
-        console.log("ourPin: " + ourPin);
-        console.log("ourPin is the type of: " + typeof ourPin);
         // Aa2_Connector.getPinFromRn(ourPin);
         Aa2_Connector.sendCommand(
           '{"cmd": "SET_PIN", "value": "' + ourPin + '"}'
@@ -136,9 +134,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
     });
 
     const sendToAa2 = (value) => {
-      console.log("value: " + value)
       const ourPin = value.toString();
-      console.log("ourPin: " + ourPin);
       Aa2_Connector.sendCommand(
         '{"cmd": "SET_PIN", "value": "' + ourPin + '"}'
       );

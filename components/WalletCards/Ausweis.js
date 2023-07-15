@@ -33,12 +33,41 @@ function Ausweis({ data, refrence }) {
     <>
       <View style={styles.container}>
         <View style={{ flexDirection: "column" }}>
-        <Text style={[styles.headingInitials, {fontSize: 24, alignSelf:"center", textAlign: "center"} ]}>{data.title}</Text>
+          <Text
+            style={[
+              styles.headingInitials,
+              {
+                fontSize: 24,
+                alignSelf: "center",
+                textAlign: "center",
+                marginTop: 10,
+              },
+            ]}
+          >
+            {data.title}
+          </Text>
+          <Text
+            style={[
+              styles.headingInitials,
+              {
+                fontSize: 16,
+                alignSelf: "center",
+                textAlign: "center",
+                marginTop: 0,
+              },
+            ]}
+          >
+            {data.title2}
+          </Text>
           <View style={{ flexDirection: "row" }}>
-       
             <View style={styles.dataContainer}>
+              <Text
+                style={[styles.heading, { paddingTop: 0, paddingLeft: 20}]}
+              >
+                Personalausweisnummer
+              </Text>
               <View style={styles.textNummer}>
-                <Text style={styles.textNummer}>{data.document.nummer}</Text>
+                <Text  style={[styles.textNummer,{letterSpacing:3}]}>{data.document.nummer}</Text>
               </View>
               <View style={styles.textContainer}>
                 <Text style={styles.heading}>Geburtstag</Text>
@@ -96,7 +125,6 @@ function Ausweis({ data, refrence }) {
           </View>
           <View style={styles.group}>
             <View style={{ flexDirection: "column" }}>
-  
               <View
                 style={{
                   alignItems: "center",
@@ -117,7 +145,9 @@ function Ausweis({ data, refrence }) {
                   <Text style={styles.headingInitials}>
                     {data.document.name}
                   </Text>
-                  <Text style={[styles.heading, {paddingHorizontal:0}]}>Vorname/Nachname</Text>
+                  <Text style={[styles.heading, { paddingHorizontal: 0 }]}>
+                    Vorname/Nachname
+                  </Text>
                 </View>
                 <Pressable
                   onPress={() => {
@@ -205,11 +235,11 @@ const styles = StyleSheet.create({
     color: "#223e4b",
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
-    paddingHorizontal:0,
+    paddingHorizontal: 0,
   },
   textNummer: {
     color: "#223e4b",
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "Nexa-Heavy",
     flexDirection: "row",
     paddingHorizontal: 10,

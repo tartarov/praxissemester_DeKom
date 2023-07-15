@@ -27,6 +27,7 @@ import BottomQRCode from "../../components/BottomQRCode.js";
 import { ScrollView } from "react-native-gesture-handler";
 import AntragContext from "../../context/AntragContext.js";
 import AntragHandler from "../../components/Antraghandler.js";
+import PaginatorDark from "../../components/PaginatorDark.js";
 
 const { width } = Dimensions.get("screen");
 
@@ -39,6 +40,7 @@ const VISIBLE_ITEMS = 3;
 
 function HomeScreen({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollX2 = useRef(new Animated.Value(0)).current;
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollValue = useRef(new Animated.ValueXY()).current;
   const [isLoading, setIsLoading] = useState(true);
@@ -194,7 +196,7 @@ function HomeScreen({ navigation }) {
                     }}
                   >
                     <View>
-                      <View style={styles.textContainer}>
+                      <View>
                      {/*}   <Text style={styles.text}>{item.title}</Text>*/}
                       </View>
                       <View style={styles.documentContainer}>
@@ -205,7 +207,7 @@ function HomeScreen({ navigation }) {
                 )}
                 // keyExtractor={(antragAusstellerDaten) => antragAusstellerDaten.document.antragFileId}
                 onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                  [{ nativeEvent: { contentOffset: { x: scrollX2 } } }],
                   { useNativeDriver: false }
                 )}
               />
@@ -220,11 +222,11 @@ function HomeScreen({ navigation }) {
           }}
         >
           Du hast keine Anträge in deiner Liste.
-          Drücke auf das "+"-Symbol um einen neuen Antrag zu beantragen
+          Drücke auf das "+"-Symbol um einen neuen Antrag zu beantragen.
         </Text>
       )}
             </Animated.View>
-            <Paginator data={antragAusstellerDaten} scrollX={scrollX} />
+            <PaginatorDark data={antragAusstellerDaten} scrollX={scrollX2} />
             <View style={{ marginTop: 80 }}></View>
             </Animated.View>
         </ScrollView>

@@ -105,7 +105,6 @@ export default function Login({ navigation }) {
     Aa2_Connector.sendCommand(
       '{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}'
     );
-    //Aa2_Connector.reconnect();
 
     eventEmitter.addListener("pJson", (data) => {
       console.log("Received pJson: " + data);
@@ -117,15 +116,11 @@ export default function Login({ navigation }) {
   }, []);
 
   const gotTheData = async (data) => {
-    console.log("Got The Data! : " + JSON.parse(data));
     let fromAa2 = JSON.parse(data);
     console.log("Got The Data! : " + fromAa2.msg);
     setidCardData(fromAa2);
   };
   console.log("after Received JSON");
-  console.log(height * 0.5);
-  //console.log(JSON.stringify(idCardData));
-  console.log(idCardData.result?.description);
 
   if (idCardData.msg === "ENTER_PIN") {
     openPinInput();
@@ -147,7 +142,6 @@ export default function Login({ navigation }) {
       "Oh no, " + idCardData.result?.description,
       idCardData.result?.message
     );
-    console.log("loooooop.")
     processLogin();
    // Aa2_Connector.disconnect()
   } else if (

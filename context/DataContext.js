@@ -11,7 +11,8 @@ export const DataProvider = ({ children }) => {
 
   let currentData = [
     {
-      title: "Personalausweis der Bundesrep. Deutschland",
+      title: "Personalausweis ",
+      title2: "Bundesrepublik Deutschland",
       color: "green",
       poster:
         "https://images.unsplash.com/photo-1561016444-14f747499547?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80",
@@ -48,7 +49,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     const respond = await fetch(
-      `http://192.168.0.104:3000/dekomdb.dekom_user/identify`,
+      `http://192.168.178.24:3000/dekomdb.dekom_user/identify`,
       {
         credentials: "same-origin",
       }

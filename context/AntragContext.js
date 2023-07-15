@@ -10,12 +10,12 @@ export function AntragProvider({ children }) {
   const [antragFileId, setAntragFileId] = useState(null);
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
-  const ipAddress = "192.168.0.104";
+  const ipAddress = "192.168.178.24";
   let isVarifiedVar;
 
   let initAntragAusstellerDaten = [
     {
-      title: "Fuehrungszeugnis",
+      title: "Führungszeugnis",
       document: {
         ausstellDatum: "none",
         ausstellerName: "Mustermann",
@@ -91,22 +91,29 @@ export function AntragProvider({ children }) {
       setAntragFileId(responseJSON.body.result);
       const updatedItems = [];
 
+   
+
       for (let i = 0; i < responseJSON.body.result.length; i++) {
         let random = Math.floor(Math.random() * bearbeitungsstatus.length);
         let bearbeitungsStatusValue = bearbeitungsstatus[random];
         let antragColor;
-  
-        if (bearbeitungsStatusValue === "in Bearbeitung") {
-          antragColor = "yellow"; // Set red color for specific statuses
-        } else if (bearbeitungsStatusValue === "in zustellung") {
-          antragColor = "white"; // Set default color for other statuses
-        } else if (bearbeitungsStatusValue === "zugestellt") {
-          antragColor = "green";
+      
+        switch (bearbeitungsStatusValue) {
+          case "in Bearbeitung":
+            antragColor = "yellow";
+            break;
+          case "in zustellung":
+            antragColor = "white";
+            break;
+          case "zugestellt":
+            antragColor = "green";
+            break;
+          default:
+            antragColor = "white";
         }
-        console.log(antragColor);
-  
+      
         updatedItems.push({
-          title: "Fuehrungszeugnis",
+          title: "Führungszeugnis",
           document: {
             ausstellDatum: responseJSON.body.result[i].DATUM,
             antragId: responseJSON.body.result[i].ID,
@@ -119,17 +126,9 @@ export function AntragProvider({ children }) {
             antragColor: antragColor,
           },
         });
-  
-        /*
-        updatedItems.document = {
-          ...updatedItems.document, 
-          antragFileId: responseJSON.body.result.length
-        };  
-        */
+      }
       
-  
       setAntragAusstellerDaten(updatedItems);
-    }
 
       console.log("respond contains true => success... YUHU");
     } else if (
