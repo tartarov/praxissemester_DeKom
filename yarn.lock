@@ -3245,6 +3245,14 @@ buffer@^5.5.0:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
 
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
+
 builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz"
@@ -6211,7 +6219,7 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
-ieee754@^1.1.13, ieee754@^1.1.4:
+ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -9669,6 +9677,11 @@ react-native-select-two@^1.1.0:
   resolved "https://registry.npmjs.org/react-native-select-two/-/react-native-select-two-1.1.0.tgz"
   integrity sha512-lYZKwQI8qkxn/82Z9P0fIeH8YtozQT8+u2jqbC6nPRqCUzdVqSr945InMuoVl3/jJHgyrNaIksdEjXLuAikbcg==
 
+react-native-signature-canvas@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.npmjs.org/react-native-signature-canvas/-/react-native-signature-canvas-4.5.1.tgz"
+  integrity sha512-YCiyIMWXiv9fn1JdKAb++b3AkKG5R1GQIXh+cAipxHV1GGZXKVuBukVo5WQ2rL1P9NOGpIOpWyeq0NXdGk41Rw==
+
 react-native-signature-capture@^0.4.12:
   version "0.4.12"
   resolved "https://registry.npmjs.org/react-native-signature-capture/-/react-native-signature-capture-0.4.12.tgz"
@@ -9720,7 +9733,7 @@ react-native-web@~0.18.7:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native-webview@11.23.0:
+react-native-webview@>11.18.1, react-native-webview@11.23.0:
   version "11.23.0"
   resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-11.23.0.tgz"
   integrity sha512-mGrgsMnYcQONvQy59xpBn87sKqkCsSkqIDRo+c2Ov4ISYl1j90wFBs+qViVJRWdoNHVuoCAZ4nZkJ65mhDpHhA==

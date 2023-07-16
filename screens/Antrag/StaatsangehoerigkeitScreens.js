@@ -48,7 +48,7 @@ export default function StaatsangehoerigkeitsScreen({ route, navigation }) {
 
   updateNationalities();
 
-  pickDocument = async () => {
+   pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({
       copyToCacheDirectory: true,
       type: "application/pdf",
@@ -79,7 +79,7 @@ export default function StaatsangehoerigkeitsScreen({ route, navigation }) {
         </WeiterButton>
         <WeiterButton
           onPress={() => {
-            navigation.navigate("ZahlungsScreen", { antragData });
+            navigation.navigate("AntragSignatureScreen", { antragData });
           }}
         >
           weiter
@@ -122,6 +122,7 @@ export default function StaatsangehoerigkeitsScreen({ route, navigation }) {
                   <NationalityItem
                     id={itemData.item.id}
                     text={itemData.item.name}
+                    onPress={pickDocument}
                     textcolor="#223e4b"
                   />
                 );

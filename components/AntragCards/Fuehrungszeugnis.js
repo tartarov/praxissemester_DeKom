@@ -26,7 +26,7 @@ const { width } = Dimensions.get("screen");
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
 
-function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
+function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   const navigation = useNavigation();
   const { height } = useWindowDimensions();
   //const scrollY = useRef(new Animated.Value(0)).current;
@@ -49,6 +49,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
 
   let ionicon;
   let ioniconColor;
+
 
   if (antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung") {
     ionicon = "reload-circle-outline"; // Set red color for specific statuses
@@ -106,6 +107,17 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY }) {
               <View style={styles.textNummer}>
                 <Text style={styles.text}>{antragAusstellerDaten.title}</Text>
               </View>
+              <Text style={[styles.heading, {fontSize:8, top:20, left:10}]}>deine Unterschrift:</Text>
+              <Image
+                source={{uri: `data:image/png;base64,${antragAusstellerDaten.document.antragSignature}`}}
+                style={{
+                  height: 150,
+                  width: 100,
+                  marginLeft: 50,
+                  marginTop: 30,
+                  marginBottom: 30,
+                }}
+              />
             </View>
           </View>
           <View style={styles.group}>
@@ -201,7 +213,7 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     padding: 20,
-    paddingTop: 30,
+    paddingTop: 10,
   },
   group: {
     flexDirection: "row",

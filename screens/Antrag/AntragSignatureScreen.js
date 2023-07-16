@@ -16,9 +16,11 @@ import Loader from "../../components/animations/Loader";
 import CustomText from "../../components/Font";
 import { DataContext } from "../../context/DataContext";
 import { Header } from "../../components/Header";
+import WeiterButton from "../../components/Buttons/WeiterButton";
+
 let isVarifiedVar;
 
-const SignatureCaptures = ({ navigation }) => {
+const AntragSignatureCaptures = ({ route, navigation }) => {
   const signatureRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isVerified } = useContext(AuthContext);
@@ -28,6 +30,8 @@ const SignatureCaptures = ({ navigation }) => {
     `data:image/png;base64,${userData.body.signature}`
   );
   isVarifiedVar = isVerified;
+
+  let antragData = route.params?.antragData || null;
 
   useEffect(() => {
     setIsLoading(true);
@@ -39,7 +43,7 @@ const SignatureCaptures = ({ navigation }) => {
   const fetcher = async (stringBase) => {
     setIsLoading(true);
     let respond = await fetch(
-      "http://192.168.178.24:3000/user/save/signature",
+      "http://192.168.178.24:3000/antrag/save/signature",
       {
         method: "POST",
         headers: {
@@ -76,10 +80,12 @@ const SignatureCaptures = ({ navigation }) => {
         "Bist du sicher, dass du diese Signatur speichern willst?",
         [
           {
-            text: "Ja, speichere ",
+            text: "Ja, anwenden ",
             onPress: () => {
               setIsTriggered(true);
-              fetcher(base64raw);
+            //  fetcher(base64raw);
+              antragData = { ...antragData, signatur: base64raw };
+              console.log("antragData in der signatur: " + JSON.stringify(antragData))
             },
           },
           {
@@ -126,7 +132,30 @@ const SignatureCaptures = ({ navigation }) => {
 
   return (
     <>
-      <Header navigation={navigation} />
+      <Header />
+      <View style={{  
+    flexDirection: "row",
+    alignItems:"center",
+    backgroundColor: "#2C3639", //2C3639
+    paddingLeft: 80,
+    paddingBottom: 10
+    }}>
+        <WeiterButton
+          onPress={() => {
+            navigation.navigate("FragenScreen", { antragData });
+          }}
+        >
+          zurück
+        </WeiterButton>
+        <WeiterButton
+          onPress={() => {
+            console.log(JSON.stringify(antragData))
+            navigation.navigate("ZahlungsScreen", { antragData });
+          }}
+        >
+          weiter
+        </WeiterButton>
+      </View>
       <SafeAreaView
         style={{ flex: 1, paddingTop: 10, backgroundColor: "#2C3639" }}
       >
@@ -192,69 +221,6 @@ const SignatureCaptures = ({ navigation }) => {
         >
           Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.
         </CustomText>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            height: 50,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-              borderWidth: 2,
-              borderRadius: 10,
-              borderColor: "#DCD7C9",
-              marginTop: 20,
-              marginLeft: 30,
-              marginRight: 30,
-            }}
-            onPress={() => {
-              signatureRef.current.clearSignature();
-            }}
-          >
-            <CustomText style={{ color: "#DCD7C9" }}>Löschen</CustomText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
-              borderWidth: 2,
-              borderRadius: 10,
-              borderColor: "#DCD7C9",
-              marginTop: 20,
-              marginLeft: 30,
-              marginRight: 30,
-            }}
-            onPress={() => {
-              setIsTriggered(true);
-              signatureRef.current.saveSignature();
-              Alert.alert("Gespeichert!", "Deine Signatur wurde gepeichert.");
-            }}
-          >
-            <CustomText style={{ color: "#DCD7C9" }}>Speichern</CustomText>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            height: 50,
-            paddingTop: 50,
-          }}
-        >
-          <ButtonGhost
-            title="Back"
-            label="zurück"
-            onPress={() => {
-              setIsTriggered(true);
-              navigation.navigate("Settings");
-            }}
-          />
-        </View>
 
         <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
           <CustomText
@@ -292,4 +258,4 @@ const SignatureCaptures = ({ navigation }) => {
   );
 };
 
-export default SignatureCaptures;
+export default AntragSignatureCaptures;

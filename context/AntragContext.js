@@ -46,7 +46,7 @@ export function AntragProvider({ children }) {
     setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
   }, []);
 
-  const addToListe = async (file) => {
+  const addToListe = async (file, signatur) => {
     isVarifiedVar = isVerified;
     console.log("Hello :0 my file is: " + file);
 
@@ -59,6 +59,7 @@ export function AntragProvider({ children }) {
       credentials: "same-origin",
       body: JSON.stringify({
         file: file,
+        signatur: signatur
       }),
     });
 
@@ -117,6 +118,7 @@ export function AntragProvider({ children }) {
           document: {
             ausstellDatum: responseJSON.body.result[i].DATUM,
             antragId: responseJSON.body.result[i].ID,
+            antragSignature: responseJSON.body.signature[i],
             ausstellerName: "Mustermann",
             ausstellerVorname: "Max",
             ausstellerNummer: "K4BN2912A",

@@ -20,6 +20,7 @@ import FertigeAntragListe from "../screens/FertigeAntragListe";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Antragmenue from "../components/AntragListeDrawer";
 import ScanMe from "../screens/ScanMe";
+import AntragSignatureCaptures from "../screens/Antrag/AntragSignatureScreen";
 
 
 const Tab = Platform.OS === 'ios' ? createMaterialTopTabNavigator() : createBottomTabNavigator();
@@ -189,6 +190,14 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="SignatureScreen"
         component={SignatureCaptures}
+        options={{
+          headerShown: false,
+          tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,
+        }}
+      />
+           <Tab.Screen
+        name="AntragSignatureScreen"
+        component={AntragSignatureCaptures}
         options={{
           headerShown: false,
           tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,

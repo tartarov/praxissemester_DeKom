@@ -28,6 +28,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import AntragContext from "../../context/AntragContext.js";
 import AntragHandler from "../../components/Antraghandler.js";
 import PaginatorDark from "../../components/PaginatorDark.js";
+import { Buffer } from 'buffer';
+
 
 const { width } = Dimensions.get("screen");
 
@@ -112,10 +114,6 @@ function HomeScreen({ navigation }) {
       setModalVisible(true);
     };
 
-    console.log(
-      "antragAusstellerDaten: " + JSON.stringify(antragAusstellerDaten)
-    );
-
     return (
       <>
        
@@ -184,7 +182,7 @@ function HomeScreen({ navigation }) {
                   <Pressable
                     onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
-                      console.log(item),
+                      console.log("item: " + JSON.stringify(item.document.antragId)),
                         Alert.alert("Löschen?", "Willst du diesen Antrag aus deiner Liste löschen?",  [
                           {
                             text: 'Ja',

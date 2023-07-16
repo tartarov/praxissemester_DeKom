@@ -8,12 +8,13 @@ import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import AntragContext from "../../context/AntragContext";
 
 let html;
+let userData;
 
 export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params?.antragData || null;
   const {addToListe, getAntrag } = useContext(AntragContext)
   const { getUserData } = useContext(DataContext);
-
+console.log("antragData: " + JSON.stringify(antragData.signatur))
   function getCheckBoxValue(boolean) {
     if (boolean == true) {
       return "checked";
@@ -25,7 +26,7 @@ export default function ExportPDFTestScreen({ route, navigation }) {
   async function loadUserData() {
     data = await getUserData();
 
-    const userData = {
+     userData = {
       vorname: data.vorname,
       name: data.name,
       geburtsname: data.name,
@@ -39,7 +40,7 @@ export default function ExportPDFTestScreen({ route, navigation }) {
       geburtsdatum: data.geburtstag,
       geburtsort: data.geburtsort,
       staatsangehörigkeit: data.staatsangehoerigkeit,
-      signatur: data.signatur,
+      signatur: antragData.signatur,
 
       einsichtsland: antragData.konsulatLand,
       bezahlungsdatum: antragData.zahlungsDatum,
@@ -205,7 +206,7 @@ export default function ExportPDFTestScreen({ route, navigation }) {
                  <h3 style="padding-top: 4pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Unterschrift der
                      Antrag
                      stellenden Person<span class="s9">: <br>
-                     <img src= "data:image/png;base64,${
+                     <img src= "${
                        userData.signatur
                      }" style="width:20%; height:20%; paddingLeft:50%"/>
                      <br> </span><span
@@ -404,7 +405,7 @@ export default function ExportPDFTestScreen({ route, navigation }) {
       },
     });
     const uriFile = file.uri
-    addToListe(uriFile)
+    addToListe(uriFile, userData.signatur)
    // getAntrag()
     await shareAsync(file.uri);
   };

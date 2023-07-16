@@ -121,6 +121,8 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
           console.log("User found successfully.");
           let buf = "";
           if (results[0].SIGNATUR !== null) {
+          //  console.log("resultsssss[0]: " + JSON.stringify(results[0].SIGNATUR))
+           // console.log("resultsssss[0]. SIGNATUR: " + res[1].SIGNATUR)
             buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
           } else {
             buf = "";
@@ -200,6 +202,26 @@ app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
   resData.send(formattingResponse(token, { value: true }));
 });
 
+app.post("/antrag/save/signature", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.pin);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    connectionDekomdb.query(
+      "UPDATE dekomdb.userdocuments SET SIGNATUR = ? WHERE USER_ID_HASH= ? ;",
+      (values = [new Buffer.from(req.body.base, "base64"), hash]),
+      function (err, res) {
+        if (err) {
+          throw err;
+        }
+      }
+    );
+    ourConnection.release();
+  });
+  resData.send(formattingResponse(token, { value: true }));
+});
+
 app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
@@ -238,8 +260,8 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("File ist " + req.body.file);
     connectionDekomdb.query(
-      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG, DATUM) VALUES (?,?,?)",
-      (values = [hash, req.body.file, fullDate]),
+      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG, DATUM, SIGNATUR) VALUES (?,?,?,?)",
+      (values = [hash, req.body.file, fullDate, new Buffer.from(req.body.signatur, "base64")]),
       function (err, res) {
         if (err) {
           console.log(err)
@@ -266,10 +288,22 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
           throw err;
         } else if (res.length) {
           console.log("Documents found! +++");
+          let buf = [];
+          console.log("res.length: " + res.length)
+          if (res[0].SIGNATUR !== null) {
+            for (let i = 0; i < res.length; i++) {
+            buf.push( new Buffer.from(res[i].SIGNATUR).toString("base64"));
+            }
+            console.log("buf:  " + buf[0] )
+            console.log("buf2:  " + buf[1] )
+          } else {
+            buf = "";
+          }
           resData.send(
             formattingResponse(token, {
               value: true,
               result: res,
+              signature: buf,
             })
           );
         } else {
