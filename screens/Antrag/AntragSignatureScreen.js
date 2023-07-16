@@ -17,6 +17,7 @@ import CustomText from "../../components/Font";
 import { DataContext } from "../../context/DataContext";
 import { Header } from "../../components/Header";
 import WeiterButton from "../../components/Buttons/WeiterButton";
+import Button from "../../components/Buttons/Button";
 
 let isVarifiedVar;
 
@@ -26,47 +27,20 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
   const { isVerified } = useContext(AuthContext);
   const { userData, fetchData } = useContext(DataContext);
   const [trigerred, setIsTriggered] = useState(false);
-  const [imageUrl, setImageUrl] = useState(
-    `data:image/png;base64,${userData.body.signature}`
+  const [signature, setSign] = useState(null);
+  const [antragData, setAntragData] = useState(
+    route.params?.antragData || null
   );
   isVarifiedVar = isVerified;
+  var base64raw;
 
-  let antragData = route.params?.antragData || null;
+  // let antragData = route.params?.antragData || null;
 
   useEffect(() => {
     setIsLoading(true);
     fetchData();
     setIsLoading(false);
-    setImageUrl(`data:image/png;base64,${userData.body.signature}`);
   }, [trigerred]);
-
-  const fetcher = async (stringBase) => {
-    setIsLoading(true);
-    let respond = await fetch(
-      "http://192.168.178.24:3000/antrag/save/signature",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-        body: JSON.stringify({
-          base: stringBase,
-        }),
-      }
-    );
-
-    const responseJSON = await respond.json();
-
-    const verificationStatus = await isVarifiedVar(responseJSON);
-
-    if (verificationStatus == "verified" && responseJSON.body.value == true) {
-      console.log("respond contains true => success... YUHU");
-      Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
-    }
-    setIsLoading(false);
-  };
 
   const Sign = ({ text, onOK }) => {
     const ref = useRef();
@@ -74,25 +48,25 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
     // Called after ref.current.readSignature() reads a non-empty base64 string
     const handleOK = (signature) => {
       console.log(signature);
-      var base64raw = signature.replace("data:image/png;base64,", "");
-      Alert.alert(
-        "Sicher?",
-        "Bist du sicher, dass du diese Signatur speichern willst?",
-        [
-          {
-            text: "Ja, anwenden ",
-            onPress: () => {
-              setIsTriggered(true);
-            //  fetcher(base64raw);
-              antragData = { ...antragData, signatur: base64raw };
-              console.log("antragData in der signatur: " + JSON.stringify(antragData))
+      setSign(signature);
+      if (signature) {
+        base64raw = signature.replace("data:image/png;base64,", "");
+        Alert.alert(
+          "Sicher?",
+          "Bist du sicher, dass du diese Signatur speichern willst?",
+          [
+            {
+              text: "Ja, anwenden ",
+              onPress: () => {
+                setAntragData((prevData) => ({ ...prevData, signatur: base64raw }));
+              },
             },
-          },
-          {
-            text: "Nein, nochmal",
-          },
-        ]
-      );
+            {
+              text: "Nein, nochmal",
+            },
+          ]
+        );
+      }
       //  onOK(signature); // Callback from Component props
     };
 
@@ -108,7 +82,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
 
     // Called after end of stroke
     const handleEnd = () => {
-      ref.current.readSignature();
+      // ref.current.readSignature();
     };
 
     // Called after ref.current.getData()
@@ -116,30 +90,48 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
       console.log(data);
     };
 
+    const handleConfirm = () => {
+      console.log("end");
+      ref.current.readSignature();
+    };
+
     return (
-      <SignatureScreen
-        ref={ref}
-        onEnd={handleEnd}
-        onOK={handleOK}
-        onEmpty={handleEmpty}
-        onClear={handleClear}
-        onGetData={handleData}
-        autoClear={true}
-        descriptionText={text}
-      />
+      <>
+        <SignatureScreen
+          ref={ref}
+          onEnd={handleEnd}
+          onOK={handleOK}
+          onEmpty={handleEmpty}
+          onClear={handleClear}
+          onGetData={handleData}
+          autoClear={true}
+        />
+        <View style={{ alignItems: "center", marginTop: 10 }}>
+          <Button label="Bestätigen" onPress={handleConfirm}></Button>
+        </View>
+        {signature ? (
+          <Image
+            resizeMode={"contain"}
+            style={{ width: 335, height: 114 }}
+            source={{ uri: signature }}
+          />
+        ) : null}
+      </>
     );
   };
 
   return (
     <>
       <Header />
-      <View style={{  
-    flexDirection: "row",
-    alignItems:"center",
-    backgroundColor: "#2C3639", //2C3639
-    paddingLeft: 80,
-    paddingBottom: 10
-    }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          backgroundColor: "#2C3639", //2C3639
+          paddingLeft: 80,
+          paddingBottom: 10,
+        }}
+      >
         <WeiterButton
           onPress={() => {
             navigation.navigate("FragenScreen", { antragData });
@@ -149,7 +141,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
         </WeiterButton>
         <WeiterButton
           onPress={() => {
-            console.log(JSON.stringify(antragData))
+            console.log(JSON.stringify(antragData));
             navigation.navigate("ZahlungsScreen", { antragData });
           }}
         >
@@ -222,7 +214,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
           Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.
         </CustomText>
 
-        <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
+        {/*    <ScrollView style={{ flex: 1, margin: 20, paddingTop: 50 }}>
           <CustomText
             style={{
               color: "#DCD7C9",
@@ -252,7 +244,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
               }}
             />
           )}
-        </ScrollView>
+            </ScrollView> */}
       </SafeAreaView>
     </>
   );

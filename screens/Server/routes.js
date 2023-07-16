@@ -49,22 +49,22 @@ const getHash = async (value) => {
 };
 
 const authorized = async (id, pin) => {
-  console.log("in Authorized ist folgende Pin: " + pin)
+  console.log("in Authorized ist folgende Pin: " + pin);
   let mock = true;
 
-  if(mock == true){
-  try {
-    const response = await fetch(
-      `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
-    );
-    const responseJSON = await response.json();
+  if (mock == true) {
+    try {
+      const response = await fetch(
+        `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
+      );
+      const responseJSON = await response.json();
 
-    return responseJSON;
-  } catch (error) {
-    console.error(`Error during authorization: ${error.message}`);
-    throw error;
+      return responseJSON;
+    } catch (error) {
+      console.error(`Error during authorization: ${error.message}`);
+      throw error;
+    }
   }
-}
 };
 
 app.get("/auth.behoerde", (req, res) => {
@@ -90,19 +90,19 @@ app.get("/auth.behoerde", (req, res) => {
 app.get("/testdb.userdaten", async (req, res) => {
   const { pin } = req.query;
 
- // const isAuthenticated = await authorized(id, pin);
+  // const isAuthenticated = await authorized(id, pin);
 
- // if (isAuthenticated) {
-    let user = { pin: pin };
-    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
+  // if (isAuthenticated) {
+  let user = { pin: pin };
+  const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
 
-    res.cookie("token", token, { httpOnly: true });
-    res.send(formattingResponse(token, { value: true }));
- // } else {
-//    res.send(formattingResponse(null, { value: null }));
-//  }
+  res.cookie("token", token, { httpOnly: true });
+  res.send(formattingResponse(token, { value: true }));
+  // } else {
+  //    res.send(formattingResponse(null, { value: null }));
+  //  }
 });
 
 app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
@@ -121,8 +121,8 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
           console.log("User found successfully.");
           let buf = "";
           if (results[0].SIGNATUR !== null) {
-          //  console.log("resultsssss[0]: " + JSON.stringify(results[0].SIGNATUR))
-           // console.log("resultsssss[0]. SIGNATUR: " + res[1].SIGNATUR)
+            //  console.log("resultsssss[0]: " + JSON.stringify(results[0].SIGNATUR))
+            // console.log("resultsssss[0]. SIGNATUR: " + res[1].SIGNATUR)
             buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
           } else {
             buf = "";
@@ -232,39 +232,66 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   // current date
   // adjust 0 before single digit date
   let date = ("0" + date_ob.getDate()).slice(-2);
-  
+
   // current month
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-  
+
   // current year
   let year = date_ob.getFullYear();
-  
+
   // current hours
   let hours = date_ob.getHours();
-  
+
   // current minutes
   let minutes = date_ob.getMinutes();
-  
+
   // current seconds
   let seconds = date_ob.getSeconds();
-  
+
   // prints date in YYYY-MM-DD format
   console.log(year + "-" + month + "-" + date);
-  
-  // prints date & time in YYYY-MM-DD HH:MM:SS format
-  let fullDate = date + "-" + month + "-" + year + ",  " + hours + ":" + minutes + ":" + seconds
-  console.log(date + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds);
-  console.log(date)
 
+  // prints date & time in YYYY-MM-DD HH:MM:SS format
+  let fullDate =
+    date +
+    "-" +
+    month +
+    "-" +
+    year +
+    ",  " +
+    hours +
+    ":" +
+    minutes +
+    ":" +
+    seconds;
+  console.log(
+    date +
+      "-" +
+      month +
+      "-" +
+      year +
+      " " +
+      hours +
+      ":" +
+      minutes +
+      ":" +
+      seconds
+  );
+  console.log(date);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("File ist " + req.body.file);
     connectionDekomdb.query(
       "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG, DATUM, SIGNATUR) VALUES (?,?,?,?)",
-      (values = [hash, req.body.file, fullDate, new Buffer.from(req.body.signatur, "base64")]),
+      (values = [
+        hash,
+        req.body.file,
+        fullDate,
+        new Buffer.from(req.body.signatur, "base64"),
+      ]),
       function (err, res) {
         if (err) {
-          console.log(err)
+          console.log(err);
           throw err;
         }
       }
@@ -282,23 +309,21 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
       "SELECT * FROM dekomdb.userdocuments WHERE USER_ID_HASH= ? ",
-      (values = [hash]), (err, res) => {
+      (values = [hash]),
+      (err, res) => {
         if (err) {
-          console.log(err)
+          console.log(err);
           throw err;
         } else if (res.length) {
           console.log("Documents found! +++");
           let buf = [];
-          console.log("res.length: " + res.length)
-          if (res[0].SIGNATUR !== null) {
-            for (let i = 0; i < res.length; i++) {
-            buf.push( new Buffer.from(res[i].SIGNATUR).toString("base64"));
-            }
-            console.log("buf:  " + buf[0] )
-            console.log("buf2:  " + buf[1] )
+          for (let i = 0; i < res.length; i++) {
+          if (res[i].SIGNATUR !== null) {
+              buf.push(new Buffer.from(res[i].SIGNATUR).toString("base64"));
           } else {
             buf = "";
           }
+        }
           resData.send(
             formattingResponse(token, {
               value: true,
@@ -323,12 +348,14 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   const hash = await getHash(decoded.user.pin);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
-    console.log(`DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`)
+    console.log(`DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`);
     connectionDekomdb.query(
-      `DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`, (err, res) => { //(values = [antragId])
+      `DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`,
+      (err, res) => {
+        //(values = [antragId])
         console.log("RES: " + JSON.stringify(res));
         if (err) {
-          console.log(err)
+          console.log(err);
           throw err;
         } else if (res) {
           console.log("Document Removed ++++ : " + res);

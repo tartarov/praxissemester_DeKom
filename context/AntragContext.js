@@ -10,6 +10,7 @@ export function AntragProvider({ children }) {
   const [antragFileId, setAntragFileId] = useState(null);
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
+  const [ isLoading, setIsLoading ] = useState(false);
   const ipAddress = "192.168.178.24";
   let isVarifiedVar;
 
@@ -59,7 +60,7 @@ export function AntragProvider({ children }) {
       credentials: "same-origin",
       body: JSON.stringify({
         file: file,
-        signatur: signatur
+        signatur: signatur,
       }),
     });
 
@@ -84,21 +85,18 @@ export function AntragProvider({ children }) {
     const responseJSON = await respond.json();
 
     const verificationStatus = await isVarifiedVar(responseJSON);
-    console.log(" responseJSON.body.value: " + responseJSON.body.value )
-  
+    console.log(" responseJSON.body.value: " + responseJSON.body.value);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       setAntragFile(responseJSON.body.result);
       setAntragFileId(responseJSON.body.result);
       const updatedItems = [];
 
-   
-
       for (let i = 0; i < responseJSON.body.result.length; i++) {
         let random = Math.floor(Math.random() * bearbeitungsstatus.length);
         let bearbeitungsStatusValue = bearbeitungsstatus[random];
         let antragColor;
-      
+
         switch (bearbeitungsStatusValue) {
           case "in Bearbeitung":
             antragColor = "yellow";
@@ -112,7 +110,7 @@ export function AntragProvider({ children }) {
           default:
             antragColor = "white";
         }
-      
+
         updatedItems.push({
           title: "Führungszeugnis",
           document: {
@@ -129,7 +127,7 @@ export function AntragProvider({ children }) {
           },
         });
       }
-      
+
       setAntragAusstellerDaten(updatedItems);
 
       console.log("respond contains true => success... YUHU");
@@ -140,28 +138,23 @@ export function AntragProvider({ children }) {
       setAntragFileId(0);
       setAntragAusstellerDaten([]);
     }
-
- // if(responseJSON.body.value==true){
-  
- //   else{
- //   setAntragAusstellerDaten({title: "Du hast keine Anträge in deiner Sammlung."});
- // }
-//}
-};
-
+  };
 
   const removeAntrag = async (antragId) => {
+    setIsLoading(true);
     isVarifiedVar = isVerified;
     console.log("antragId:  " + antragId);
     let respond = await fetch(
-      `http://${ipAddress}:3000/user/remove/antrag?antragId=${antragId}`,{
+      `http://${ipAddress}:3000/user/remove/antrag?antragId=${antragId}`,
+      {
         method: "DELETE",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        credentials: "same-origin"
-      });
+        credentials: "same-origin",
+      }
+    );
 
     const responseJSON = await respond.json();
 
@@ -176,6 +169,7 @@ export function AntragProvider({ children }) {
     ) {
       Alert.alert("Some Error occured");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -184,6 +178,7 @@ export function AntragProvider({ children }) {
         antragFile,
         antragFileId,
         antragAusstellerDaten,
+        isLoading,
         addToListe,
         getAntrag,
         removeAntrag,

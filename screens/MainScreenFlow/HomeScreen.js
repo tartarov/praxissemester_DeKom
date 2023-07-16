@@ -45,9 +45,9 @@ function HomeScreen({ navigation }) {
   const scrollX2 = useRef(new Animated.Value(0)).current;
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollValue = useRef(new Animated.ValueXY()).current;
-  const [isLoading, setIsLoading] = useState(true);
+ // const [isLoading, setIsLoading] = useState(true);
   const { data, getWalletData } = useContext(DataContext);
-  const { antragAusstellerDaten, getAntrag, removeAntrag, bearbeitungsstatus } =
+  const { antragAusstellerDaten, getAntrag, removeAntrag, isLoading } =
     useContext(AntragContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
@@ -68,10 +68,10 @@ function HomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
+   // setIsLoading(true);
     getWalletData();
     getAntrag();
-    setIsLoading(false);
+   // setIsLoading(false);
   }, []);
 
   const toggleModal = () => {
@@ -169,7 +169,9 @@ function HomeScreen({ navigation }) {
             <Paginator data={data} scrollX={scrollX} />
 
             <Animated.View style={[styles.flatListContainer2, {backgroundColor: interpolateColorY }]}>
-            {antragAusstellerDaten.length ? (
+            {isLoading ? (
+          <Loader />
+        ): antragAusstellerDaten.length ? (
               <FlatList
                 horizontal
                 pagingEnabled

@@ -80,7 +80,7 @@ function ZahlungsScreen({ route, navigation }) {
       <View style={styles.headerContainer}>
         <WeiterButton
           onPress={() => {
-            navigation.navigate("StaatsangehoerigkeitsScreen", { antragData });
+            navigation.navigate("AntragSignatureScreen", { antragData });
           }}
         >
           zurück
