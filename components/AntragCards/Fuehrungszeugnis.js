@@ -8,6 +8,7 @@ import {
   Pressable,
   useWindowDimensions,
   Animated,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -19,7 +20,8 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import BottomQRCode from "../BottomQRCode";
+import * as FileSystem from "expo-file-system";
+import { shareAsync } from "expo-sharing";
 
 const { width } = Dimensions.get("screen");
 
@@ -29,9 +31,57 @@ const ImageHeight = ImageWidth * 0.6;
 function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   const navigation = useNavigation();
   const { height } = useWindowDimensions();
-  //const scrollY = useRef(new Animated.Value(0)).current;
+  let cacheUri;
+  let documentUri;
 
-  const bottomSheetRefQr = useRef(null);
+  async function transferFileFromCacheToDocumentDirectory() {
+    cacheUri = `${antragAusstellerDaten.document.antragDir}`;
+    documentUri = `${FileSystem.documentDirectory}${antragAusstellerDaten.title}.pdf`;
+    console.log(documentUri);
+    try {
+      // Read the content of the file from the CacheDirectory
+      const fileContent = await FileSystem.readAsStringAsync(cacheUri);
+
+      // Write the content to the DocumentDirectory
+      await FileSystem.writeAsStringAsync(documentUri, fileContent);
+      console.log(
+        "File transferred from CacheDirectory to DocumentDirectory successfully."
+      );
+      if (Platform.OS == "android") {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (permissions.granted) {
+          const base64 = await FileSystem.readAsStringAsync(cacheUri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            antragAusstellerDaten.title + "- Antrag",
+            "application/pdf"
+          )
+            .then(async (uri) => {
+              await FileSystem.writeAsStringAsync(uri, base64, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+            })
+            .catch((e) =>
+              console.log("Error while saving file to Directory: " + e)
+            );
+        } else {
+          shareAsync(cacheUri);
+        }
+      } else {
+        shareAsync(documentUri);
+      }
+    } catch (error) {
+      console.error("Error transferring the file:", error);
+    }
+  }
+
+  async function shareDocument() {
+    cacheUri = `${antragAusstellerDaten.document.antragDir}`;
+    shareAsync(cacheUri);
+  }
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height / 2],
@@ -49,7 +99,6 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
 
   let ionicon;
   let ioniconColor;
-
 
   if (antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung") {
     ionicon = "reload-circle-outline"; // Set red color for specific statuses
@@ -107,9 +156,15 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
               <View style={styles.textNummer}>
                 <Text style={styles.text}>{antragAusstellerDaten.title}</Text>
               </View>
-              <Text style={[styles.heading, {fontSize:8, top:20, left:10}]}>deine Unterschrift:</Text>
+              <Text
+                style={[styles.heading, { fontSize: 8, top: 20, left: 10 }]}
+              >
+                deine Unterschrift:
+              </Text>
               <Image
-                source={{uri: `data:image/png;base64,${antragAusstellerDaten.document.antragSignature}`}}
+                source={{
+                  uri: `data:image/png;base64,${antragAusstellerDaten.document.antragSignature}`,
+                }}
                 style={{
                   height: 150,
                   width: 100,
@@ -141,20 +196,32 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
                 {antragAusstellerDaten.document.einreichungsbehoerde}
               </Text>
             </View>
-            <View style={[styles.textContainer, { marginLeft: 0 }]}>
+            <View style={styles.ioniconContainer}></View>
+            <View style={[styles.textContainer]}>
               <Text style={styles.heading}>Nummer des Ausstellers</Text>
-              <Text style={styles.text}>
+              <Text style={[styles.text, { marginBottom: 0 }]}>
                 {antragAusstellerDaten.document.ausstellerNummer}
               </Text>
+              <Pressable onPress={transferFileFromCacheToDocumentDirectory}>
+                <Ionicons
+                  name="download-outline"
+                  size={40}
+                  color="black"
+                  style={{ top: 30, right: 100, backgroundColor:"red" }}
+                />
+              </Pressable>
+              <Pressable onPress={shareDocument}>
+                <Ionicons
+                  name="share-social-outline"
+                  size={40}
+                  color="black"
+                  style={{ top: -10, left: 130 }}
+                />
+              </Pressable>
             </View>
           </View>
           <View style={{ flexDirection: "column" }}>
-            <View
-              style={[
-                styles.textContainer,
-                { paddingLeft: 0, marginTop: 50, bakcgroundColor: "red" },
-              ]}
-            >
+            <View style={[styles.textContainer, { paddingLeft: 0 }]}>
               <Text style={styles.textCAN}>
                 {antragAusstellerDaten.document.can}
               </Text>
@@ -162,7 +229,6 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View
               style={{
                 alignItems: "center",
-                paddingTop: 0,
                 marginLeft: 10,
                 borderBottomWidth: 1,
                 width: 350,
@@ -171,14 +237,18 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
               }}
             />
 
-            <View style={{  alignItems: "center" }}>
+            <View style={{ alignItems: "center" }}>
               <View style={styles.textContainerInitials}>
                 <Text style={styles.headingInitials}>
                   {antragAusstellerDaten.document.bearbeiitungsStatus}
                 </Text>
               </View>
               <View style={styles.ioniconContainer}>
-                <Ionicons name={ionicon} size={60} style={{color:ioniconColor, left:140, bottom:10}} />
+                <Ionicons
+                  name={ionicon}
+                  size={60}
+                  style={{ color: ioniconColor, left: 140, bottom: 10 }}
+                />
               </View>
             </View>
           </View>
@@ -219,7 +289,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textContainer: {
-    paddingTop: 10,
+    paddingTop: 0,
     paddingLeft: 10,
   },
   textContainerInitials: {
@@ -241,7 +311,7 @@ const styles = StyleSheet.create({
     color: "#223e4b",
     marginLeft: 0,
     top: 40,
-    right:80,
+    right: 80,
     justifyContent: "center",
   },
   text: {

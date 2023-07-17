@@ -25,9 +25,33 @@ const { width } = Dimensions.get("screen");
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
 
+
 function Ausweis({ data, refrence }) {
+  const maxSize = 34;
+  const minSize = 10;
   const navigation = useNavigation();
   const { height } = useWindowDimensions();
+  const [textNachname, setTextNachname] = useState(data.document.name);
+  const [textVorname, setTextVorname] = useState(data.document.vorname);
+  const [width, setWidth] = useState(Dimensions.get('window').width);
+  const [letterToWidthRatioNach, setWidthRatioNach] = useState(textNachname.length / width);
+  const [letterToWidthRatioVor, setWidthRatioVor] = useState(textNachname.length / width);
+
+  const [fontSizeNachname, setFontSizeNachname] = useState(maxSize);
+  const [fontSizeVorname, setFontSizeVorname] = useState(maxSize);
+
+  useEffect(() => {
+    // Do your calculation here
+    setWidthRatioNach(width / Math.max(textNachname.length, 2)/1.1);
+    setWidthRatioVor(width / Math.max(textVorname.length, 2)/1.1);
+  }, [textNachname, textVorname, width]);
+
+  useEffect(() => {
+    const sizeN = Math.max(Math.min(letterToWidthRatioNach, maxSize), minSize);
+    const sizeV = Math.max(Math.min(letterToWidthRatioVor, maxSize), minSize);
+    setFontSizeNachname(sizeN);
+    setFontSizeVorname(sizeV)
+  }, [width, textNachname, letterToWidthRatioNach]);
 
   return (
     <>
@@ -62,12 +86,14 @@ function Ausweis({ data, refrence }) {
           <View style={{ flexDirection: "row" }}>
             <View style={styles.dataContainer}>
               <Text
-                style={[styles.heading, { paddingTop: 0, paddingLeft: 20}]}
+                style={[styles.heading, { paddingTop: 0, paddingLeft: 20 }]}
               >
                 Personalausweisnummer
               </Text>
               <View style={styles.textNummer}>
-                <Text  style={[styles.textNummer,{letterSpacing:3}]}>{data.document.nummer}</Text>
+                <Text style={[styles.textNummer, { letterSpacing: 3 }]}>
+                  {data.document.nummer}
+                </Text>
               </View>
               <View style={styles.textContainer}>
                 <Text style={styles.heading}>Geburtstag</Text>
@@ -90,9 +116,17 @@ function Ausweis({ data, refrence }) {
               <View
                 style={[
                   styles.textContainer,
-                  { paddingLeft: 250, marginTop: 0 },
+                  { paddingLeft: 250, marginTop: 0, flexDirection: "row",  right:20 },
                 ]}
               >
+                <Image
+                  source={require("../../assets/images/AusweisApp2_Bildmarke_Symbol.png")}
+                  style={{
+                    height: 31,
+                    width: 31,
+                    right: 210,
+                  }}
+                />
                 <Text style={styles.textCAN}>{data.document.can}</Text>
               </View>
             </View>
@@ -107,6 +141,7 @@ function Ausweis({ data, refrence }) {
                   marginTop: 35,
                   marginBottom: 20,
                   borderRadius: 2,
+                  right:30
                 }}
               />
             ) : (
@@ -119,6 +154,7 @@ function Ausweis({ data, refrence }) {
                   color: "#2C3639",
                   marginRight: 10,
                   marginLeft: 30,
+                  right:20
                 }}
               />
             )}
@@ -139,11 +175,11 @@ function Ausweis({ data, refrence }) {
 
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.textContainerInitials}>
-                  <Text style={styles.headingInitials}>
-                    {data.document.vorname}
+                  <Text style={[styles.headingInitials, {fontSize: fontSizeVorname}]}>
+                  {data.document.vorname}
                   </Text>
-                  <Text style={styles.headingInitials}>
-                    {data.document.name}
+                  <Text style={[styles.headingInitials, {fontSize: fontSizeNachname}]}>
+                   {data.document.name} 
                   </Text>
                   <Text style={[styles.heading, { paddingHorizontal: 0 }]}>
                     Vorname/Nachname
@@ -158,11 +194,12 @@ function Ausweis({ data, refrence }) {
                     name="qr-code-outline"
                     size={60}
                     style={{
-                      paddingLeft: 70,
-                      paddingTop: 30,
+                      paddingLeft: 0,
+                      paddingTop: 0,
                       color: "#2C3639",
-                      marginRight: 10,
-                      marginLeft: 30,
+                      marginRight: 0,
+                      left: 20,
+                      top:20
                     }}
                   />
                 </Pressable>
@@ -235,7 +272,7 @@ const styles = StyleSheet.create({
     color: "#223e4b",
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
-    paddingHorizontal: 0,
+    right: 15,
   },
   textNummer: {
     color: "#223e4b",

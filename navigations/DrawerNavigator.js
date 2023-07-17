@@ -37,6 +37,9 @@ const DrawerNavigator = () => {
             <Ionicons name="person-circle-outline" size={28} color="#DCD7C9" />
           ),
         }}
+        listeners={({ navigation }) => ({
+          press: () => navigation.navigate("You"),
+        })}
       />
       <Drawer.Screen
         name="Wallet"

@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useRef, useEffect } from "react";
+import React, { createContext, useState, useContext, useRef, useEffect } from "react";
 import { Alert, useWindowDimensions } from "react-native";
 import { AuthContext } from "./AuthContext";
 
@@ -11,7 +11,7 @@ export function AntragProvider({ children }) {
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
   const [ isLoading, setIsLoading ] = useState(false);
-  const ipAddress = "192.168.178.24";
+  const ipAddress = "192.168.1.213";
   let isVarifiedVar;
 
   let initAntragAusstellerDaten = [
@@ -114,6 +114,7 @@ export function AntragProvider({ children }) {
         updatedItems.push({
           title: "Führungszeugnis",
           document: {
+            antragDir: responseJSON.body.result[i].ANTRAG,
             ausstellDatum: responseJSON.body.result[i].DATUM,
             antragId: responseJSON.body.result[i].ID,
             antragSignature: responseJSON.body.signature[i],

@@ -2,10 +2,11 @@ import Button from "../../components/Buttons/Button";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { DataContext } from "../../context/DataContext";
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import AntragContext from "../../context/AntragContext";
+
 
 let html;
 let userData;
@@ -14,6 +15,8 @@ export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params?.antragData || null;
   const {addToListe, getAntrag } = useContext(AntragContext)
   const { getUserData } = useContext(DataContext);
+  //const [pdfUri, setPdfUri] = useState('');
+
 console.log("antragData: " + JSON.stringify(antragData.signatur))
   function getCheckBoxValue(boolean) {
     if (boolean == true) {
@@ -206,7 +209,7 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
                  <h3 style="padding-top: 4pt;padding-left: 26pt;text-indent: 0pt;text-align: left;">Unterschrift der
                      Antrag
                      stellenden Person<span class="s9">: <br>
-                     <img src= "${
+                     <img src= "data:image/png;base64,${
                        userData.signatur
                      }" style="width:20%; height:20%; paddingLeft:50%"/>
                      <br> </span><span
@@ -406,6 +409,7 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
     });
     const uriFile = file.uri
     addToListe(uriFile, userData.signatur)
+   // setPdfUri(uriFile); 
    // getAntrag()
     await shareAsync(file.uri);
   };
