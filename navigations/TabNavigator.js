@@ -21,6 +21,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Antragmenue from "../components/AntragListeDrawer";
 import ScanMe from "../screens/ScanMe";
 import AntragSignatureCaptures from "../screens/Antrag/AntragSignatureScreen";
+import colorEnum from "../components/DeKomColors";
 
 
 const Tab = Platform.OS === 'ios' ? createMaterialTopTabNavigator() : createBottomTabNavigator();
@@ -75,7 +76,7 @@ const BottomTabNavigator = () => {
           marginHorizontal:20,
           marginBottom:10,
           borderRadius:100,
-          backgroundColor: "#2C3639",
+          backgroundColor: colorEnum.primary,
           position: "absolute",
         },
       }}
@@ -91,13 +92,13 @@ const BottomTabNavigator = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <View style={{backgroundColor:  "#A27B5C" , borderRadius:40, paddingHorizontal:5, paddingRight: 0, elevation:9, height:60, width: 60, justifyContent:'center', alignItems:'center'}}>
-            <Ionicons name="add-outline" color= {focused ? "#DCD7C9" : "#3F4E4F"} size={50}  />
+            <View style={{backgroundColor:  colorEnum.tertiary , borderRadius:40, paddingHorizontal:5, paddingRight: 0, elevation:9, height:60, width: 60, justifyContent:'center', alignItems:'center'}}>
+            <Ionicons name="add-outline" color= {focused ? colorEnum.quartiary : colorEnum.secondary} size={50}  />
             </View>
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
-              style={{ color: focused ? "#A27B5C" : "#DCD7C9", fontSize: 12 }}
+              style={{ color: focused ? colorEnum.tertiary : colorEnum.quartiary, fontSize: 12 }}
             >
               Anträge
             </Text>
@@ -118,11 +119,11 @@ const BottomTabNavigator = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name="person" color= {focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
+            <Ionicons name="person" color= {focused ? colorEnum.quartiary : colorEnum.secondary} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
-              style={{ color: focused ? "#A27B5C" : "#DCD7C9", fontSize: 12 }}
+              style={{ color: focused ? colorEnum.tertiary : colorEnum.quartiary, fontSize: 12 }}
             >
               You
             </Text>
@@ -135,11 +136,11 @@ const BottomTabNavigator = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name="home" color={focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
+            <Ionicons name="home" color={focused ? colorEnum.quartiary : colorEnum.secondary} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
-              style={{ color: focused ? "#A27B5C" : "#DCD7C9", fontSize: 12 }}
+              style={{ color: focused ? colorEnum.tertiary : colorEnum.quartiary, fontSize: 12 }}
             >
               Home
             </Text>
@@ -152,11 +153,11 @@ const BottomTabNavigator = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name="menu" color={focused ? "#DCD7C9" : "#3F4E4F"} size={size} />
+            <Ionicons name="menu" color={focused ? colorEnum.quartiary : colorEnum.secondary} size={size} />
           ),
           tabBarLabel: ({ focused, color, size }) => (
             <Text
-              style={{ color: focused ? "#A27B5C" : "#DCD7C9", fontSize: 12 }}
+              style={{ color: focused ? colorEnum.tertiary : colorEnum.quartiary, fontSize: 12 }}
             >
               Settings
             </Text>

@@ -1,5 +1,6 @@
 import { View, StyleSheet, Animated, useWindowDimensions } from "react-native";
 import React from "react";
+import colorEnum from "./DeKomColors";
 
 function Paginator({ data, scrollX }) {
   console.log("data current State:" + data);
@@ -26,7 +27,7 @@ function Paginator({ data, scrollX }) {
 
             const color = scrollX.interpolate({
               inputRange,
-              outputRange: ["#3F4E4F", "#DCD7C9", "#3F4E4F"],
+              outputRange: [colorEnum.secondary, colorEnum.quartiary, colorEnum.secondary],
               extrapolate: "clamp",
             });
 
@@ -60,6 +61,6 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     marginHorizontal: 8,
     borderWidth: 1.5,
-    borderColor: "#3F4E4F",
+    borderColor: colorEnum.secondary,
   },
 });

@@ -27,6 +27,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { HeaderBottomdrawer } from "./HeaderBottomDrawer";
 import { PanGestureHandler, ScrollView } from "react-native-gesture-handler";
+import colorEnum from "./DeKomColors";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -184,8 +185,8 @@ const Antragmenue = forwardRef(
     );
 
     const renderItem = ({ item }) => {
-      const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
-      const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
+      const backgroundColor = item.id === selectedId ? colorEnum.tertiary : colorEnum.secondary;
+      const color = item.id === selectedId ? colorEnum.primary : colorEnum.quartiary;
 
       return (
         <Item
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: "center",
-    backgroundColor: "#2C3639",
+    backgroundColor: colorEnum.primary,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     position: "absolute",

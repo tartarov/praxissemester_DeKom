@@ -20,6 +20,7 @@ import Animated, {
     useAnimatedGestureHandler,
   } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import colorEnum from "./DeKomColors";
 
 const { width } = Dimensions.get("screen");
 
@@ -173,11 +174,11 @@ const BottomQRCode = forwardRef(
           onGestureEvent={gestureHandler}
         >
           <Animated.View style={[styles.container, animationStyle]}>
-          <SafeAreaView style={{ backgroundColor: "#2C3639", flex: 1 }}>
+          <SafeAreaView style={{ backgroundColor: colorEnum.primary, flex: 1 }}>
             <Header navigation={navigation} />
             <View
               style={{
-                backgroundColor: "#3F4E4F",
+                backgroundColor: colorEnum.secondary,
                 width: 190,
                 height: 230,
                 alignItems: "center",
@@ -207,7 +208,7 @@ const BottomQRCode = forwardRef(
                 )}
               </View>
               <LogoText
-                style={{ marginTop: 5, color: "#DCD7C9", alignItems: "center" }}
+                style={{ marginTop: 5, color: colorEnum.quartiary, alignItems: "center" }}
               >
                 {nameVar.name
                   ? nameVar.name
@@ -224,7 +225,7 @@ const BottomQRCode = forwardRef(
                 width: "100%",
               }}
             >
-              <CustomText style={{ marginLeft: 10, color: "#DCD7C9" }}>
+              <CustomText style={{ marginLeft: 10, color: colorEnum.quartiary }}>
                 Name
               </CustomText>
               <TextInput

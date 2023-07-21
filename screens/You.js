@@ -12,6 +12,8 @@ import Button from "../components/Buttons/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
 import Loader from "../components/animations/Loader";
+import colorEnum from "../components/DeKomColors";
+
 const { width } = Dimensions.get("screen");
 
 function You({ navigation }) {
@@ -67,11 +69,11 @@ function You({ navigation }) {
 
  // if (userId.length) {
     return (
-      <SafeAreaView style={{ backgroundColor: "#2C3639", flex:1 }}>
+      <SafeAreaView style={{ backgroundColor: colorEnum.primary, flex:1 }}>
         <Header navigation={navigation} />
         <View
           style={{
-            backgroundColor: "#3F4E4F",
+            backgroundColor: colorEnum.secondary,
             width: 190,
             height: 230,
             alignItems: "center",
@@ -97,7 +99,7 @@ function You({ navigation }) {
            {userId.length ?  <QRCode value={userId} size={120}  /> : <Loader/>}
           </View>
           <LogoText
-            style={{ marginTop: 5, color: "#DCD7C9", alignItems: "center" }}
+            style={{ marginTop: 5, color: colorEnum.quartiary, alignItems: "center" }}
           >
             {nameVar.name
               ? nameVar.name
@@ -114,7 +116,7 @@ function You({ navigation }) {
             width: "100%",
           }}
         >
-          <CustomText style={{ marginLeft: 10, color: "#DCD7C9" }}>
+          <CustomText style={{ marginLeft: 10, color: colorEnum.quartiary }}>
             Name
           </CustomText>
           <TextInput

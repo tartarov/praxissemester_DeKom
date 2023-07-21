@@ -9,6 +9,7 @@ import {
   Dimensions
 } from "react-native";
 import DokumenteButton from "./Buttons/DokumentButton";
+import colorEnum from "./DeKomColors";
 
 
 const { width } = Dimensions.get("screen");
@@ -20,7 +21,7 @@ const VISIBLE_ITEMS = 3;
 console.log("ITEM_HEIGHT --- " + (600/1.09) + "  " + (ITEM_HEIGHT*2.01) )
 
 export function HeaderBottomdrawer({ isExpanded }) {
-  const backgroundColor = isExpanded ? "#2C3639" : "#DCD7C9";
+  const backgroundColor = isExpanded ? colorEnum.primary : colorEnum.quartiary;
 
   return (
     <SafeAreaView
@@ -47,10 +48,10 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 2,
-    borderTopColor: "#2C3639",
-    borderLeftColor: "#2C3639",
-    borderRightColor: "#2C3639",
-    borderBottomColor: "#DCD7C9",
+    borderTopColor: colorEnum.primary,
+    borderLeftColor: colorEnum.primary,
+    borderRightColor: colorEnum.primary,
+    borderBottomColor: colorEnum.primary,
     elevation: 7,
   },
   headerContainer: {
@@ -65,6 +66,6 @@ const styles = StyleSheet.create({
     //fontFamily: "Trebuchet MS",
     fontSize: 38,
     marginLeft: 20,
-    color: "#A27B5C",
+    color: colorEnum.tertiary,
   },
 });

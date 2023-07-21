@@ -8,6 +8,7 @@ import {
   Image
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import colorEnum from "../DeKomColors";
 
 const { width } = Dimensions.get("screen");
 
@@ -26,7 +27,7 @@ function Ausweis({ data }) {
                         style={{height:120,width:80, margin:0, marginLeft: 10, marginTop: 60, borderRadius:2}}/> :   <Ionicons
                         name="person-circle-outline"
                         size={100}
-                        style={{ marginTop: 70, color: '#2C3639' }}
+                        style={{ marginTop: 70, color: colorEnum.primary }}
                       /> } 
         <View style={styles.dataContainer}>
           <View style={styles.textContainer}>
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#3F4E4F",
+    borderColor: colorEnum.secondary,
     overflow: "hidden",
   },
   dataContainer: {
@@ -111,11 +112,11 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: Platform.OS === "android" ? 10 : 12, //Platform.OS === 'android' ? 10 : 12,
     fontStyle: "italic",
-    color: "#223e4b",
+    color: colorEnum.primary,
     paddingHorizontal: 10,
   },
   text: {
-    color: "#223e4b",
+    color: colorEnum.primary,
     fontSize: Platform.OS === "android" ? 10 : 12,
     fontFamily: 'Nexa-Heavy',
     paddingHorizontal: 10,

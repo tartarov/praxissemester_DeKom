@@ -31,6 +31,7 @@ import CustomText from "./Font";
 import { Linking } from "react-native";
 import NumberPad from "./NumberPad";
 import { Entypo as Icon } from "@expo/vector-icons";
+import colorEnum from "./DeKomColors";
 
 const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
@@ -140,7 +141,7 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
             fontSize: 30,
             alignSelf: "center",
             paddingTop: 40,
-            color: "#2C3639",
+            color: colorEnum.primary,
           }}
         >
           {" "}
@@ -168,7 +169,7 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
             alignSelf: "center",
             paddingVertical: 1,
             paddingHorizontal: 20,
-            color: "#2C3639",
+            color: colorEnum.primary,
             textAlign: "center",
           }}
           onPress={() =>
@@ -204,7 +205,7 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
         >
           <TextInputBlack
             style={[
-              { color: enteredNumbers.length === 10 ? "green" : "#3F4E4F" },
+              { color: enteredNumbers.length === 10 ? "green" : colorEnum.secondary },
               { fontSize: 18 },
             ]}
             letterSpacing={18}
@@ -235,7 +236,7 @@ const BottomSheetPUK = forwardRef(({ activeHeight }, ref) => {
                   styles.numberPadButton,
                   {
                     backgroundColor:
-                      enteredNumbers.length === 10 ? "#A0AAA0" : "#2C3639",
+                      enteredNumbers.length === 10 ? "#A0AAA0" : colorEnum.primary,
                   },
                 ]}
                 onPress={() => handleNumberPress(button.value)}
@@ -269,7 +270,7 @@ export default BottomSheetPUK;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#DCD7C9",
+    backgroundColor: colorEnum.quartiary,
     position: "absolute",
     top: 500,
     bottom: 0,
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
   },
   numberPadButtonText: {
     fontSize: 22,
-    color: "#DCD7C9",
+    color: colorEnum.quartiary,
   },
   backspaceButton: {
     width: 40,
@@ -305,12 +306,12 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: -40,
     marginBottom: 10,
-    backgroundColor: "#DCD7C9",
+    backgroundColor: colorEnum.quartiary,
     justifyContent: "center",
     alignItems: "center",
   },
   backspaceButtonText: {
     fontSize: 22,
-    color: "#2C3639",
+    color: colorEnum.primary,
   },
 });

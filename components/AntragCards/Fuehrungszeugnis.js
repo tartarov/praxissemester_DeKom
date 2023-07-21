@@ -199,25 +199,27 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View style={styles.ioniconContainer}></View>
             <View style={[styles.textContainer]}>
               <Text style={styles.heading}>Nummer des Ausstellers</Text>
-              <Text style={[styles.text, { marginBottom: 0 }]}>
+              <Text style={[styles.text]}>
                 {antragAusstellerDaten.document.ausstellerNummer}
               </Text>
-              <Pressable onPress={transferFileFromCacheToDocumentDirectory}>
+              <View style={{flexDirection:"row", right:50, justifyContent:"space-between", marginHorizontal:-70, top:20}}>
+              <TouchableOpacity onPress={transferFileFromCacheToDocumentDirectory}>
                 <Ionicons
                   name="download-outline"
                   size={40}
                   color="black"
-                  style={{ top: 30, right: 100, backgroundColor:"red" }}
+                  style={{ top: 0, right: 0 }}
                 />
-              </Pressable>
-              <Pressable onPress={shareDocument}>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={shareDocument}>
                 <Ionicons
                   name="share-social-outline"
                   size={40}
                   color="black"
-                  style={{ top: -10, left: 130 }}
+                  style={{ top: 0, left: 0}}
                 />
-              </Pressable>
+              </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View style={{ flexDirection: "column" }}>

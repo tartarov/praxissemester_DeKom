@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
+import colorEnum from '../DeKomColors';
 
 export default function Button({ label, onPress }) {
   return (
@@ -10,14 +11,14 @@ export default function Button({ label, onPress }) {
         width: 245,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#A27B5C', 
+        backgroundColor: colorEnum.tertiary, 
        // elevation: 2
       }}
       activeOpacity={0.7}
       onPress={onPress}
     >
       <Text
-        style={{ fontSize: 18, color: '#2C3639', textTransform: 'uppercase', fontFamily: "Nexa-Heavy" }}
+        style={{ fontSize: 18, color: colorEnum.primary, textTransform: 'uppercase', fontFamily: "Nexa-Heavy" }}
       >
         {label}
       </Text>

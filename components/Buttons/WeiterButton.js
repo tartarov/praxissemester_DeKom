@@ -1,4 +1,5 @@
 import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
+import colorEnum from '../DeKomColors';
 
 
 const { width } = Dimensions.get('screen');
@@ -28,13 +29,13 @@ const styles = StyleSheet.create({
         width: 100,
     },
     buttonInnerContainer:{
-        backgroundColor: '#A27B5C',
+        backgroundColor: colorEnum.tertiary,
     //    paddingVertical: 2,
     //    paddingHorizontal: 16,
         elevation: 2,
     },
     buttonText: {
-        color: '#DCD7C9',
+        color: colorEnum.quartiary,
         textAlign: 'center',
         padding: 6,
     },

@@ -11,6 +11,7 @@ import CustomDrawer from "../components/CustomDrawer";
 import You from "../screens/You";
 import FertigeAntragListe from "../screens/FertigeAntragListe";
 import FertigeAntragListeIntegrated from "../screens/FertigeAntragListeIntegrated";
+import colorEnum from "../components/DeKomColors";
 
 const Drawer = createDrawerNavigator();
 
@@ -20,12 +21,12 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: "#A27B5C",
-        drawerActiveTintColor: "#DCD7C9",
+        drawerActiveBackgroundColor: colorEnum.tertiary,
+        drawerActiveTintColor: colorEnum.quartiary,
         drawerLabelStyle: {
           fontFamily: "Nexa-ExtraLight",
         }, unmountOnBlur: true,
-        drawerInactiveTintColor:'#DCD7C9'
+        drawerInactiveTintColor: colorEnum.quartiary
       }}
       initialRouteName="Wallet"
     >
@@ -34,7 +35,7 @@ const DrawerNavigator = () => {
         component={You}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="person-circle-outline" size={28} color="#DCD7C9" />
+            <Ionicons name="person-circle-outline" size={28} color= {colorEnum.quartiary} />
           ),
         }}
         listeners={({ navigation }) => ({
@@ -46,7 +47,7 @@ const DrawerNavigator = () => {
         component={BottomTabNavigator}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="albums-outline" size={28} color="#DCD7C9" />
+            <Ionicons name="albums-outline" size={28} color={colorEnum.quartiary} />
           ),
         }}
       />
@@ -58,7 +59,7 @@ const DrawerNavigator = () => {
             <Ionicons
               name="documents-outline"
               size={28}
-              color="#DCD7C9"
+              color={colorEnum.quartiary}
             />
           ),
         }}
@@ -72,7 +73,7 @@ const DrawerNavigator = () => {
             <Ionicons
               name="ellipsis-horizontal-outline"
               size={28}
-              color="#DCD7C9"
+              color={colorEnum.quartiary}
             />
           ),
         }}

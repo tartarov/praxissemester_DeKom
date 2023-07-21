@@ -2,6 +2,7 @@ import React, {
     useState,
   } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import colorEnum from './DeKomColors';
 
 export default function NumberPad() {
     const [enteredNumbers, setEnteredNumbers] = useState("");
@@ -51,7 +52,7 @@ export default function NumberPad() {
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: "#DCD7C9",
+      backgroundColor: colorEnum.quartiary,
       position: "absolute",
       top: 500,
       bottom: 0,

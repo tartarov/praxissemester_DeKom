@@ -32,6 +32,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheet from "../../components/BottomSheet.js";
 import BottomSheetPUK from "../../components/BottomSheetPUK.js";
 import BottomSheetCAN from "../../components/BottomSheetCAN.js";
+import colorEnum from "../../components/DeKomColors.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -167,18 +168,18 @@ export default function Login({ navigation }) {
         <View
           style={{
             flex: 1,
-            backgroundColor: "#2C3639",
+            backgroundColor: colorEnum.primary,
             alignItems: "center",
             paddingTop: 50,
             justifyContent: "center",
           }}
         >
-          <LogoText style={{ color: "#A27B5C", fontSize: 40 }}>
+          <LogoText style={{ color: colorEnum.tertiary, fontSize: 40 }}>
             |DeKom.
           </LogoText>
           <CustomText
             style={{
-              color: "#A27B5C",
+              color: colorEnum.tertiary,
               fontSize: 11,
               marginBottom: 0,
             }}
@@ -188,7 +189,7 @@ export default function Login({ navigation }) {
           <View>
             <CustomText
               style={{
-                color: "#DCD7C9",
+                color: colorEnum.quartiary,
                 alignSelf: "center",
                 fontSize: 12,
                 marginTop: 80,
@@ -223,7 +224,7 @@ export default function Login({ navigation }) {
               style={{
                 height: 30,
                 marginTop: 5,
-                color: "#DCD7C9",
+                color: colorEnum.quartiary,
                 fontSize: 17,
               }}
             >

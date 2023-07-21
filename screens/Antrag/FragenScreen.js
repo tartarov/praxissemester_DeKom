@@ -9,6 +9,7 @@ import React, { useRef, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useFormik } from "formik";
 import { Header } from "../../components/Header";
+import colorEnum from "../../components/DeKomColors";
 
 export default function FragenScreen({ navigation }) {
   const [state, setState] = React.useState(1);
@@ -107,7 +108,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={NormalesCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#3F4E4F"
+                unfillColor={colorEnum.secondary}
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() => setNormalesCheckboxState(!NormalesCheckboxState)}
@@ -127,7 +128,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ErweitertesCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#3F4E4F"
+                unfillColor={colorEnum.secondary}
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -147,7 +148,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ÜbersendungPrivatCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#3F4E4F"
+                unfillColor={colorEnum.secondary}
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -169,7 +170,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={ÜbersendungBehördeCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#3F4E4F"
+                unfillColor={colorEnum.secondary}
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -253,7 +254,7 @@ export default function FragenScreen({ navigation }) {
                 isChecked={EinsichtÜbersendungBotschaftCheckboxState}
                 size={25}
                 fillColor="#e94832"
-                unfillColor="#3F4E4F"
+                unfillColor={colorEnum.secondary}
                 iconStyle={{ borderColor: "green" }}
                 innerIconStyle={{ borderWidth: 2 }}
                 onPress={() =>
@@ -346,13 +347,13 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems:"center",
-    backgroundColor: "#2C3639", //2C3639
+    backgroundColor: colorEnum.primary, //2C3639
     paddingLeft: 80,
     paddingBottom: 10,
   },
   bodyContainer: {
     height: 1300,
-    backgroundColor: "#3F4E4F",
+    backgroundColor: colorEnum.secondary,
     flexDirection: "column",
   },
   logo: {
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#A27B5C",
+    color: colorEnum.tertiary,
   },
   headline: {
     fontWeight: "bold",
@@ -371,7 +372,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
-    color: "#DCD7C9",
+    color: colorEnum.quartiary,
   },
   bottomline: {
     fontWeight: "semi-bold",
@@ -380,24 +381,24 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
-    color: "#DCD7C9",
+    color: colorEnum.quartiary,
   },
   label: {
     margin: 8,
-    color: "#DCD7C9",
+    color:  colorEnum.quartiary,
   },
   questionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-    color: "#DCD7C9",
+    color:  colorEnum.quartiary,
 
   },
   textBetweenContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 0,
-    color: "#DCD7C9",
+    color:  colorEnum.quartiary,
  
   },
   textInputContainer: {
@@ -413,7 +414,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 0,
     alignSelf: "center",
-    color: "#DCD7C9",
+    color:  colorEnum.quartiary,
   },
   textBetween: {
     fontSize: 17,
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 0,
     alignSelf: "center",
-    color: "#DCD7C9",
+    color:  colorEnum.quartiary,
   },
   textInputContainerBetween: {
     marginTop: 10,
@@ -439,6 +440,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   white: {
-    backgroundColor: "#2C3639",
+    backgroundColor:  colorEnum.primary,
   },
 });

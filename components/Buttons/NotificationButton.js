@@ -1,6 +1,7 @@
 import { View, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import colorEnum from "../DeKomColors";
 
 function NotificationButton({ onPress }) {
   return (
@@ -12,10 +13,10 @@ function NotificationButton({ onPress }) {
             : styles.buttonInnerContainer
         }
         onPress={onPress}
-        android_ripple={{ color: "#3F4E4F" }}
+        android_ripple={{ color: colorEnum.secondary }}
       >
         <Ionicons name="notifications-circle-outline"  size={34}
-            style={{  color: "#A27B5C" }} />
+            style={{  color: colorEnum.tertiary }} />
       </Pressable>
     </View>
   );

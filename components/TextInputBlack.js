@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
 import { TextInput as RNTextInput, View, StyleSheet} from 'react-native';
 import { Entypo as Icon } from '@expo/vector-icons';
+import colorEnum from './DeKomColors';
 
 const TextInputBlack = forwardRef(({ icon, error, touched, ...otherProps }, ref) => {
- const validationColor = !touched ? '#2C3639' : error ? '#CC3D3F' : '#3fcc3d';
+ const validationColor = !touched ? colorEnum.primary : error ? '#CC3D3F' : '#3fcc3d';
   return (
     <View
       style={{
@@ -22,8 +23,8 @@ const TextInputBlack = forwardRef(({ icon, error, touched, ...otherProps }, ref)
       <View style={{ flex: 1}}>
         <RNTextInput
           underlineColorAndroid='transparent'
-          placeholderTextColor='#3F4E4F'
-          color='#3F4E4F'
+          placeholderTextColor= {colorEnum.secondary}
+          color={colorEnum.secondary}
           ref={ref}
           {...otherProps}
         />

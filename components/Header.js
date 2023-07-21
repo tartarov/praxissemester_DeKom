@@ -4,6 +4,7 @@ import NotificationButton from "./Buttons/NotificationButton";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomText from "./Font";
+import colorEnum from "./DeKomColors";
 
 export function Header({ navigation }) {
   return (
@@ -23,7 +24,7 @@ export function Header({ navigation }) {
           <Ionicons
             name="ellipsis-vertical-circle-outline"
             size={34}
-            style={{ paddingRight: 20, paddingTop: 15, color: "#A27B5C" }}
+            style={{ paddingRight: 20, paddingTop: 15, color: colorEnum.tertiary}}
           />
         </Pressable>
         </View>
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     paddingBottom: 15,
     paddingTop: 0,
-    backgroundColor: "#2C3639",
+    backgroundColor: colorEnum.primary,
     //  borderBottomLeftRadius: 20,
     //  borderBottomRightRadius: 20
     //elevation: 7,

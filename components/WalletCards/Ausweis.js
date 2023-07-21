@@ -18,14 +18,14 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import BottomQRCode from "../BottomQRCode";
+import colorEnum from "../DeKomColors";
 
 const { width } = Dimensions.get("screen");
 
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
 
-
+console.log("ENUMCOLOR: " + colorEnum.primary)
 function Ausweis({ data, refrence }) {
   const maxSize = 34;
   const minSize = 10;
@@ -151,7 +151,7 @@ function Ausweis({ data, refrence }) {
                 style={{
                   marginTop: 30,
                   marginBottom: 70,
-                  color: "#2C3639",
+                  color: colorEnum.primary,
                   marginRight: 10,
                   marginLeft: 30,
                   right:20
@@ -168,7 +168,7 @@ function Ausweis({ data, refrence }) {
                   marginLeft: 10,
                   borderBottomWidth: 1,
                   width: 350,
-                  borderBottomColor: "#2C3639",
+                  borderBottomColor: colorEnum.primary,
                   // borderBottomWidth: StyleSheet.hairlineWidth,
                 }}
               />
@@ -196,7 +196,7 @@ function Ausweis({ data, refrence }) {
                     style={{
                       paddingLeft: 0,
                       paddingTop: 0,
-                      color: "#2C3639",
+                      color: colorEnum.primary,
                       marginRight: 0,
                       left: 20,
                       top:20
@@ -221,18 +221,18 @@ const styles = StyleSheet.create({
     height: ImageHeight + 350,
     elevation: 16,
     borderRadius: 10,
-    backgroundColor: "#DCD7C9",
+    backgroundColor: colorEnum.quartiary,
     opacity: 1,
     borderWidth: 1,
-    borderColor: "#3F4E4F",
+    borderColor: colorEnum.secondary,
   },
   image: {
     flex: 1,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#3F4E4F",
+    borderColor: colorEnum.secondary,
     overflow: "hidden",
-    backgroundColor: "#A27B5C",
+    backgroundColor: colorEnum.tertiary,
     marginBottom: 20,
   },
   dataContainer: {
@@ -253,29 +253,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: "italic",
     fontFamily: "Nexa-ExtraLight",
-    color: "#223e4b",
+    color: colorEnum.primary,
     paddingHorizontal: 10,
   },
   headingInitials: {
     fontSize: 34,
     fontFamily: "Nexa-Heavy",
-    color: "#223e4b",
+    color: colorEnum.primary,
     justifyContent: "center",
   },
   text: {
-    color: "#223e4b",
+    color: colorEnum.primary,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     paddingHorizontal: 10,
   },
   textCAN: {
-    color: "#223e4b",
+    color: colorEnum.primary,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     right: 15,
   },
   textNummer: {
-    color: "#223e4b",
+    color: colorEnum.primary,
     fontSize: 18,
     fontFamily: "Nexa-Heavy",
     flexDirection: "row",

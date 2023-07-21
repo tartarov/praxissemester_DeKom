@@ -16,6 +16,7 @@ import CustomText from "../components/Font";
 import CountryFlag from "react-native-country-flag";
 import { ScrollView } from "react-native-gesture-handler";
 import { AuthContext } from "../context/AuthContext";
+import colorEnum from "../components/DeKomColors";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -56,7 +57,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         <Ionicons
           name="chevron-forward-outline"
           size={24}
-          style={{ color: "#DCD7C9", paddingTop: 2 }}
+          style={{ color: colorEnum.quartiary, paddingTop: 2 }}
         />
       </View>
     </TouchableOpacity>
@@ -77,8 +78,8 @@ function Settings({ navigation }) {
   }, []);
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#A27B5C" : "#3F4E4F";
-    const color = item.id === selectedId ? "DCD7C9" : "#DCD7C9";
+    const backgroundColor = item.id === selectedId ? colorEnum.tertiary : colorEnum.secondary;
+    const color = item.id === selectedId ? colorEnum.primary : colorEnum.quartiary;
 
     return (
       <Item
@@ -122,7 +123,7 @@ function Settings({ navigation }) {
         <Header navigation={navigation} />
         <View
           style={{
-            backgroundColor: "#2C3639",
+            backgroundColor: colorEnum.primary,
             elevation: 8,
             alignItems: "center",
             marginTop: -4,
@@ -152,13 +153,13 @@ function Settings({ navigation }) {
                 style={{
                   marginTop: 30,
                   marginBottom: 70,
-                  color: "#2C3639",
+                  color: colorEnum.primary,
                   marginRight: 10,
                   marginLeft: 30,
                 }}
               />
             )}
-          <CustomText style={{ color: "#DCD7C9", fontSize: 25 }}>
+          <CustomText style={{ color: colorEnum.quartiary, fontSize: 25 }}>
             {data[0].document.name + ", " + data[0].document.vorname}
           </CustomText>
           <View style={{ paddingTop: 20 }}>
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#2C3639",
+    backgroundColor: colorEnum.primary,
     //  overflow:'hidden'
   },
   item: {

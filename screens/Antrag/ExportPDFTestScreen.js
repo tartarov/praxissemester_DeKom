@@ -6,6 +6,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import AntragContext from "../../context/AntragContext";
+import colorEnum from "../../components/DeKomColors";
 
 
 let html;
@@ -437,6 +438,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor:'#2C3639'
+    backgroundColor: colorEnum.primary
   },
 });

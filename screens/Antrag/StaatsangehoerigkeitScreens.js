@@ -8,6 +8,7 @@ import countries from "../../assets/countries.json";
 import NationalityItem from "./components/NationalityItem";
 import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 import { Header } from "../../components/Header";
+import colorEnum from "../../components/DeKomColors";
 
 const mockData = [
   { id: 1, name: "React Native Developer", checked: true }, // set default checked for render option item
@@ -161,14 +162,14 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems:"center",
-    backgroundColor: "#2C3639", //2C3639
+    backgroundColor: colorEnum.primary, //2C3639
     paddingLeft: 80,
     paddingBottom: 10,
   },
   bodyContainer: {
     height: 700,
     marginTop: 0,
-    backgroundColor: "#3F4E4F",
+    backgroundColor: colorEnum.secondary,
   },
   h2: {
     fontSize: 20,
@@ -180,13 +181,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#DCD7C9",
+    color: colorEnum.quartiary,
   },
   questionText: {
     fontSize: 15,
     marginLeft: 20,
     marginTop: 10,
-    color: "#DCD7C9",
+    color: colorEnum.quartiary,
   },
   selectListContainer: {
     flex: 7,

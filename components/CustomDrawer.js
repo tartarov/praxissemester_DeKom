@@ -11,6 +11,7 @@ import Loader from "./animations/Loader";
 import { DataContext } from "../context/DataContext";
 import CustomText from "./Font";
 import { useNavigation } from "@react-navigation/native";
+import colorEnum from "./DeKomColors";
 
 function CustomDrawer( props ) {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,11 +30,11 @@ function CustomDrawer( props ) {
       <View style={{ flex: 1 }}>
         <DrawerContentScrollView
           {...props}
-          contentContainerStyle={{ backgroundColor: "#3F4E4F" }}
+          contentContainerStyle={{ backgroundColor: colorEnum.secondary }}
         >
           <View
             style={{
-              backgroundColor: "#2C3639",
+              backgroundColor: colorEnum.primary,
               elevation: 8,
               alignItems: "center",
               marginTop: -4,
@@ -63,7 +64,7 @@ function CustomDrawer( props ) {
                 style={{
                   marginTop: 30,
                   marginBottom: 70,
-                  color: "#2C3639",
+                  color: colorEnum.primary,
                   marginRight: 10,
                   marginLeft: 30,
                 }}
@@ -72,7 +73,7 @@ function CustomDrawer( props ) {
          
               <CustomText
                 style={{
-                  color: "#DCD7C9",
+                  color: colorEnum.quartiary,
                   paddingBottom: 2,
                   fontSize: 10,
                 }}
@@ -81,7 +82,7 @@ function CustomDrawer( props ) {
               </CustomText>
               <CustomText
                 style={{
-                  color: "#DCD7C9",
+                  color: colorEnum.quartiary,
                   paddingBottom: 20,
                   fontSize: 20,
                 }}
@@ -97,7 +98,7 @@ function CustomDrawer( props ) {
           <View
             style={{
               flex: 1,
-              backgroundColor: "#3F4E4F",
+              backgroundColor: colorEnum.secondary,
               paddingTop: 10,
               marginBottom: 270,
             }}
@@ -109,14 +110,14 @@ function CustomDrawer( props ) {
           style={{
             padding: 20,
             borderTopWidth: 1,
-            borderTopColor: "#DCD7C9",
-            backgroundColor: "#3F4E4F",
+            borderTopColor: colorEnum.quartiary,
+            backgroundColor: colorEnum.secondary,
           }}
         >
           <Pressable onPress={() => {}} style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons name="bandage-outline" size={28} color="#A27B5C" />
-              <CustomText style={{ fontSize: 22, marginLeft: 25, color:'#DCD7C9'  }}>
+              <Ionicons name="bandage-outline" size={28} color={colorEnum.tertiary} />
+              <CustomText style={{ fontSize: 22, marginLeft: 25, color: colorEnum.quartiary  }}>
                 Support
               </CustomText>
             </View>
@@ -128,8 +129,8 @@ function CustomDrawer( props ) {
             style={{ paddingVertical: 15 }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons name="exit-outline" size={28} color="#A27B5C" />
-              <CustomText style={{ fontSize: 22, marginLeft: 25, color:'#DCD7C9' }}>Log out</CustomText>
+              <Ionicons name="exit-outline" size={28} color={colorEnum.tertiary} />
+              <CustomText style={{ fontSize: 22, marginLeft: 25, color:colorEnum.quartiary }}>Log out</CustomText>
             </View>
           </Pressable>
         </View>

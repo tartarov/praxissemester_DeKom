@@ -28,6 +28,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import AntragContext from "../../context/AntragContext.js";
 import AntragHandler from "../../components/Antraghandler.js";
 import PaginatorDark from "../../components/PaginatorDark.js";
+import colorEnum from "../../components/DeKomColors.js";
 import { Buffer } from 'buffer';
 
 
@@ -51,7 +52,7 @@ function HomeScreen({ navigation }) {
     useContext(AntragContext);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState("");
-  const [backgroundColor, setBackgroundColor] = useState("#DCD7C9");
+  const [backgroundColor, setBackgroundColor] = useState(colorEnum.quartiary);
   const [hasNfc, setHasNFC] = useState(null);
 
   const { height } = useWindowDimensions();
@@ -88,13 +89,13 @@ function HomeScreen({ navigation }) {
 
   const interpolateColorX = scrollX.interpolate({
     inputRange: [0, ITEM_WIDTH],
-    outputRange: [`rgba(220,	215,	201, 0)`, "#2C3639"],
+    outputRange: [`rgba(220,	215,	201, 0)`, colorEnum.primary],
     extrapolate: "clamp",
   });
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height],
-    outputRange: ["#2C3639", "#3F4E4F"],  //3F4E4F
+    outputRange: [colorEnum.primary, colorEnum.secondary],  //3F4E4F
     extrapolate: "clamp",
   });
 
@@ -104,7 +105,7 @@ function HomeScreen({ navigation }) {
       0,
       ITEM_WIDTH + height,
     ],
-    outputRange: ["#DCD7C9", "#193326"],
+    outputRange: [colorEnum.quartiary, "#193326"],
     extrapolate: "clamp",
   });
 
@@ -182,7 +183,7 @@ function HomeScreen({ navigation }) {
                 data={antragAusstellerDaten}
                 renderItem={({ item, index }) => (
                   <Pressable
-                    onPress={() => handleItemPress({ item })}
+                  //  onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
                       console.log("item: " + JSON.stringify(item.document.antragId)),
                         Alert.alert("Löschen?", "Willst du diesen Antrag aus deiner Liste löschen?",  [
@@ -216,7 +217,7 @@ function HomeScreen({ navigation }) {
           style={{
             fontSize: 16,
             textAlign: "center",
-            color: "#DCD7C9",
+            color: colorEnum.quartiary,
             top: height/3,
             color:"grey"
           }}
@@ -244,7 +245,7 @@ function HomeScreen({ navigation }) {
                   style={{
                     alignItems: "center",
                     paddingLeft: 15,
-                    color: "#DCD7C9",
+                    color: colorEnum.quartiary,
                   }}
                 >
                   {!data.length ? (
@@ -279,7 +280,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2C3639",
+    backgroundColor: colorEnum.primary,
   },
   buttonContainer: {
     alignItems: "center",
@@ -320,6 +321,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 14,
     fontFamily: "Nexa-ExtraLight",
-    color: "#2C3639",
+    color: colorEnum.primary,
   },
 });

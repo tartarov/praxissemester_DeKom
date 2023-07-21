@@ -18,6 +18,7 @@ import { DataContext } from "../../context/DataContext";
 import { Header } from "../../components/Header";
 import WeiterButton from "../../components/Buttons/WeiterButton";
 import Button from "../../components/Buttons/Button";
+import colorEnum from "../../components/DeKomColors";
 
 let isVarifiedVar;
 
@@ -127,7 +128,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: "#2C3639", //2C3639
+          backgroundColor:  colorEnum.primary, //2C3639
           paddingLeft: 80,
           paddingBottom: 10,
         }}
@@ -149,7 +150,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
         </WeiterButton>
       </View>
       <SafeAreaView
-        style={{ flex: 1, paddingTop: 10, backgroundColor: "#2C3639" }}
+        style={{ flex: 1, paddingTop: 10, backgroundColor:  colorEnum.primary }}
       >
         <Sign />
         {/*  <SignatureView 
@@ -208,7 +209,7 @@ const AntragSignatureCaptures = ({ route, navigation }) => {
             alignItems: "center",
             paddingTop: 15,
             paddingLeft: 30,
-            color: "#DCD7C9",
+            color:  colorEnum.quartiary,
           }}
         >
           Ich stimme den rechtlichen Bedingungen und Vereinbarungen zu.

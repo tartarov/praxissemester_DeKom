@@ -6,9 +6,10 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import validationColor from "../../components/TextInput";
 import { useFormik } from "formik";
 import { Header } from "../../components/Header";
+import colorEnum from "../../components/DeKomColors";
 
 let dateValue = "Bezahldatum";
-let dateTextColor = "#DCD7C9";
+let dateTextColor = colorEnum.quartiary;
 
 function ZahlungsScreen({ route, navigation }) {
   let antragData = route.params?.antragData || null;;
@@ -71,7 +72,7 @@ function ZahlungsScreen({ route, navigation }) {
   const changeDateTextColor = (dateValue) => {
     if (dateValue == "Bezahldatum") {
       return dateTextColor;
-    } else return (dateTextColor = "#DCD7C9");
+    } else return (dateTextColor = colorEnum.quartiary);
   };
 
   return (
@@ -109,7 +110,7 @@ function ZahlungsScreen({ route, navigation }) {
               isChecked={BezahlungDeKomCheckboxState}
               size={25}
               fillColor="#e94832"
-              unfillColor="#3F4E4F"
+              unfillColor={colorEnum.secondary}
               iconStyle={{ borderColor: "green" }}
               innerIconStyle={{ borderWidth: 2 }}
               onPress={() =>
@@ -131,7 +132,7 @@ function ZahlungsScreen({ route, navigation }) {
               isChecked={BezahlungBereitsGemachtCheckboxState}
               size={25}
               fillColor="#e94832"
-              unfillColor="#3F4E4F"
+              unfillColor={colorEnum.secondary}
               iconStyle={{ borderColor: "green" }}
               innerIconStyle={{ borderWidth: 2 }}
               onPress={() =>
@@ -169,12 +170,12 @@ function ZahlungsScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   screen: {
     flex:1,
-    color: "#3F4E4F",
+    color: colorEnum.secondary,
   },
   headerContainer: {
     flexDirection: "row",
     alignItems:"center",
-    backgroundColor: "#2C3639", //2C3639
+    backgroundColor: colorEnum.primary, //2C3639
     paddingLeft: 80,
     paddingBottom: 10,
   },
@@ -185,12 +186,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 0,
-    color: "#3F4E4F",
+    color: colorEnum.secondary,
   },
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:'#3F4E4F'
+    backgroundColor:colorEnum.secondary
   },
   image: {
     marginTop:20,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   bodyContainer: {
     height: 340,
     paddingBottom:70,
-    backgroundColor: "#3F4E4F",
+    backgroundColor: colorEnum.secondary,
     flexDirection: "column",
   },
   questionContainer: {
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 10,
     alignSelf: "center",
-    color:'#DCD7C9'
+    color:colorEnum.quartiary
   },
   textBetween: {
     fontSize: 17,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 0,
     alignSelf: "center",
-    color:'#DCD7C9'
+    color:colorEnum.quartiary
   },
   textInputContainerBetween: {
     marginTop: 10,
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   white: {
-    backgroundColor: "#3F4E4F",
+    backgroundColor: colorEnum.secondary,
   },
   dateText: {
     borderWidth: StyleSheet.hairlineWidth,
