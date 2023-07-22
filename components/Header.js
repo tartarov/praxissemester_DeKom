@@ -1,30 +1,32 @@
 import React from "react";
-import { StatusBar, Text, View, StyleSheet, SafeAreaView, Pressable, Image } from "react-native";
+import { StatusBar, Text, View, StyleSheet, SafeAreaView, Pressable, Image, Dimensions } from "react-native";
 import NotificationButton from "./Buttons/NotificationButton";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomText from "./Font";
 import colorEnum from "./DeKomColors";
 
+const { width } = Dimensions.get("screen");
+
 export function Header({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <View style={styles.headerContainer}>
-      <Image
+  {/*    <Image
               source={require("../assets/adaptive-icon.png")}
               style={styles.logo}
-            />
+  /> */}
        {/*} <CustomText style={styles.logo}>|DeKom. </CustomText> */}
-       <View style={{flexDirection: "row", justifyContent: "space-between", paddingHorizontal:10,}}>
-        <View style={{marginTop:15, paddingHorizontal:30}}>
+       <View style={{flexDirection: "row", justifyContent: "space-between", paddingHorizontal:0, marginLeft: width/2}}>
+        <View style={{marginTop:15, paddingHorizontal:50}}>
         <NotificationButton />
         </View>
         <Pressable onPress={() => navigation.openDrawer()}>
           <Ionicons
-            name="ellipsis-vertical-circle-outline"
-            size={34}
-            style={{ paddingRight: 20, paddingTop: 15, color: colorEnum.tertiary}}
+            name="ellipsis-vertical-outline"
+            size={36}
+            style={{paddingTop: 13, color: colorEnum.accent}}
           />
         </Pressable>
         </View>

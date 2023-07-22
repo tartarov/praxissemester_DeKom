@@ -112,11 +112,11 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: Platform.OS === "android" ? 10 : 12, //Platform.OS === 'android' ? 10 : 12,
     fontStyle: "italic",
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     paddingHorizontal: 10,
   },
   text: {
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     fontSize: Platform.OS === "android" ? 10 : 12,
     fontFamily: 'Nexa-Heavy',
     paddingHorizontal: 10,

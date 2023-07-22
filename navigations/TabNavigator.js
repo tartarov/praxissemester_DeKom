@@ -93,7 +93,7 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <View style={{backgroundColor:  colorEnum.tertiary , borderRadius:40, paddingHorizontal:5, paddingRight: 0, elevation:9, height:60, width: 60, justifyContent:'center', alignItems:'center'}}>
-            <Ionicons name="add-outline" color= {focused ? colorEnum.quartiary : colorEnum.secondary} size={50}  />
+            <Ionicons name="add-outline" color= {focused ? colorEnum.quartiary : colorEnum.primary} size={50}  />
             </View>
           ),
           tabBarLabel: ({ focused, color, size }) => (

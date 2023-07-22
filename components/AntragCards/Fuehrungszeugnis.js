@@ -22,6 +22,7 @@ import React, {
 } from "react";
 import * as FileSystem from "expo-file-system";
 import { shareAsync } from "expo-sharing";
+import colorEnum from "../DeKomColors";
 
 const { width } = Dimensions.get("screen");
 
@@ -85,7 +86,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height / 2],
-    outputRange: ["#2C3639", "#ffff"],
+    outputRange: [colorEnum.primary, "#ffff"],
     extrapolate: "clamp",
     //, { backgroundColor: interpolateColorY}
   });
@@ -146,7 +147,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
                 style={{
                   marginTop: 30,
                   marginBottom: 70,
-                  color: "#2C3639",
+                  color: colorEnum.textcolor,
                   marginRight: 10,
                   marginLeft: 30,
                 }}
@@ -234,7 +235,8 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
                 marginLeft: 10,
                 borderBottomWidth: 1,
                 width: 350,
-                borderBottomColor: "#2C3639",
+                marginTop:20,
+                borderBottomColor: colorEnum.textcolor,
                 // borderBottomWidth: StyleSheet.hairlineWidth,
               }}
             />
@@ -269,10 +271,10 @@ const styles = StyleSheet.create({
     height: ImageHeight + 350,
     elevation: 16,
     borderRadius: 10,
-    backgroundColor: "#DCD7C9",
+    backgroundColor: colorEnum.quartiary,
     opacity: 1,
     borderWidth: 1,
-    borderColor: "#3F4E4F",
+    borderColor: colorEnum.secondary,
   },
   image: {
     flex: 1,
@@ -304,32 +306,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: "italic",
     fontFamily: "Nexa-ExtraLight",
-    color: "#223e4b",
+    color: colorEnum.textcolor,
     paddingHorizontal: 4,
   },
   headingInitials: {
     fontSize: 24,
     fontFamily: "Nexa-Heavy",
-    color: "#223e4b",
+    color: colorEnum.textcolor,
     marginLeft: 0,
     top: 40,
     right: 80,
     justifyContent: "center",
   },
   text: {
-    color: "#223e4b",
+    color: colorEnum.textcolor,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     paddingHorizontal: 4,
   },
   textCAN: {
-    color: "#223e4b",
+    color: colorEnum.textcolor,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     paddingHorizontal: 0,
   },
   textNummer: {
-    color: "#223e4b",
+    color: colorEnum.textcolor,
     fontSize: 12,
     fontFamily: "Nexa-Heavy",
     flexDirection: "row",

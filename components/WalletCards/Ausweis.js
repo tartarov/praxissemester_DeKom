@@ -31,7 +31,7 @@ function Ausweis({ data, refrence }) {
   const minSize = 10;
   const navigation = useNavigation();
   const { height } = useWindowDimensions();
-  const [textNachname, setTextNachname] = useState(data.document.name);
+  const [textNachname, setTextNachname] = useState(data.document.name); //data.document.name
   const [textVorname, setTextVorname] = useState(data.document.vorname);
   const [width, setWidth] = useState(Dimensions.get('window').width);
   const [letterToWidthRatioNach, setWidthRatioNach] = useState(textNachname.length / width);
@@ -39,6 +39,10 @@ function Ausweis({ data, refrence }) {
 
   const [fontSizeNachname, setFontSizeNachname] = useState(maxSize);
   const [fontSizeVorname, setFontSizeVorname] = useState(maxSize);
+
+  console.log("fontSizeNachname: " + fontSizeNachname)
+  console.log("fontSizeVorname: " + fontSizeVorname)
+  console.log(fontSizeNachname  < maxSize ? fontSizeNachname*2 : 110)
 
   useEffect(() => {
     // Do your calculation here
@@ -179,13 +183,14 @@ function Ausweis({ data, refrence }) {
                   {data.document.vorname}
                   </Text>
                   <Text style={[styles.headingInitials, {fontSize: fontSizeNachname}]}>
-                   {data.document.name} 
+                 
+                   {data.document.name}
                   </Text>
                   <Text style={[styles.heading, { paddingHorizontal: 0 }]}>
                     Vorname/Nachname
                   </Text>
                 </View>
-                <Pressable
+                <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ScanMe");
                   }}
@@ -196,13 +201,14 @@ function Ausweis({ data, refrence }) {
                     style={{
                       paddingLeft: 0,
                       paddingTop: 0,
-                      color: colorEnum.primary,
-                      marginRight: 0,
-                      left: 20,
-                      top:20
+                      color: colorEnum.textcolor,
+                      marginLeft: fontSizeNachname < maxSize ? fontSizeNachname*2 : 110,
+                      marginTop:20,
+                      left: fontSizeNachname < maxSize ? fontSizeNachname*2 : 0,
+                      top:0
                     }}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -253,29 +259,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: "italic",
     fontFamily: "Nexa-ExtraLight",
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     paddingHorizontal: 10,
   },
   headingInitials: {
     fontSize: 34,
     fontFamily: "Nexa-Heavy",
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     justifyContent: "center",
   },
   text: {
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     paddingHorizontal: 10,
   },
   textCAN: {
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     right: 15,
   },
   textNummer: {
-    color: colorEnum.primary,
+    color: colorEnum.textcolor,
     fontSize: 18,
     fontFamily: "Nexa-Heavy",
     flexDirection: "row",

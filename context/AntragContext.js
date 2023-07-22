@@ -69,6 +69,8 @@ export function AntragProvider({ children }) {
 
     const verificationStatus = await isVarifiedVar(responseJSON);
 
+    console.log("verificationStatus: " + verificationStatus + "___ responseJSON.body.value: " + responseJSON.body.value )
+
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       getAntrag();
       console.log("respond contains true => success... YUHU");

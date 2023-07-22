@@ -95,7 +95,7 @@ function HomeScreen({ navigation }) {
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height],
-    outputRange: [colorEnum.primary, colorEnum.secondary],  //3F4E4F
+    outputRange: [colorEnum.primary, antragAusstellerDaten.length ? "#50524a" : colorEnum.primary],  //3F4E4F
     extrapolate: "clamp",
   });
 
@@ -106,6 +106,12 @@ function HomeScreen({ navigation }) {
       ITEM_WIDTH + height,
     ],
     outputRange: [colorEnum.quartiary, "#193326"],
+    extrapolate: "clamp",
+  });
+
+  const gradientOpacity = scrollY.interpolate({
+    inputRange: [0, height /2],
+    outputRange: [0, 1],
     extrapolate: "clamp",
   });
 
@@ -142,7 +148,7 @@ function HomeScreen({ navigation }) {
                 data={data}
                 renderItem={({ item, index }) => (
                   <Pressable
-                    onPress={() => handleItemPress({ item })}
+                  //  onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
                       console.log("pressed"),
                         Vibration.vibrate(1000),
@@ -219,7 +225,7 @@ function HomeScreen({ navigation }) {
             textAlign: "center",
             color: colorEnum.quartiary,
             top: height/3,
-            color:"grey"
+            color:"gray"
           }}
         >
           Du hast keine Anträge in deiner Liste.
@@ -267,7 +273,7 @@ function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
+        <Header navigation={navigation} />
       {isLoading ? <Loader /> : <DocumentList />}
       {/*    {isLoading ? <Loader /> : <ModalTester />}
    {/*   <BottomDrawerScreen navigation={navigation} icon /> */}

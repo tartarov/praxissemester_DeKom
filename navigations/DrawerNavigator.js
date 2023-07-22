@@ -22,7 +22,7 @@ const DrawerNavigator = () => {
       screenOptions={{
         headerShown: false,
         drawerActiveBackgroundColor: colorEnum.tertiary,
-        drawerActiveTintColor: colorEnum.quartiary,
+        drawerActiveTintColor: colorEnum.primary,
         drawerLabelStyle: {
           fontFamily: "Nexa-ExtraLight",
         }, unmountOnBlur: true,

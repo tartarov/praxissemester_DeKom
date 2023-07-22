@@ -110,14 +110,14 @@ function CustomDrawer( props ) {
           style={{
             padding: 20,
             borderTopWidth: 1,
-            borderTopColor: colorEnum.quartiary,
+            borderTopColor: colorEnum.primary,
             backgroundColor: colorEnum.secondary,
           }}
         >
           <Pressable onPress={() => {}} style={{ paddingVertical: 15 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Ionicons name="bandage-outline" size={28} color={colorEnum.tertiary} />
-              <CustomText style={{ fontSize: 22, marginLeft: 25, color: colorEnum.quartiary  }}>
+              <CustomText style={{ fontSize: 14, marginLeft: 25, color: colorEnum.quartiary  }}>
                 Support
               </CustomText>
             </View>

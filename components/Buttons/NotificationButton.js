@@ -15,8 +15,8 @@ function NotificationButton({ onPress }) {
         onPress={onPress}
         android_ripple={{ color: colorEnum.secondary }}
       >
-        <Ionicons name="notifications-circle-outline"  size={34}
-            style={{  color: colorEnum.tertiary }} />
+        <Ionicons name="notifications-outline"  size={32}
+            style={{  color: colorEnum.accent }} />
       </Pressable>
     </View>
   );

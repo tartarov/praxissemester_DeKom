@@ -11,7 +11,7 @@ export default function Button({ label, onPress }) {
         width: 245,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colorEnum.tertiary, 
+        backgroundColor: colorEnum.accent, 
        // elevation: 2
       }}
       activeOpacity={0.7}
