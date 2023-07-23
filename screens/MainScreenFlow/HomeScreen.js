@@ -22,15 +22,11 @@ import Loader from "../../components/animations/Loader.js";
 import { Header } from "../../components/Header";
 import { Modal } from "../../components/Modal";
 import Button from "../../components/Buttons/Button.js";
-import FertigeAntragListeIntegrated from "../FertigeAntragListeIntegrated";
-import BottomQRCode from "../../components/BottomQRCode.js";
 import { ScrollView } from "react-native-gesture-handler";
 import AntragContext from "../../context/AntragContext.js";
 import AntragHandler from "../../components/Antraghandler.js";
 import PaginatorDark from "../../components/PaginatorDark.js";
 import colorEnum from "../../components/DeKomColors.js";
-import { Buffer } from 'buffer';
-
 
 const { width } = Dimensions.get("screen");
 
@@ -60,7 +56,6 @@ function HomeScreen({ navigation }) {
   const AntragListeRef = useRef(null);
 
   const openAntragListe = useCallback(() => {
-    console.log("triggered");
     AntragListeRef.current.expand();
   }, []);
 

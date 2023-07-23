@@ -52,8 +52,8 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Docs in process"
-        component={FertigeAntragListeIntegrated}
+        name="Your Docs"
+        component={FertigeAntragListe}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons

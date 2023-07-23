@@ -277,7 +277,6 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
       ":" +
       seconds
   );
-  console.log(date);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("File ist " + req.body.file);
@@ -333,6 +332,49 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
           );
         } else {
           console.log("No Documents found -------- ");
+          resData.send(formattingResponse(token, { value: false }));
+        }
+      }
+    );
+    ourConnection.release();
+  });
+});
+
+app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
+  let token = req.cookies.token;
+  const { antragId } = req.query;
+  let decoded = jwt_decode(token);
+  const hash = await getHash(decoded.user.pin);
+
+  connectionDekomdb.getConnection((err, ourConnection) => {
+    console.log(`SELECT FROM dekomdb.userdocuments WHERE ID=${antragId}`);
+    connectionDekomdb.query(
+      `SELECT * FROM dekomdb.userdocuments WHERE ID=${antragId}`,
+      (err, res) => {
+        //(values = [antragId])
+        console.log("RES: " + JSON.stringify(res));
+        if (err) {
+          console.log(err);
+          throw err;
+        } else if (res) {
+          console.log("Document By Id found ++++ : " + res);
+          let buf = [];
+          console.log(antragId !== "null")
+          if (antragId !== "null") {
+              buf.push(new Buffer.from(res[0].SIGNATUR).toString("base64"));
+          } else {
+            buf = "";
+          }
+          console.log(buf)
+          resData.send(
+            formattingResponse(token, {
+              value: true,
+              result: res,
+              signature: buf[0],
+            })
+          );
+        } else {
+          console.log("No Document by given Id found -------- ");
           resData.send(formattingResponse(token, { value: false }));
         }
       }

@@ -30,6 +30,7 @@ function Paginator({ data, scrollX }) {
               outputRange: [colorEnum.secondary, colorEnum.quartiary, colorEnum.secondary],
               extrapolate: "clamp",
             });
+            console.log(i.toString())
 
             return (
               <Animated.View

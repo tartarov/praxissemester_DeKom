@@ -335,7 +335,7 @@ export default function FragenScreen({ navigation }) {
             </View>
           </View>
           <View
-            style={[styles.questionContainer, { height: 60, marginTop: 60 }]}
+            style={[styles.questionContainer, { height: 50,position:"relative", paddingTop:120 }]}
           ></View>
         </View>
       </ScrollView>
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     height: 1300,
-    backgroundColor: colorEnum.secondary,
+    backgroundColor: colorEnum.monochrome,
     flexDirection: "column",
   },
   logo: {

@@ -7,6 +7,7 @@ const AntragContext = createContext();
 export function AntragProvider({ children }) {
   const [antragFile, setAntragFile] = useState(null);
   const [antragAusstellerDaten, setAntragAusstellerDaten] = useState([]);
+  const [desiredAntrag, setDesiredAntrag] = useState({});
   const [antragFileId, setAntragFileId] = useState(null);
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
@@ -124,7 +125,7 @@ export function AntragProvider({ children }) {
             ausstellerVorname: "Max",
             ausstellerNummer: "K4BN2912A",
             einreichungsbehoerde: "Stadt Köln",
-            bearbeiitungsStatus: bearbeitungsStatusValue,
+            bearbeitungsStatus: bearbeitungsStatusValue,
             rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
             antragColor: antragColor,
           },
@@ -143,10 +144,54 @@ export function AntragProvider({ children }) {
     }
   };
 
-  const removeAntrag = async (antragId) => {
+  const getAntragById = async (antragId) => {
     setIsLoading(true);
     isVarifiedVar = isVerified;
-    console.log("antragId:  " + antragId);
+    let respond = await fetch(
+      `http://${ipAddress}:3000/user/getById/antrag?antragId=${antragId}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      }
+    );
+
+    const responseJSON = await respond.json();
+
+    const verificationStatus = await isVarifiedVar(responseJSON);
+
+    if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      console.log(responseJSON.body.result)
+      const foundAntrag = {
+        title: "Führungszeugnis",
+        document: {
+          antragDir: responseJSON.body?.result[0]?.ANTRAG,
+          ausstellDatum: responseJSON.body?.result[0]?.DATUM,
+          antragId: responseJSON.body?.result[0]?.ID,
+          antragSignature: responseJSON.body?.signature,
+          ausstellerName: "Mustermann",
+          ausstellerVorname: "Max",
+          ausstellerNummer: "K4BN2912A",
+          einreichungsbehoerde: "Stadt Köln",
+          rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
+        },
+      };
+      setDesiredAntrag(foundAntrag)
+    } else if (
+      verificationStatus == "verified" &&
+      responseJSON.body.value == false
+    ) {
+      Alert.alert("Some Error occured");
+    }
+    setIsLoading(false);
+  };
+
+  const removeAntragById = async (antragId) => {
+    setIsLoading(true);
+    isVarifiedVar = isVerified;
     let respond = await fetch(
       `http://${ipAddress}:3000/user/remove/antrag?antragId=${antragId}`,
       {
@@ -181,10 +226,12 @@ export function AntragProvider({ children }) {
         antragFile,
         antragFileId,
         antragAusstellerDaten,
+        desiredAntrag,
         isLoading,
         addToListe,
         getAntrag,
-        removeAntrag,
+        removeAntrag: removeAntragById,
+        getAntragById,
       }}
     >
       {children}

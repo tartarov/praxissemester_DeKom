@@ -35,6 +35,8 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   let cacheUri;
   let documentUri;
 
+  console.log("AntragAustellerDaten: " + JSON.stringify(antragAusstellerDaten))
+
   async function transferFileFromCacheToDocumentDirectory() {
     cacheUri = `${antragAusstellerDaten.document.antragDir}`;
     documentUri = `${FileSystem.documentDirectory}${antragAusstellerDaten.title}.pdf`;
@@ -84,14 +86,14 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
     shareAsync(cacheUri);
   }
 
-  const interpolateColorY = scrollY.interpolate({
+  const interpolateColorY = scrollY?.interpolate({
     inputRange: [0, height / 2],
     outputRange: [colorEnum.primary, "#ffff"],
     extrapolate: "clamp",
     //, { backgroundColor: interpolateColorY}
   });
 
-  const opacity = scrollY.interpolate({
+  const opacity = scrollY?.interpolate({
     inputRange: [0, height / 2],
     outputRange: [0, 1],
     extrapolate: "clamp",
@@ -101,16 +103,16 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   let ionicon;
   let ioniconColor;
 
-  if (antragAusstellerDaten.document.bearbeiitungsStatus === "in Bearbeitung") {
+  if (antragAusstellerDaten?.document?.bearbeitungsStatus === "in Bearbeitung") {
     ionicon = "reload-circle-outline"; // Set red color for specific statuses
     ioniconColor = "brown";
   } else if (
-    antragAusstellerDaten.document.bearbeiitungsStatus === "in zustellung"
+    antragAusstellerDaten?.document?.bearbeitungsStatus === "in zustellung"
   ) {
     ionicon = "checkmark-circle-outline";
     ioniconColor = "orange"; // Set default color for other statuses
   } else if (
-    antragAusstellerDaten.document.bearbeiitungsStatus === "zugestellt"
+    antragAusstellerDaten?.document?.bearbeitungsStatus === "zugestellt"
   ) {
     ionicon = "checkmark-done-circle-outline";
     ioniconColor = "green";
@@ -121,7 +123,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
       <Animated.View
         style={[
           styles.container,
-          { backgroundColor: interpolateColorY, opacity: opacity },
+          { backgroundColor: interpolateColorY, opacity: opacity }, //opacity
         ]}
       >
         <View style={{ flexDirection: "column", opacity: 1 }}>
@@ -164,7 +166,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
               </Text>
               <Image
                 source={{
-                  uri: `data:image/png;base64,${antragAusstellerDaten.document.antragSignature}`,
+                  uri: `data:image/png;base64,${antragAusstellerDaten?.document?.antragSignature}`,
                 }}
                 style={{
                   height: 150,
@@ -180,13 +182,13 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View style={styles.textContainer}>
               <Text style={styles.heading}>Rückverfolgungsnummer</Text>
               <Text style={styles.text}>
-                {antragAusstellerDaten.document.rueckverfolgungsnummer}
+                {antragAusstellerDaten?.document?.rueckverfolgungsnummer}
               </Text>
             </View>
             <View style={[styles.textContainer, { marginLeft: 15 }]}>
               <Text style={styles.heading}>Ausstelldatum</Text>
               <Text style={[styles.text, { fontSize: 12 }]}>
-                {antragAusstellerDaten.document.ausstellDatum}
+                {antragAusstellerDaten?.document?.ausstellDatum}
               </Text>
             </View>
           </View>
@@ -194,14 +196,14 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View style={styles.textContainer}>
               <Text style={styles.heading}>Einreichungsbehörde</Text>
               <Text style={styles.text}>
-                {antragAusstellerDaten.document.einreichungsbehoerde}
+                {antragAusstellerDaten?.document?.einreichungsbehoerde}
               </Text>
             </View>
             <View style={styles.ioniconContainer}></View>
             <View style={[styles.textContainer]}>
               <Text style={styles.heading}>Nummer des Ausstellers</Text>
               <Text style={[styles.text]}>
-                {antragAusstellerDaten.document.ausstellerNummer}
+                {antragAusstellerDaten?.document?.ausstellerNummer}
               </Text>
               <View style={{flexDirection:"row", right:50, justifyContent:"space-between", marginHorizontal:-70, top:20}}>
               <TouchableOpacity onPress={transferFileFromCacheToDocumentDirectory}>
@@ -226,7 +228,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
           <View style={{ flexDirection: "column" }}>
             <View style={[styles.textContainer, { paddingLeft: 0 }]}>
               <Text style={styles.textCAN}>
-                {antragAusstellerDaten.document.can}
+                {antragAusstellerDaten?.document?.can}
               </Text>
             </View>
             <View
@@ -244,7 +246,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View style={{ alignItems: "center" }}>
               <View style={styles.textContainerInitials}>
                 <Text style={styles.headingInitials}>
-                  {antragAusstellerDaten.document.bearbeiitungsStatus}
+                  {antragAusstellerDaten?.document?.bearbeiitungsStatus}
                 </Text>
               </View>
               <View style={styles.ioniconContainer}>
@@ -269,12 +271,12 @@ const styles = StyleSheet.create({
   container: {
     width: ImageWidth,
     height: ImageHeight + 350,
-    elevation: 16,
+  //  elevation: 16,
     borderRadius: 10,
     backgroundColor: colorEnum.quartiary,
     opacity: 1,
-    borderWidth: 1,
-    borderColor: colorEnum.secondary,
+ //   borderWidth: 1,
+  //  borderColor: colorEnum.secondary,
   },
   image: {
     flex: 1,
