@@ -56,7 +56,6 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <>
-      {console.log(item.document.ausstellDatum)}
       <TouchableOpacity
         onPress={onPress}
         style={[styles.item, backgroundColor]}
@@ -128,7 +127,6 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
           backgroundColor={{ backgroundColor }}
           textColor={{ color }}
         />
-          {console.log("selectedID: " + selectedId)}
       </>
     );
   };
@@ -160,7 +158,7 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
               selectedStatus === "all" && styles.activeNavigationButtonText,
             ]}
           >
-            All
+            Alle
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

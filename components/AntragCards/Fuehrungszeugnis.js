@@ -35,8 +35,6 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   let cacheUri;
   let documentUri;
 
-  console.log("AntragAustellerDaten: " + JSON.stringify(antragAusstellerDaten))
-
   async function transferFileFromCacheToDocumentDirectory() {
     cacheUri = `${antragAusstellerDaten.document.antragDir}`;
     documentUri = `${FileSystem.documentDirectory}${antragAusstellerDaten.title}.pdf`;

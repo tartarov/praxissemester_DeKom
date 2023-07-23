@@ -41,8 +41,6 @@ import AntragContext from "../context/AntragContext";
       const newActiveHeight = height - activeHeight;
       const topAnimation = useSharedValue(height);
       const { getAntragById, desiredAntrag } = useContext(AntragContext);
-
-      console.log("desiredAntrag: " + JSON.stringify(desiredAntrag))
   
       useEffect(() => {
         // setIsLoading(true);

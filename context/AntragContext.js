@@ -50,7 +50,6 @@ export function AntragProvider({ children }) {
 
   const addToListe = async (file, signatur) => {
     isVarifiedVar = isVerified;
-    console.log("Hello :0 my file is: " + file);
 
     let respond = await fetch(`http://${ipAddress}:3000/user/save/antrag`, {
       method: "POST",
@@ -66,16 +65,12 @@ export function AntragProvider({ children }) {
     });
 
     const responseJSON = await respond.json();
-    console.log("MY RESPONSE JSON: " + responseJSON.body.value);
 
     const verificationStatus = await isVarifiedVar(responseJSON);
-
-    console.log("verificationStatus: " + verificationStatus + "___ responseJSON.body.value: " + responseJSON.body.value )
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       getAntrag();
       console.log("respond contains true => success... YUHU");
-      //  Alert.alert("Gespeichert!", "Deine Änderungen wurden gespeichert.");
     }
     console.log("addToListeTriggered");
   };
@@ -88,7 +83,6 @@ export function AntragProvider({ children }) {
     const responseJSON = await respond.json();
 
     const verificationStatus = await isVarifiedVar(responseJSON);
-    console.log(" responseJSON.body.value: " + responseJSON.body.value);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       setAntragFile(responseJSON.body.result);
@@ -164,7 +158,6 @@ export function AntragProvider({ children }) {
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
-      console.log(responseJSON.body.result)
       const foundAntrag = {
         title: "Führungszeugnis",
         document: {
