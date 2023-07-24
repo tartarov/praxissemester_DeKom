@@ -7,17 +7,13 @@ import React, {
   useCallback,
 } from "react";
 import {
-  FlatList,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Dimensions,
   Animated,
-  Vibration,
-  Alert,
   Image,
   useWindowDimensions,
 } from "react-native";
@@ -26,11 +22,7 @@ import { AntragProvider } from "../context/AntragContext";
 import AntragContext from "../context/AntragContext";
 import { Ionicons } from "@expo/vector-icons";
 import CustomText from "../components/Font";
-import LogoText from "../components/LogoFont";
-import Paginator from "../components/Paginator";
-import AntragHandler from "../components/Antraghandler";
 import colorEnum from "../components/DeKomColors";
-import Antragmenue from "../components/AntragListeDrawer";
 import AntragDetailBottomSheet from "../components/AntragDetailBottomSheet";
 
 const { width } = Dimensions.get("screen");
@@ -43,6 +35,9 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
     useContext(AntragContext);
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [renderCounter, setRenderCounter] = useState(0);
+  const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(1));
+  const [filteredAntragAusstellerDaten, setFilteredAntragAusstellerDaten] =
+    useState([]);
   const { height } = useWindowDimensions();
   const Antragdetail = useRef(null);
 
@@ -54,50 +49,54 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
     Antragdetail.current.close();
   }, []);
 
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <>
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.item, backgroundColor]}
-      >
-        <View style={{ flexDirection: "row", marginHorizontal: 10 }}>
-          {item.title == "Führungszeugnis" ? (
-            <Image
-              source={require("../assets/images/fuehrungszeugnis.png")}
-              style={{
-                height: 100,
-                width: 70,
-                //  margin: 10,
-                //  marginTop: 30,
-                //   marginBottom: 30,
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: "#2C3639",
-              }}
-            />
-          ) : (
-            <Ionicons
-              name="person-circle-outline"
-              size={100}
-              style={{
-                marginTop: 30,
-                marginBottom: 70,
-                color: colorEnum.textcolor,
-                marginRight: 10,
-                marginLeft: 30,
-              }}
-            />
-          )}
-          <View style={{ flexDirection: "column" }}>
-            <Text style={[styles.title, textColor]}>{item.title}</Text>
-            <Text style={[styles.date, textColor]}>
-              {item.document.ausstellDatum}
-            </Text>
+
+  const Item = ({ item, onPress, backgroundColor, textColor }) => {
+    // Animate the opacity when the item changes
+    return (
+      <>
+        <TouchableOpacity
+          onPress={onPress}
+          style={[styles.item, backgroundColor]}
+        >
+          <View style={{ flexDirection: "row", marginHorizontal: 10 }}>
+            {item.title == "Führungszeugnis" ? (
+              <Image
+                source={require("../assets/images/fuehrungszeugnis.png")}
+                style={{
+                  height: 100,
+                  width: 70,
+                  //  margin: 10,
+                  //  marginTop: 30,
+                  //   marginBottom: 30,
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: "#2C3639",
+                }}
+              />
+            ) : (
+              <Ionicons
+                name="person-circle-outline"
+                size={100}
+                style={{
+                  marginTop: 30,
+                  marginBottom: 70,
+                  color: colorEnum.textcolor,
+                  marginRight: 10,
+                  marginLeft: 30,
+                }}
+              />
+            )}
+            <View style={{ flexDirection: "column" }}>
+              <Text style={[styles.title, textColor]}>{item.title}</Text>
+              <Text style={[styles.date, textColor]}>
+                {item.document.ausstellDatum}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    </>
-  );
+        </TouchableOpacity>
+      </>
+    );
+  };
 
   const renderItem = ({ item }) => {
     const backgroundColor =
@@ -131,15 +130,37 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
     );
   };
 
-  const filteredAntragAusstellerDaten = useMemo(() => {
-    if (selectedStatus === "all") {
-      return antragAusstellerDaten;
-    } else {
-      return antragAusstellerDaten.filter(
-        (item) => item.document.bearbeitungsStatus === selectedStatus
-      );
-    }
-  }, [antragAusstellerDaten, selectedStatus]);
+  const filterAndAnimateFlatList = useCallback(() => {
+    let filteredData;
+    Animated.timing(animatedOpacity, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: false,
+    }).start(() => {
+      console.log(selectedStatus)
+      if (selectedStatus === "all") {
+        filteredData = antragAusstellerDaten;
+      } else {
+        filteredData = antragAusstellerDaten.filter(
+          (item) => item.document.bearbeitungsStatus === selectedStatus
+        );
+      }
+
+      setFilteredAntragAusstellerDaten(filteredData);
+
+      setTimeout(() => {
+        Animated.timing(animatedOpacity, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: false,
+        }).start();
+      }, 130);
+    });
+  }, [antragAusstellerDaten, selectedStatus, animatedOpacity]);
+
+  useEffect(() => {
+    filterAndAnimateFlatList();
+  }, [filterAndAnimateFlatList]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -150,7 +171,10 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             styles.navigationButton,
             selectedStatus === "all" && styles.activeNavigationButton,
           ]}
-          onPress={() => setSelectedStatus("all")}
+          onPress={() => {
+            setSelectedStatus("all");
+            filterAndAnimateFlatList();
+          }}
         >
           <Text
             style={[
@@ -167,7 +191,10 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             selectedStatus === "in Bearbeitung" &&
               styles.activeNavigationButton,
           ]}
-          onPress={() => setSelectedStatus("in Bearbeitung")}
+          onPress={() => {
+            setSelectedStatus("in Bearbeitung");
+            filterAndAnimateFlatList();
+          }}
         >
           <Text
             style={[
@@ -184,7 +211,10 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             styles.navigationButton,
             selectedStatus === "in zustellung" && styles.activeNavigationButton,
           ]}
-          onPress={() => setSelectedStatus("in zustellung")}
+          onPress={() => {
+            setSelectedStatus("in zustellung");
+            filterAndAnimateFlatList();
+          }}
         >
           <Text
             style={[
@@ -201,7 +231,10 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             styles.navigationButton,
             selectedStatus === "zugestellt" && styles.activeNavigationButton,
           ]}
-          onPress={() => setSelectedStatus("zugestellt")}
+          onPress={() => {
+            setSelectedStatus("zugestellt");
+            filterAndAnimateFlatList();
+          }}
         >
           <Text
             style={[
@@ -214,14 +247,14 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {antragAusstellerDaten.length ? (
-        <FlatList
+      {filteredAntragAusstellerDaten.length ? (
+        <Animated.FlatList
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           bounces={true}
           snapToAlignment="center"
           decelerationRate={"fast"}
-          style={styles.flatlist}
+          style={[styles.flatlist, { opacity: animatedOpacity }]}
           data={filteredAntragAusstellerDaten}
           renderItem={renderItem}
           keyExtractor={(item) => item.document.antragId.toString()}
@@ -236,24 +269,25 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
       ) : (
         <CustomText
           style={{
-            fontSize: 24,
+            fontSize: 14,
             textAlign: "center",
-            color: "#DCD7C9",
-            alignSelf: "center",
+            color: "gray",
+            justifyContent: "center",
+            alignItems:"center",
+            top: height/3,
           }}
         >
-          du hast derzeit keine Anträge beantragt.
+          Bisher befinden sich keine Anträge unter "{selectedStatus}".
         </CustomText>
       )}
-          <AntragDetailBottomSheet
-            key={renderCounter}
-            activeHeight={height * 0.7}
-            ref={Antragdetail}
-            navigation={navigation}
-            antragAusstellerDaten={antragAusstellerDaten}
-            selectedId={selectedId}
-          />
-
+      <AntragDetailBottomSheet
+        key={renderCounter}
+        activeHeight={height * 0.7}
+        ref={Antragdetail}
+        navigation={navigation}
+        antragAusstellerDaten={antragAusstellerDaten}
+        selectedId={selectedId}
+      />
     </SafeAreaView>
   );
 };

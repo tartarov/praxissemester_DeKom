@@ -90,7 +90,7 @@ function HomeScreen({ navigation }) {
 
   const interpolateColorY = scrollY.interpolate({
     inputRange: [0, height],
-    outputRange: [colorEnum.primary, antragAusstellerDaten.length ? "#50524a" : colorEnum.primary],  //3F4E4F
+    outputRange: [colorEnum.primary, antragAusstellerDaten.length ? "#1A2527" : colorEnum.primary],  //3F4E4F
     extrapolate: "clamp",
   });
 
@@ -306,18 +306,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // marginTop: 60,
   },
-  /*textContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#3F4E4F",
-    marginLeft: ITEM_WIDTH / 11,
-    marginRight: ITEM_WIDTH / 9,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    backgroundColor: "#DCD7C9",
-  },
-  */
   text: {
     fontWeight: "500",
     fontSize: 14,

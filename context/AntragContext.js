@@ -12,7 +12,7 @@ export function AntragProvider({ children }) {
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
   const [ isLoading, setIsLoading ] = useState(false);
-  const ipAddress = "192.168.178.24";
+  const ipAddress = "192.168.1.213";
   let isVarifiedVar;
 
   let initAntragAusstellerDaten = [

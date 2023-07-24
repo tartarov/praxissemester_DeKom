@@ -1,5 +1,5 @@
 const colorEnum = {
-    primary: "#3b413c",  // Dark Slate Gray
+    primary: "#2C3639",  // Dark Slate Gray
     monochrome: "#50524a", //Charcoal Gray
     secondary: "#6c7b77", // Aged Pewter
     tertiary: "#B8C7B2", // Celadon Green
