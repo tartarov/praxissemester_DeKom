@@ -69,10 +69,11 @@ export function AntragProvider({ children }) {
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
-      getAntrag();
+      
       console.log("respond contains true => success... YUHU");
     }
     console.log("addToListeTriggered");
+    getAntrag();
   };
 
   const getAntrag = async () => {

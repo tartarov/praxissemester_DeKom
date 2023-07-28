@@ -24,11 +24,12 @@
         <action android:name="android.nfc.action.TECH_DISCOVERED" />
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
-      <intent-filter>
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.minechess123.ProjectLaunch_DeKom"/>
+        <data android:scheme="https" android:host="dekom" />
         <data android:scheme="exp+projectlaunchdekom"/>
         <action android:name="android.intent.action.RUN"/>
       </intent-filter>

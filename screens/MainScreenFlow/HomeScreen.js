@@ -122,6 +122,7 @@ function HomeScreen({ navigation }) {
         <ScrollView
           pagingEnabled
           showsHorizontalScrollIndicator={false}
+          scrollEnabled={antragAusstellerDaten.lenght ? false : true}
           bounces={true}
           decelerationRate={"fast"}
           onScroll={Animated.event(
@@ -306,6 +307,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // marginTop: 60,
   },
+  /*textContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#3F4E4F",
+    marginLeft: ITEM_WIDTH / 11,
+    marginRight: ITEM_WIDTH / 9,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    backgroundColor: "#DCD7C9",
+  },
+  */
   text: {
     fontWeight: "500",
     fontSize: 14,

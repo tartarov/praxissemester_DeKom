@@ -277,7 +277,7 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             top: height/3,
           }}
         >
-          Bisher befinden sich keine Anträge unter "{selectedStatus}".
+          Bisher haben keine Anträge den Status "{selectedStatus}".
         </CustomText>
       )}
       <AntragDetailBottomSheet
