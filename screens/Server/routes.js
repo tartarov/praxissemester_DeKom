@@ -8,6 +8,10 @@ const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("../middleware/cookieJWTAuth");
 const { formattingResponse } = require("../middleware/Formatter.js");
 const jwt_decode = require("jwt-decode");
+const tls = require('node:tls'); 
+const https = require('https');
+var http = require('http');
+const fs = require('fs');
 global.atob = require("atob");
 global.Blob = require("node-blob");
 
@@ -28,6 +32,23 @@ const connectionDekomdb = mysql.createPool({
 });
 
 const app = express();
+
+//var privateKey = fs.readFileSync( 'privatekey.pem' );
+//var certificate = fs.readFileSync( 'certificate.pem' );
+
+const filePath = 'C:/Users/themo/cert-key.pem';
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  console.log(fileContents + "                      ///END OF CERT KEY///                      ");
+
+  const filePath2 = 'C:/Users/themo/fullchain.pem';
+  const fileContents2 = fs.readFileSync(filePath2, 'utf8');
+  console.log(fileContents2);
+
+const options = {
+  key: fs.readFileSync('C:/Users/themo/cert-key-coco.pem'),
+  cert: fs.readFileSync('C:/Users/themo/fullchain-cocoOpenDNS.pem')
+};
+//console.log(JSON.stringify(fs.readFileSync('C:/Users/themo/fullchain.pem')))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -89,6 +110,7 @@ app.get("/auth.behoerde", (req, res) => {
 
 app.get("/testdb.userdaten", async (req, res) => {
   const { pin } = req.query;
+  console.log("https funktioniert!")
 
   // const isAuthenticated = await authorized(id, pin);
 
@@ -417,8 +439,12 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
+const server = https.createServer(options, app);
+const serversimple = http.createServer(app)
+
+
 // Starting our server.
-app.listen(process.env.PORT, process.env.IP, () => {
+serversimple.listen(process.env.PORT, process.env.IP, () => {
   console.log(
     `Server has been started and listens to port ${process.env.PORT}.`
   );
