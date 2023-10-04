@@ -45,8 +45,9 @@ const filePath = 'C:/Users/themo/cert-key.pem';
   console.log(fileContents2);
 
 const options = {
-  key: fs.readFileSync('C:/Users/themo/cert-key-coco.pem'),
-  cert: fs.readFileSync('C:/Users/themo/fullchain-cocoOpenDNS.pem')
+  key: fs.readFileSync('C:/Users/themo/dekomPrivateKey.key'),
+  cert: fs.readFileSync('C:/Users/themo/dekom_ddns_net.pem'),
+  passphrase: process.env.PASSPHRASE
 };
 //console.log(JSON.stringify(fs.readFileSync('C:/Users/themo/fullchain.pem')))
 app.use(bodyParser.json());
@@ -444,7 +445,7 @@ const serversimple = http.createServer(app)
 
 
 // Starting our server.
-serversimple.listen(process.env.PORT, process.env.IP, () => {
+server.listen(process.env.PORT, process.env.IP, () => {
   console.log(
     `Server has been started and listens to port ${process.env.PORT}.`
   );
