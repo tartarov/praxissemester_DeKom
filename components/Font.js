@@ -9,7 +9,7 @@ export default function CustomText(props) {
   useEffect(() => {
     async function loadFont() {
       await Font.loadAsync({
-        "Nexa-ExtraLight": require("../assets/fonts/Nexa-ExtraLight.ttf"),
+        "Nexa-ExtraLight": require("../assets/fonts/Univers 45 Light Regular.otf"),
       });
 
       setFontLoaded(true);

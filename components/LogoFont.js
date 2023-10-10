@@ -8,7 +8,7 @@ export default function LogoText(props) {
   useEffect(() => {
     async function loadFont() {
       await Font.loadAsync({
-        "Nexa-Heavy": require("../assets/fonts/Nexa-Heavy.ttf"),
+        "Nexa-Heavy": require("../assets/fonts/univers_45_light.ttf"),
       });
 
       setFontLoaded(true);
