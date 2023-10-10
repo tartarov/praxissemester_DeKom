@@ -33,27 +33,15 @@ const connectionDekomdb = mysql.createPool({
 
 const app = express();
 
-//var privateKey = fs.readFileSync( 'privatekey.pem' );
-//var certificate = fs.readFileSync( 'certificate.pem' );
-
-const filePath = 'C:/Users/themo/cert-key.pem';
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  console.log(fileContents + "                      ///END OF CERT KEY///                      ");
-
-  const filePath2 = 'C:/Users/themo/fullchain.pem';
-  const fileContents2 = fs.readFileSync(filePath2, 'utf8');
-  console.log(fileContents2);
-
 const options = {
   key: fs.readFileSync('C:/Users/themo/dekomPrivateKey.key'),
   cert: fs.readFileSync('C:/Users/themo/dekom_ddns_net.pem'),
   passphrase: process.env.PASSPHRASE
 };
-//console.log(JSON.stringify(fs.readFileSync('C:/Users/themo/fullchain.pem')))
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-//app.use(session({ secret: 'mySecret', resave: false, saveUninitialized: false }));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -89,7 +77,7 @@ const authorized = async (id, pin) => {
   }
 };
 
-app.get("/auth.behoerde", (req, res) => {
+app.get("/auth", (req, res) => {
   const { pin, id } = req.query;
   connectionTestdb.getConnection((err, ourConnection) => {
     connectionTestdb.query(
@@ -106,6 +94,10 @@ app.get("/auth.behoerde", (req, res) => {
         ourConnection.release();
       }
     );
+    if(err){
+      console.error("Error. Nothing to authenthicate.", err);
+      res.send("Error. Nothing to authenthicate.")
+    }
   });
 });
 
@@ -144,8 +136,6 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
           console.log("User found successfully.");
           let buf = "";
           if (results[0].SIGNATUR !== null) {
-            //  console.log("resultsssss[0]: " + JSON.stringify(results[0].SIGNATUR))
-            // console.log("resultsssss[0]. SIGNATUR: " + res[1].SIGNATUR)
             buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
           } else {
             buf = "";

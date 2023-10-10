@@ -29,13 +29,13 @@ const reducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
-  const ipAddress = "192.168.1.213";
+  const ipAddress = "dekom.ddns.net";
 
   const login = async (userPin) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
       const response = await fetch(
-        `http://192.168.1.213:3000/testdb.userdaten?pin=${userPin}`
+        `https://dekom.ddns.net:4222/testdb.userdaten?pin=${userPin}`
       );
       const requiredToken = await response.json();
       const token = requiredToken.token
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     dispatch({ type: "SET_LOADING", payload: true });
 
-    const apiUrl = `http://${ipAddress}:3000/user/save`;
+    const apiUrl = `https://${ipAddress}:4222/user/save`;
     const requestOptions = {
       method: "POST",
       headers: {
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        `http://${ipAddress}:3000/dekomdb.dekom_user/identify?token=${userToken}`
+        `https://${ipAddress}:4222/dekomdb.dekom_user/identify?token=${userToken}`
       );
       const confirmedUser = await response.json();
 

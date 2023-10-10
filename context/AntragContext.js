@@ -12,7 +12,7 @@ export function AntragProvider({ children }) {
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
   const [ isLoading, setIsLoading ] = useState(false);
-  const ipAddress = "192.168.1.213";
+  const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
   let initAntragAusstellerDaten = [
@@ -51,7 +51,7 @@ export function AntragProvider({ children }) {
   const addToListe = async (file, signatur) => {
     isVarifiedVar = isVerified;
 
-    let respond = await fetch(`http://${ipAddress}:3000/user/save/antrag`, {
+    let respond = await fetch(`https://${ipAddress}:4222/user/save/antrag`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -79,7 +79,7 @@ export function AntragProvider({ children }) {
   const getAntrag = async () => {
     isVarifiedVar = isVerified;
 
-    let respond = await fetch(`http://${ipAddress}:3000/user/identify/antrag`);
+    let respond = await fetch(`https://${ipAddress}:4222/user/identify/antrag`);
 
     const responseJSON = await respond.json();
 
@@ -143,7 +143,7 @@ export function AntragProvider({ children }) {
     setIsLoading(true);
     isVarifiedVar = isVerified;
     let respond = await fetch(
-      `http://${ipAddress}:3000/user/getById/antrag?antragId=${antragId}`,
+      `https://${ipAddress}:4222/user/getById/antrag?antragId=${antragId}`,
       {
         method: "GET",
         headers: {
@@ -187,7 +187,7 @@ export function AntragProvider({ children }) {
     setIsLoading(true);
     isVarifiedVar = isVerified;
     let respond = await fetch(
-      `http://${ipAddress}:3000/user/remove/antrag?antragId=${antragId}`,
+      `https://${ipAddress}:4222/user/remove/antrag?antragId=${antragId}`,
       {
         method: "DELETE",
         headers: {
