@@ -5,13 +5,14 @@ import Loader from './animations/Loader';
 
 export default function CustomText(props) {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const { fontSize, style, children } = props;
 
   useEffect(() => {
     async function loadFont() {
       await Font.loadAsync({
         "Nexa-ExtraLight": require("../assets/fonts/Univers 45 Light Regular.otf"),
       });
-
+      console.log("Font loaded!");
       setFontLoaded(true);
     }
 
@@ -19,13 +20,12 @@ export default function CustomText(props) {
   }, []);
 
   if (!fontLoaded) {
-    console.log("Hallo :+)")
-    return null
+    return <Loader />; // Or any loading indicator
   }
 
   return (
-    <Text style={{ ...props.style, fontFamily: "Nexa-ExtraLight" }}>
-      {props.children}
+    <Text style={{ ...style, fontFamily: "Nexa-ExtraLight", fontSize: fontSize }}>
+      {children}
     </Text>
   );
 };

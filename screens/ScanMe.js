@@ -8,10 +8,11 @@ import CustomText from "../components/Font";
 import TextInput from "../components/TextInput";
 import { useFormik } from "formik";
 import LogoText from "../components/LogoFont";
-import Button from "../components/Buttons/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
 import Loader from "../components/animations/Loader";
+import ButtonGhost from "../components/Buttons/ButtonGhost";
+
 const { width } = Dimensions.get("screen");
 
 function ScanMe({ navigation }) {
@@ -106,23 +107,20 @@ function ScanMe({ navigation }) {
           </LogoText>
         </View>
         <View
-          style={{
-            paddingHorizontal: 32,
-            marginTop: width / 12,
-            width: "100%",
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 70,
+        }}
+      >
+        <ButtonGhost
+          title="Back to home"
+          label="Zurück zu Home"
+          onPress={() => {
+            navigation.navigate("Home")
           }}
-        >
-        </View>
-        {/* <View style={{marginTop: 15, borderBottomColor: '#DCD7C9',borderBottomWidth: StyleSheet.hairlineWidth,}}/> */}
-        <View
-          style={{
-            marginTop: width / 2,
-            alignitems: "center",
-            marginHorizontal: width / 5,
-            paddingBottom: 95,
-          }}
-        >
-        </View>
+        />
+      </View>
       </SafeAreaView>
     );
   } 

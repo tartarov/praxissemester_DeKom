@@ -65,7 +65,7 @@ const authorized = async (id, pin) => {
   if (mock == true) {
     try {
       const response = await fetch(
-        `http://${process.env.IP}:3000/auth.behoerde?pin=${pin}&id=${id}`
+        `http://${process.env.IP}:3000/auth?pin=${pin}&id=${id}`
       );
       const responseJSON = await response.json();
 
@@ -78,6 +78,8 @@ const authorized = async (id, pin) => {
 };
 
 app.get("/auth", (req, res) => {
+  console.log("auth is triggered.")
+  console.log("requestbody: " + JSON.stringify(req.body))
   const { pin, id } = req.query;
   connectionTestdb.getConnection((err, ourConnection) => {
     connectionTestdb.query(
@@ -85,10 +87,12 @@ app.get("/auth", (req, res) => {
       (values = [pin, id]),
       (err, results, fields) => {
         if (err) {
+          console.log("Error querying database:", err)
           console.error("Error querying database:", err);
           res.send(false);
           return;
         }
+        console.log("results" + results)
         //console.log(err)
         res.send(results.length > 0);
         ourConnection.release();

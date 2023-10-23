@@ -14,6 +14,7 @@ import {
   Vibration,
   useWindowDimensions,
   Alert,
+  Pressable,
 } from "react-native"; //some imports not in use (yet)
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -33,6 +34,7 @@ import BottomSheet from "../../components/BottomSheet.js";
 import BottomSheetPUK from "../../components/BottomSheetPUK.js";
 import BottomSheetCAN from "../../components/BottomSheetCAN.js";
 import colorEnum from "../../components/DeKomColors.js";
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -54,6 +56,11 @@ const DismissKeyboard = ({ children }) => (
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
   const [idCardData, setidCardData] = useState("");
+  const [showHelperText, setShowHelperText] = useState(false);
+
+  const helper = () => {
+    setShowHelperText(true);
+  };
 
   const { height } = useWindowDimensions();
 
@@ -104,7 +111,7 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     Aa2_Connector.sendCommand(
-      '{\"cmd\": \"RUN_AUTH\", \"tcTokenURL\": \"https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet\", \"developerMode\": \"false\", \"handleInterrupt\": \"false\", \"status\": \"true\"}'
+      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
     );
 
     eventEmitter.addListener("pJson", (data) => {
@@ -144,7 +151,7 @@ export default function Login({ navigation }) {
       idCardData.result?.message
     );
     processLogin();
-   // Aa2_Connector.disconnect()
+    // Aa2_Connector.disconnect()
   } else if (
     idCardData.result?.description === "A trusted channel could not be opened."
   ) {
@@ -153,13 +160,9 @@ export default function Login({ navigation }) {
       "Oh no, " + idCardData.result?.description,
       idCardData.result?.message
     );
-  } else if (
-    idCardData.error === "You must provide 6 digits"
-  ) {
+  } else if (idCardData.error === "You must provide 6 digits") {
     //closeHandler();
-    Alert.alert(
-      "Wrong Pin ", idCardData.error
-    );
+    Alert.alert("Wrong Pin ", idCardData.error);
   }
 
   return (
@@ -171,7 +174,6 @@ export default function Login({ navigation }) {
             backgroundColor: colorEnum.primary,
             alignItems: "center",
             paddingTop: 50,
-            justifyContent: "center",
           }}
         >
           <LogoText style={{ color: colorEnum.tertiary, fontSize: 40 }}>
@@ -187,28 +189,51 @@ export default function Login({ navigation }) {
             All bueraucracies. One app.
           </CustomText>
           <View>
-            <CustomText
-              style={{
-                color: colorEnum.quartiary,
-                alignSelf: "center",
-                fontSize: 12,
-                marginTop: 80,
-                textAlign: "center",
-                marginHorizontal: 40,
-              }}
-            >
-              Halte dein Personalausweis auf die Rückseite deines handys bis
-              eine Aktion erscheint
-            </CustomText>
+            <Pressable onPress={helper}>
+              <Ionicons
+                name="help-circle-outline"
+                size={36}
+                style={{
+                  alignSelf: "center",
+                  marginTop: 30,
+                  color: colorEnum.quartiary,
+                  marginHorizontal: 4,
+                }}
+              />
+            </Pressable>
+            {showHelperText && (
+              <CustomText
+                style={{
+                  color: colorEnum.quartiary,
+                  alignSelf: "center",
+                  fontSize: 12,
+                  marginTop: 20,
+                  textAlign: "center",
+                  marginHorizontal: 40,
+                }}
+              >
+                Halte dein Personalausweis auf die Rückseite deines Handys, bis
+                eine Aktion erscheint
+              </CustomText>
+            )}
 
-            {(idCardData.msg === undefined ||
-              idCardData.msg === "INSERT_CARD") && <Nfc_tutorial />}
+            {(idCardData.msg === "INSERT_CARD" ||
+              idCardData.msg === undefined) && <Nfc_tutorial />}
+            {!(
+              idCardData.msg === "INSERT_CARD" ||
+              idCardData.msg === undefined ||
+              idCardData.msg === "ENTER_PIN" ||
+              idCardData.msg === "ENTER_PUK" ||
+              idCardData.msg === "ENTER_CAN" ||
+              idCardData.msg === "STATUS" ||
+              idCardData.msg === "AUTH"
+            ) && <Nfc_tutorial />}
 
             {(idCardData.msg === "ENTER_PIN" ||
               idCardData.msg === "ENTER_PUK" ||
               idCardData.msg === "ENTER_CAN") && <Processer />}
 
-            {idCardData.msg === "STATUS"  && <Correct />}
+            {idCardData.msg === "STATUS" && <Correct />}
 
             {idCardData.msg === "AUTH" && <Correct />}
           </View>
@@ -232,7 +257,7 @@ export default function Login({ navigation }) {
             </CustomText>
             <Image
               source={require("../../assets/images/AusweisApp2_Bildmarke_transparent.png")}
-              style={{ height: 30, width: 180 }}
+              style={{ height: 35, width: 180 }}
             />
           </View>
         </View>

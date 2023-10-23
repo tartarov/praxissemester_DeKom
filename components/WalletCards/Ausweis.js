@@ -19,6 +19,7 @@ import React, {
   useCallback,
 } from "react";
 import colorEnum from "../DeKomColors";
+import CustomText from "../Font";
 
 const { width } = Dimensions.get("screen");
 
@@ -46,6 +47,7 @@ function Ausweis({ data, refrence }) {
 
   useEffect(() => {
     // Do your calculation here
+    console.log("textNachname.length" + textNachname.length)
     setWidthRatioNach(width / Math.max(textNachname.length, 2)/1.1);
     setWidthRatioVor(width / Math.max(textVorname.length, 2)/1.1);
   }, [textNachname, textVorname, width]);
@@ -95,9 +97,9 @@ function Ausweis({ data, refrence }) {
                 Personalausweisnummer
               </Text>
               <View style={styles.textNummer}>
-                <Text style={[styles.textNummer, { letterSpacing: 3 }]}>
+                <CustomText style={[styles.textNummer, { letterSpacing: 3 }]}>
                   {data.document.nummer}
-                </Text>
+                </CustomText>
               </View>
               <View style={styles.textContainer}>
                 <Text style={styles.heading}>Geburtstag</Text>
@@ -168,7 +170,7 @@ function Ausweis({ data, refrence }) {
               <View
                 style={{
                   alignItems: "center",
-                  paddingTop: 30,
+                  paddingTop: 20,
                   marginLeft: 10,
                   borderBottomWidth: 1,
                   width: 350,
@@ -179,10 +181,11 @@ function Ausweis({ data, refrence }) {
 
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.textContainerInitials}>
-                  <Text style={[styles.headingInitials, {fontSize: fontSizeVorname}]}>
+                  <Text style={[styles.headingInitials, {fontSize: fontSizeVorname, letterSpacing: 0.5}]}>
                   {data.document.vorname}
                   </Text>
-                  <Text style={[styles.headingInitials, {fontSize: fontSizeNachname}]}>
+                  {console.log("räusper..." + fontSizeNachname)}
+                  <Text style={[styles.headingInitials, {fontSize: fontSizeNachname, letterSpacing: 0.5}]}>
                  
                    {data.document.name}
                   </Text>
@@ -263,29 +266,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   headingInitials: {
-    fontSize: 34,
-    fontFamily: "Nexa-Heavy",
+    //fontSize: 34,
+    fontFamily: "Nexa-ExtraLight",
     color: colorEnum.textcolor,
     justifyContent: "center",
   },
   text: {
     color: colorEnum.textcolor,
     fontSize: 16,
-    fontFamily: "Nexa-Heavy",
+    fontFamily: "Nexa-ExtraLight",
     paddingHorizontal: 10,
   },
   textCAN: {
     color: colorEnum.textcolor,
     fontSize: 16,
-    fontFamily: "Nexa-Heavy",
+    fontFamily: "Nexa-ExtraLight",
     right: 15,
   },
   textNummer: {
     color: colorEnum.textcolor,
     fontSize: 18,
-    fontFamily: "Nexa-Heavy",
+    fontFamily: "Nexa-ExtraLight",
     flexDirection: "row",
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     marginLeft: 0,
     marginTop: 0,
   },
