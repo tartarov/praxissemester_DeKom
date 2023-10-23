@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomText from "../components/Font";
+import * as SecureStore from "expo-secure-store"
 
 export const AuthContext = createContext();
 
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         dispatch({ type: "SET_TOKEN", payload: token });
         AsyncStorage.setItem("userToken", token);
+        SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " })
       } else {
         Alert.alert(
           "Etwas ist schiefgelaufen.",
