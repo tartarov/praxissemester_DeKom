@@ -8,10 +8,10 @@ const fetch = require("node-fetch");
 const { cookieJWTAuth } = require("../middleware/cookieJWTAuth");
 const { formattingResponse } = require("../middleware/Formatter.js");
 const jwt_decode = require("jwt-decode");
-const tls = require('node:tls'); 
-const https = require('https');
-var http = require('http');
-const fs = require('fs');
+const tls = require("node:tls");
+const https = require("https");
+var http = require("http");
+const fs = require("fs");
 global.atob = require("atob");
 global.Blob = require("node-blob");
 
@@ -33,10 +33,24 @@ const connectionDekomdb = mysql.createPool({
 
 const app = express();
 
-const options = {
-  key: fs.readFileSync('C:/Users/themo/dekomPrivateKey.key'),
-  cert: fs.readFileSync('C:/Users/themo/dekom_ddns_net.pem'),
-  passphrase: process.env.PASSPHRASE
+const optionsNoIp = {
+  key: fs.readFileSync("C:/Users/themo/dekomPrivateKey.key"),
+  cert: fs.readFileSync("C:/Users/themo/dekom_ddns_net.pem"),
+  passphrase: process.env.PASSPHRASE,
+};
+// Lese die Zertifikate aus den Dateien
+const cert1 = fs.readFileSync(
+  "C:/AusweisIDent/Signaturzertifikat/Aktuelles_AusweisIdent_Signaturzertifikat/AusweisIDent_Signaturzertifikat.cer"
+);
+const cert2 = fs.readFileSync(
+  "C:/AusweisIDent/Signaturzertifikat/Aktuelles_AusweisIdent_Signaturzertifikat/D-TRUST_Limited_Basic_CA_1-2_2019.pem"
+);
+const cert3 = fs.readFileSync(
+  "C:/AusweisIDent/Signaturzertifikat/Aktuelles_AusweisIdent_Signaturzertifikat/D-TRUST_Limited_Basic_Root_CA_1_2019.pem"
+);
+
+const optionsDtrust = {
+  cert: [cert1], // Ein Array mit den Zertifikaten  // Weitere Optionen...
 };
 
 app.use(bodyParser.json());
@@ -58,56 +72,84 @@ const getHash = async (value) => {
   return hash;
 };
 
-const authorized = async (id, pin) => {
-  console.log("in Authorized ist folgende Pin: " + pin);
-  let mock = true;
+const getUserInfoToken = async (accessToken) => {
+  console.log("in getUserInfoToken ist folgender AccesToken: " + accessToken);
 
-  if (mock == true) {
+  const requestOptionsUserInfo = {
+    method: "GET",
+    headers: {
+      "Authorization": "Bearer " + accessToken,
+     // "Content-Type": "application/json",
+    },
+  };
+
     try {
-      const response = await fetch(
-        `http://${process.env.IP}:3000/auth?pin=${pin}&id=${id}`
+      const response2 = await fetch(
+        `https://ref-ausweisident.eid-service.de/oic/user-info`,
+        requestOptionsUserInfo
       );
-      const responseJSON = await response.json();
-
-      return responseJSON;
+      const userInfoJSON = await response2.text();
+      console.log("RESPONSE2: " + userInfoJSON)
+      return(userInfoJSON)
     } catch (error) {
       console.error(`Error during authorization: ${error.message}`);
       throw error;
     }
-  }
 };
 
-app.get("/auth", (req, res) => {
-  console.log("auth is triggered.")
-  console.log("requestbody: " + JSON.stringify(req.body))
-  const { pin, id } = req.query;
-  connectionTestdb.getConnection((err, ourConnection) => {
-    connectionTestdb.query(
-      "SELECT * FROM testdb.userdaten WHERE PIN = ? AND ID = ?",
-      (values = [pin, id]),
-      (err, results, fields) => {
-        if (err) {
-          console.log("Error querying database:", err)
-          console.error("Error querying database:", err);
-          res.send(false);
-          return;
-        }
-        console.log("results" + results)
-        //console.log(err)
-        res.send(results.length > 0);
-        ourConnection.release();
-      }
+app.get("/auth", async (req, res) => {
+
+//https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
+
+  console.log("requestquery: " + JSON.stringify(req.query.code));
+
+  const uri_encoded_ClientId = encodeURIComponent("UF2RkWt7dI");
+  console.log("URI encoded Client ID: " + uri_encoded_ClientId);
+
+  const uri_encoded_Cs = encodeURIComponent(":B3?KZN1uN#rDn0sc?wxb");
+  console.log("URI encoded secret: " + uri_encoded_Cs);
+
+  const authrozationHeader = uri_encoded_ClientId + ":" + uri_encoded_Cs;
+  console.log("raw authHeader: " + authrozationHeader);
+
+  const authorizationHeader = new Buffer.from(authrozationHeader).toString(
+    "base64"
+  );
+  console.log("authorizationHeader: " + authorizationHeader);
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: "Basic " + authorizationHeader,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  };
+
+  let responseJSON;
+
+  try {
+    const response = await fetch(
+      `https://ref-ausweisident.eid-service.de/oic/token?code=${req.query.code}&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth`,
+      requestOptions
     );
-    if(err){
-      console.error("Error. Nothing to authenthicate.", err);
-      res.send("Error. Nothing to authenthicate.")
-    }
-  });
+    responseJSON = await response.json();
+    console.log(responseJSON);
+    const  accessToken = responseJSON.access_token
+    const userInfo = await getUserInfoToken(accessToken)
+    const decodedUserInfo = jwt_decode(userInfo)
+    console.log("userInfo: " + JSON.stringify(decodedUserInfo))
+    res.send("NAME: " + decodedUserInfo.name + " ; ADRESSE: " + decodedUserInfo.address.streetAddress + ", " + decodedUserInfo.address.locality + " ; GEBURTSTAG: " +  decodedUserInfo.birthdate )
+  } catch (error) {
+    console.error(`Error during authorization: ${error.message}`);
+    throw error;
+  }
+
+ // console.log("Access Token: " + JSON.stringify(responseJSON.access_token));
 });
 
 app.get("/testdb.userdaten", async (req, res) => {
   const { pin } = req.query;
-  console.log("https funktioniert!")
+  console.log("https funktioniert!");
 
   // const isAuthenticated = await authorized(id, pin);
 
@@ -334,12 +376,12 @@ app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
           console.log("Documents found! +++");
           let buf = [];
           for (let i = 0; i < res.length; i++) {
-          if (res[i].SIGNATUR !== null) {
+            if (res[i].SIGNATUR !== null) {
               buf.push(new Buffer.from(res[i].SIGNATUR).toString("base64"));
-          } else {
-            buf = "";
+            } else {
+              buf = "";
+            }
           }
-        }
           resData.send(
             formattingResponse(token, {
               value: true,
@@ -376,13 +418,13 @@ app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
         } else if (res) {
           console.log("Document By Id found ++++ : " + res);
           let buf = [];
-          console.log(antragId !== "null")
+          console.log(antragId !== "null");
           if (antragId !== "null") {
-              buf.push(new Buffer.from(res[0].SIGNATUR).toString("base64"));
+            buf.push(new Buffer.from(res[0].SIGNATUR).toString("base64"));
           } else {
             buf = "";
           }
-          console.log(buf)
+          console.log(buf);
           resData.send(
             formattingResponse(token, {
               value: true,
@@ -434,9 +476,8 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
-const server = https.createServer(options, app);
-const serversimple = http.createServer(app)
-
+const server = https.createServer(optionsNoIp, app);
+const serversimple = http.createServer(app);
 
 // Starting our server.
 server.listen(process.env.PORT, process.env.IP, () => {

@@ -198,11 +198,11 @@ public class Aa2_ConnectorModule extends ReactContextBaseJavaModule implements A
                 JSONObject json = new JSONObject(pJson);
                 String msg = json.getString("msg");
                 System.out.println("pJSON +++++++++: " + msg);
-                if (msg.equals("ACCESS_RIGHTS")) {
-                    System.out.println("Access rights are done! Congrats");
-                    String cmdTwo = "{\"cmd\": \"ACCEPT\"}";
-                    sendCommand(cmdTwo);
-                }
+         //       if (msg.equals("ACCESS_RIGHTS")) {
+         //           System.out.println("Access rights are done! Congrats");
+         //           String cmdTwo = "{\"cmd\": \"GET_CERTIFICATE\"}";
+         //           sendCommand(cmdTwo);
+                
                 /*
                  * if (msg.equals("ENTER_PIN")) {
                  * pinLatch.await();

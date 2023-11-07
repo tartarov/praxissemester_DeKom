@@ -109,11 +109,13 @@ export default function Login({ navigation }) {
   const { Aa2_Connector } = NativeModules;
   const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
-  useEffect(() => {
+  const runAuth = async() =>{
     Aa2_Connector.sendCommand(
-      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://test.governikus-eid.de/AusweisAuskunft/WebServiceRequesterServlet", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
+    '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&nonce=fb668ef8-925f-48ea-8850-39ff7efe17b4&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
     );
+    }
 
+  useEffect(() => {
     eventEmitter.addListener("pJson", (data) => {
       console.log("Received pJson: " + data);
       gotTheData(data);
@@ -129,6 +131,22 @@ export default function Login({ navigation }) {
     setidCardData(fromAa2);
   };
   console.log("after Received JSON");
+
+/*  if(idCardData.msg ==="INSERT_CARD"){
+    Aa2_Connector.sendCommand(
+    // '{"cmd": "GET_READER", "name": "Simulator"}'
+    '{"cmd": "SET_CARD", "name": "Simulator"}'
+    // '{"cmd": "GET_READER_LIST"}'
+
+    );
+  }
+  */
+
+  if(idCardData.msg === "ACCESS_RIGHTS"){
+    Aa2_Connector.sendCommand(
+  "{\"cmd\": \"ACCEPT\"}"
+    )
+  }
 
   if (idCardData.msg === "ENTER_PIN") {
     openPinInput();
@@ -217,6 +235,13 @@ export default function Login({ navigation }) {
               </CustomText>
             )}
 
+        <Button
+          title="Start Auth"
+          label="Start Auth"
+          onPress={() => {
+            runAuth()
+          }}
+        />
             {(idCardData.msg === "INSERT_CARD" ||
               idCardData.msg === undefined) && <Nfc_tutorial />}
             {!(
