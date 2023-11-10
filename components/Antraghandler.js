@@ -1,5 +1,6 @@
 import Fuehrungszeugnis from "./AntragCards/Fuehrungszeugnis";
 import ErwFuehrungszeugnis from "./AntragCards/ErwFuehrungszeugnis";
+import React from "react";
 
 
 function AntragHandler ({antragAusstellerDaten, scrollY, signature}){

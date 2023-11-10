@@ -1,3 +1,4 @@
+import React from "react";
 import {
   View,
   Text,
@@ -11,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import React, {
+import {
   useState,
   useContext,
   useEffect,

@@ -111,7 +111,7 @@ export default function Login({ navigation }) {
 
   const runAuth = async() =>{
     Aa2_Connector.sendCommand(
-    '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&nonce=fb668ef8-925f-48ea-8850-39ff7efe17b4&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
+    '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
     );
     }
 
@@ -141,6 +141,19 @@ export default function Login({ navigation }) {
     );
   }
   */
+
+  if (idCardData.hasOwnProperty("url")) {
+  console.log("Der Schlüssel 'url' ist vorhanden.");
+  var urlValue = idCardData.url;
+  getUserInfo(urlValue)
+ 
+  }
+
+  async function getUserInfo(url) {
+    let response = await fetch(url)
+    const userInfoJSON = await response.text();
+    console.log("RESPONSE: " + userInfoJSON)
+  }
 
   if(idCardData.msg === "ACCESS_RIGHTS"){
     Aa2_Connector.sendCommand(

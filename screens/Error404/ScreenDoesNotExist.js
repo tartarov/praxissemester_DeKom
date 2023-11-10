@@ -2,6 +2,7 @@ import LottieView from "lottie-react-native";
 import { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
+import React from "react";
 
 export function ScreenDoesNotExist({ navigation }) {
   const [finish, setFinish] = useState(false);

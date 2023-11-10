@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import colorEnum from "../DeKomColors";
+import React from "react";
 
 const { width } = Dimensions.get("screen");
 

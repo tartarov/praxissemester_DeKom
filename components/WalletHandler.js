@@ -1,5 +1,6 @@
 import Ausweis from "./WalletCards/Ausweis";
 import Fuehrerschein from "./WalletCards/Fuehrerschein";
+import React from "react";
 
 function WalletHandler ({data, refrence}){
     // getUserDataByHash();
