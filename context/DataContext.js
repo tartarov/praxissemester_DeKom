@@ -64,7 +64,7 @@ export const DataProvider = ({ children }) => {
   const getWalletData = async () => {
     const thisUser = await SecureStore.getItemAsync("userToken");
     const personalInfo = jwtDecode(thisUser)
-    console.log("personalInfo: " + personalInfo.user.name)
+    console.log("personalInfo: " + personalInfo.user.vorname)
     const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
       personalInfo;
 /*
@@ -83,8 +83,10 @@ export const DataProvider = ({ children }) => {
     //Data of Personalausweis
     currentData[0].document = {
       ...currentData[0].document,
-      name:  personalInfo.user.name,
+      name:  personalInfo.user.nachname,
+      vorname: personalInfo.user.vorname,
       geburtstag: personalInfo.user.birthdate,
+      gueltigBis: personalInfo.user.dateOfExpiry
    //   geburtsort: GEBURTSORT,
    //   staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
     };

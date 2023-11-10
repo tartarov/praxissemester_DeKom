@@ -26,7 +26,7 @@ const ImageHeight = ImageWidth * 0.6;
 
 console.log("ENUMCOLOR: " + colorEnum.primary);
 function Ausweis({ data, refrence }) {
-  console.log("DÖÖTA: " + data)
+  console.log("DÖÖTA: " + JSON.stringify(data.document.name))
   const maxSize = 34;
   const minSize = 10;
   const navigation = useNavigation();
@@ -50,76 +50,12 @@ function Ausweis({ data, refrence }) {
 
   console.log("fontSizeNachname: " + fontSizeNachname);
   console.log("fontSizeVorname: " + fontSizeVorname);
-  console.log(fontSizeNachname < maxSize ? fontSizeNachname * 2 : 110);
+  console.log(fontSizeNachname < maxSize ? fontSizeNachname * 5 : 110);
 
-  /*
-  async function readDataWithBiometrics() {
-    try {
-      // Check if authentication is already in progress
-      if (isAuthenticationInProgress) {
-        console.log("Authentication is already in progress");
-        return null;
-      }
-  
-      // Set authentication in progress
-      setAuthenticationInProgress(true);
-  
-      // Initiate the biometric authentication
-      const userDataToken = await SecureStore.getItemAsync("userToken", {
-        requireAuthentication: true,
-      });
-  
-      // If we reach here, authentication was successful, and result contains the data.
-      console.log("Data:", userDataToken);
-  
-      try {
-        const decoded = jwtDecode(userDataToken);
-        setIsFingerprintRead(true)
-        return decoded; // Return the decoded token
-      } catch (error) {
-        console.error("Invalid Token Error: " + error);
-        return null;
-      } finally {
-        // Reset authentication status
-        setAuthenticationInProgress(false);
-      }
-    } catch (error) {
-      // If there was an error, it may be due to unsuccessful authentication.
-      console.error("Error reading data:", error);
-  
-      // Reset authentication status in case of an error
-      setAuthenticationInProgress(false);
-      return null;
-    }
-  }
-
-  const [isFingerprintRead, setIsFingerprintRead] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const decodedToken = await readDataWithBiometrics();
-      if (decodedToken) {
-        setIsFingerprintRead(true);
-      } else {
-        setIsFingerprintRead(false);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
-  useEffect(() => {
-    if (isFingerprintRead) {
-      // Log or perform any action when isFingerprintRead changes to true
-      console.log('Fingerprint successfully read!');
-    }
-  }, [isFingerprintRead]);
-
-*/
   useEffect(() => {
     // Do your calculation here
     console.log("textNachname.length" + textNachname.length);
-    setWidthRatioNach(width / Math.max(textNachname.length, 2) / 1.1);
+    setWidthRatioNach(width / Math.max(textNachname.length, 2) / 1.5);
     setWidthRatioVor(width / Math.max(textVorname.length, 2) / 1.1);
   }, [textNachname, textVorname, width]);
 
@@ -287,16 +223,16 @@ function Ausweis({ data, refrence }) {
                       name="qr-code-outline"
                       size={60}
                       style={{
-                        paddingLeft: 0,
+                        paddingRight: 28,
                         paddingTop: 0,
                         color: colorEnum.textcolor,
                         marginLeft:
                           fontSizeNachname < maxSize
-                            ? fontSizeNachname * 2
+                            ? fontSizeNachname * 1
                             : 110,
                         marginTop: 20,
                         left:
-                          fontSizeNachname < maxSize ? fontSizeNachname * 2 : 0,
+                          fontSizeNachname < maxSize ? fontSizeNachname : 110,
                         top: 0,
                       }}
                     />

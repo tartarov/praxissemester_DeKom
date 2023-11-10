@@ -65,10 +65,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-const getHash = async (name, streetAddress) => {
+const getHash = async (nachname, streetAddress) => {
   const { createHmac } = await import("crypto");
   const secret = process.env.HASH_SECRET;
-  let value = name+streetAddress;
+  let value = nachname+streetAddress;
   let hash = createHmac("sha256", secret).update(value).digest("hex");
   return hash;
 };
@@ -139,7 +139,9 @@ app.get("/auth", async (req, res) => {
     const userInfo = await getUserInfoToken(accessToken)
     const decodedUserInfo = jwt_decode(userInfo)
     console.log("userInfo: " + JSON.stringify(decodedUserInfo))
-    let user = { name: decodedUserInfo.name, streetAdress: decodedUserInfo.address.streetAddress, locality: decodedUserInfo.address.locality, birthdate: decodedUserInfo.birthdate  };
+   const dateOfExpiry = decodedUserInfo['https://ref-ausweisident.eid-service.de/dateOfExpiry']
+   console.log("dateOfExpiry: " + dateOfExpiry)
+    let user = { vorname: decodedUserInfo.given_name, nachname: decodedUserInfo.family_name,  streetAdress: decodedUserInfo.address.streetAddress, locality: decodedUserInfo.address.locality, birthdate: decodedUserInfo.birthdate, dateOfExpiry: dateOfExpiry };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
@@ -179,7 +181,7 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
   console.log("in server Token: " + token)
   const decoded = jwt_decode(token);
   console.log("in server decoded Token: " + decoded)
-  const userIdHash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const userIdHash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   const query = `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
   connectionDekomdb.getConnection((err, ourConnection) => {
@@ -218,7 +220,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 
   const token = req.cookies.token;
   const decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -254,7 +256,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -274,7 +276,7 @@ app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
 app.post("/antrag/save/signature", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -294,7 +296,7 @@ app.post("/antrag/save/signature", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   let date_ob = new Date();
 
@@ -372,7 +374,7 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
 app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -413,7 +415,7 @@ app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log(`SELECT FROM dekomdb.userdocuments WHERE ID=${antragId}`);
@@ -456,7 +458,7 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.name,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log(`DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`);
