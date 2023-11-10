@@ -113,6 +113,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
 
   const { Aa2_Connector } = NativeModules;
 
+/*
   const LoginSchema = Yup.object().shape({
     pin: Yup.string()
 
@@ -133,6 +134,7 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
       
       },
     });
+    */
 
     const sendToAa2 = (value) => {
       const ourPin = value.toString();
@@ -237,9 +239,9 @@ const BottomSheet = forwardRef(({ activeHeight }, ref) => {
           returnKeyLabel="go"
           editable={false}
           value={enteredNumbers}
-          onChangeText={handlePinChange}
-          onBlur={handleBlur("pin")}
-          error={errors.pin}
+        //  onChangeText={handlePinChange}
+         // onBlur={handleBlur("pin")}
+         // error={errors.pin}
           touched={isTouched}
           ref={pin}
           onSubmitEditing={() => handleSubmit()}

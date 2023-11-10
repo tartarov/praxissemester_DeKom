@@ -1,10 +1,13 @@
 import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CustomText from "../components/Font";
+import { NativeEventEmitter, NativeModules } from "react-native";
 import * as SecureStore from "expo-secure-store"
 
 export const AuthContext = createContext();
+
+const { Aa2_Connector } = NativeModules;
+const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
 const initialState = {
   isLoading: false,
@@ -31,15 +34,22 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
   const ipAddress = "dekom.ddns.net";
+  const [idCardData, setidCardData] = useState("");
 
-  const login = async (userPin) => {
-    try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      const response = await fetch(
-        `https://dekom.ddns.net:4222/testdb.userdaten?pin=${userPin}`
+
+  const startAuth = () =>{
+    Aa2_Connector.sendCommand(
+      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
       );
+  }
+
+  const login = async (url) => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    try {
+      let response = await fetch(url)
       const requiredToken = await response.json();
       const token = requiredToken.token
+
       console.log("TOKEN: " + token)
       if (token) {
         dispatch({ type: "SET_TOKEN", payload: token });
@@ -51,11 +61,33 @@ export const AuthProvider = ({ children }) => {
           "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
         );
       }
+      
+/*
+      dispatch({ type: "SET_LOADING", payload: true });
+      const response = await fetch(
+        `https://dekom.ddns.net:4222/testdb.userdaten?pin=${userPin}`
+      );
+      const requiredToken = await response.json();
+      const token = requiredToken.token
+
+      console.log("TOKEN: " + token)
+      if (token) {
+        dispatch({ type: "SET_TOKEN", payload: token });
+        AsyncStorage.setItem("userToken", token);
+        SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " })
+      } else {
+        Alert.alert(
+          "Etwas ist schiefgelaufen.",
+          "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
+        );
+      }
+      */
     } catch (error) {
       console.log(`Error during login: ${error.message}`);
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
+    
   };
 
   const signup = async (userData) => {
@@ -159,6 +191,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        startAuth,
         login,
         logout,
         signup,

@@ -55,6 +55,7 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
+  const { startAuth } = useContext(AuthContext);
   const [idCardData, setidCardData] = useState("");
   const [showHelperText, setShowHelperText] = useState(false);
 
@@ -104,15 +105,11 @@ export default function Login({ navigation }) {
 
   const pin = useRef(null);
 
-  // ...
-
   const { Aa2_Connector } = NativeModules;
   const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
-  const runAuth = async() =>{
-    Aa2_Connector.sendCommand(
-    '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
-    );
+  const runAuth = () =>{
+    startAuth();
     }
 
   useEffect(() => {
@@ -128,32 +125,27 @@ export default function Login({ navigation }) {
   const gotTheData = async (data) => {
     let fromAa2 = JSON.parse(data);
     console.log("Got The Data! : " + fromAa2.msg);
+  
     setidCardData(fromAa2);
   };
   console.log("after Received JSON");
 
-/*  if(idCardData.msg ==="INSERT_CARD"){
-    Aa2_Connector.sendCommand(
-    // '{"cmd": "GET_READER", "name": "Simulator"}'
-    '{"cmd": "SET_CARD", "name": "Simulator"}'
-    // '{"cmd": "GET_READER_LIST"}'
-
-    );
-  }
-  */
-
+  
   if (idCardData.hasOwnProperty("url")) {
   console.log("Der Schlüssel 'url' ist vorhanden.");
   var urlValue = idCardData.url;
-  getUserInfo(urlValue)
+  login(urlValue)
  
   }
 
+  /*
   async function getUserInfo(url) {
     let response = await fetch(url)
     const userInfoJSON = await response.text();
     console.log("RESPONSE: " + userInfoJSON)
   }
+
+  */
 
   if(idCardData.msg === "ACCESS_RIGHTS"){
     Aa2_Connector.sendCommand(
