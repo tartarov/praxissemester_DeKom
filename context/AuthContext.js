@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeEventEmitter, NativeModules } from "react-native";
-import * as SecureStore from "expo-secure-store"
+import * as SecureStore from "expo-secure-store";
 
 export const AuthContext = createContext();
 
@@ -36,33 +36,34 @@ export const AuthProvider = ({ children }) => {
   const ipAddress = "dekom.ddns.net";
   const [idCardData, setidCardData] = useState("");
 
-
-  const startAuth = () =>{
+  const startAuth = () => {
     Aa2_Connector.sendCommand(
       '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
-      );
-  }
+    );
+  };
 
   const login = async (url) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
-      let response = await fetch(url)
+      let response = await fetch(url);
       const requiredToken = await response.json();
-      const token = requiredToken.token
+      const token = requiredToken.token;
 
-      console.log("TOKEN: " + token)
+      console.log("TOKEN: " + token);
       if (token) {
         dispatch({ type: "SET_TOKEN", payload: token });
         AsyncStorage.setItem("userToken", token);
-        SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " })
+        console.log("vor Secure Store");
+         await SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }); //, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }
+        console.log("nach Secure Store");
       } else {
         Alert.alert(
           "Etwas ist schiefgelaufen.",
           "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
         );
       }
-      
-/*
+
+      /*
       dispatch({ type: "SET_LOADING", payload: true });
       const response = await fetch(
         `https://dekom.ddns.net:4222/testdb.userdaten?pin=${userPin}`
@@ -87,7 +88,6 @@ export const AuthProvider = ({ children }) => {
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
-    
   };
 
   const signup = async (userData) => {
@@ -116,16 +116,17 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "SET_LOADING", payload: false });
   };
 
-  const logout = () => {
+  const logout = async() => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "CLEAR" });
     AsyncStorage.removeItem("userToken");
     AsyncStorage.removeItem("isSignedUp");
+   await SecureStore.deleteItemAsync("userToken");
+   await SecureStore.deleteItemAsync("isSignedUp");
     dispatch({ type: "SET_LOADING", payload: false });
   };
 
   const isSignedUp = async () => {
-
     dispatch({ type: "SET_LOADING", payload: true });
 
     try {
@@ -150,7 +151,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       dispatch({ type: "SET_LOADING", payload: false });
-      console.log("userIsSignedUp: ------ " + userIsSignedUp)
+      console.log("userIsSignedUp: ------ " + userIsSignedUp);
       return userIsSignedUp;
     } catch (e) {
       console.log(`isSignedUp error : ${e}`);
@@ -171,11 +172,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isVerified = async (result) => {
+    console.log(result)
     try {
       if (result.body.value == "logout") {
         console.log("User session ended.");
         logout();
-        Alert.alert("Session wurde beendet.", "Bitte authentifiziere dich nochmal.");
+        Alert.alert(
+          "Session wurde beendet.",
+          "Bitte authentifiziere dich nochmal."
+        );
       } else {
         return "verified";
       }

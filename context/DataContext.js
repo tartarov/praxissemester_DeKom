@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthContext";
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 export const DataContext = createContext();
 
@@ -60,11 +62,12 @@ export const DataProvider = ({ children }) => {
   };
 
   const getWalletData = async () => {
-    const thisUser = await fetchData();
-    const personalInfo = thisUser.body.result[0];
+    const thisUser = await SecureStore.getItemAsync("userToken");
+    const personalInfo = jwtDecode(thisUser)
+    console.log("personalInfo: " + personalInfo.user.name)
     const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
       personalInfo;
-
+/*
     if (thisUser.body.value !== true) {
       return;
     }
@@ -74,14 +77,16 @@ export const DataProvider = ({ children }) => {
     if (verificationStatus !== "verified") {
       return;
     }
+    */
+
+    console.log("NAME: " + NAME)
     //Data of Personalausweis
     currentData[0].document = {
       ...currentData[0].document,
-      name: NAME,
-      vorname: VORNAME,
-      geburtstag: GEBURTSDATUM,
-      geburtsort: GEBURTSORT,
-      staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
+      name:  personalInfo.user.name,
+      geburtstag: personalInfo.user.birthdate,
+   //   geburtsort: GEBURTSORT,
+   //   staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
     };
 
     //Data of Fuehrerschein
