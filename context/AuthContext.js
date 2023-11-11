@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   const startAuth = () => {
     Aa2_Connector.sendCommand(
-      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
+      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}'
     );
   };
 
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         dispatch({ type: "SET_TOKEN", payload: token });
         AsyncStorage.setItem("userToken", token);
         console.log("vor Secure Store");
-         await SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }); //, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }
+        await SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }); //, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }
         console.log("nach Secure Store");
       } else {
         Alert.alert(

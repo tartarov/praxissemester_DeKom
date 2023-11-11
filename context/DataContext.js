@@ -25,6 +25,7 @@ export const DataProvider = ({ children }) => {
         staatsangehoerigkeit: "DEUTSCH",
         geburtsort: "KÖLN",
         gueltigBis: "10.12.2030",
+        dokumentTyp: "Perso",
         nummer: "K591MLO6G",
         can: "1 3 5 0 9 9",
       },
@@ -63,7 +64,7 @@ export const DataProvider = ({ children }) => {
 
   const getWalletData = async () => {
     const thisUser = await SecureStore.getItemAsync("userToken");
-    const personalInfo = jwtDecode(thisUser)
+    const personalInfo = jwtDecode(thisUser)  
     console.log("personalInfo: " + personalInfo.user.vorname)
     const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
       personalInfo;
@@ -86,9 +87,10 @@ export const DataProvider = ({ children }) => {
       name:  personalInfo.user.nachname,
       vorname: personalInfo.user.vorname,
       geburtstag: personalInfo.user.birthdate,
-      gueltigBis: personalInfo.user.dateOfExpiry
-   //   geburtsort: GEBURTSORT,
-   //   staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
+      gueltigBis: personalInfo.user.dateOfExpiry,
+      geburtsort: personalInfo.user.placeOfBirth,
+      staatsangehoerigkeit: personalInfo.user.nationality,
+      dokumentTyp: personalInfo.user.documentType,
     };
 
     //Data of Fuehrerschein

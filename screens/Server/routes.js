@@ -68,7 +68,7 @@ app.use(function (req, res, next) {
 const getHash = async (nachname, streetAddress) => {
   const { createHmac } = await import("crypto");
   const secret = process.env.HASH_SECRET;
-  let value = nachname+streetAddress;
+  let value = nachname + streetAddress;
   let hash = createHmac("sha256", secret).update(value).digest("hex");
   return hash;
 };
@@ -79,28 +79,27 @@ const getUserInfoToken = async (accessToken) => {
   const requestOptionsUserInfo = {
     method: "GET",
     headers: {
-      "Authorization": "Bearer " + accessToken,
-     // "Content-Type": "application/json",
+      Authorization: "Bearer " + accessToken,
+      // "Content-Type": "application/json",
     },
   };
 
-    try {
-      const response2 = await fetch(
-        `https://ref-ausweisident.eid-service.de/oic/user-info`,
-        requestOptionsUserInfo
-      );
-      const userInfoJSON = await response2.text();
+  try {
+    const response2 = await fetch(
+      `https://ref-ausweisident.eid-service.de/oic/user-info`,
+      requestOptionsUserInfo
+    );
+    const userInfoJSON = await response2.text();
     //  console.log("RESPONSE2: " + userInfoJSON)
-      return(userInfoJSON)
-    } catch (error) {
-      console.error(`Error during authorization: ${error.message}`);
-      throw error;
-    }
+    return userInfoJSON;
+  } catch (error) {
+    console.error(`Error during authorization: ${error.message}`);
+    throw error;
+  }
 };
 
 app.get("/auth", async (req, res) => {
-
-//https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
+  //https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
 
   console.log("requestquery: " + JSON.stringify(req.query.code));
 
@@ -135,26 +134,48 @@ app.get("/auth", async (req, res) => {
     );
     responseJSON = await response.json();
     console.log(responseJSON);
-    const  accessToken = responseJSON.access_token
-    const userInfo = await getUserInfoToken(accessToken)
-    const decodedUserInfo = jwt_decode(userInfo)
-    console.log("userInfo: " + JSON.stringify(decodedUserInfo))
-   const dateOfExpiry = decodedUserInfo['https://ref-ausweisident.eid-service.de/dateOfExpiry']
-   console.log("dateOfExpiry: " + dateOfExpiry)
-    let user = { vorname: decodedUserInfo.given_name, nachname: decodedUserInfo.family_name,  streetAdress: decodedUserInfo.address.streetAddress, locality: decodedUserInfo.address.locality, birthdate: decodedUserInfo.birthdate, dateOfExpiry: dateOfExpiry };
+    const accessToken = responseJSON.access_token;
+    const userInfo = await getUserInfoToken(accessToken);
+    const decodedUserInfo = jwt_decode(userInfo);
+    console.log("userInfo: " + JSON.stringify(decodedUserInfo));
+    const dateOfExpiry =
+      decodedUserInfo["https://ref-ausweisident.eid-service.de/dateOfExpiry"];
+    const placeOfBirth =
+      decodedUserInfo["https://ref-ausweisident.eid-service.de/placeOfBirth"];
+    const issuingState =
+      decodedUserInfo["https://ref-ausweisident.eid-service.de/issuingState"];
+      const documentType = decodedUserInfo['https://ref-ausweisident.eid-service.de/documentType']
+      const nationality = decodedUserInfo['https://ref-ausweisident.eid-service.de/nationality']
+    const pobFormatted = placeOfBirth.formatted;
+    console.log("dateOfExpiry: " + dateOfExpiry);
+    console.log("pobFormatted: " + pobFormatted);
+    let user = {
+      vorname: decodedUserInfo.given_name,
+      nachname: decodedUserInfo.family_name,
+      streetAdress: decodedUserInfo.address.streetAddress,
+      locality: decodedUserInfo.address.locality,
+      postalCode: decodedUserInfo.address.postalCode,
+      country: decodedUserInfo.address.country,
+      birthdate: decodedUserInfo.birthdate,
+      dateOfExpiry: dateOfExpiry,
+      placeOfBirth: pobFormatted,
+      issuingState: issuingState,
+      documentType: documentType,
+      nationality: nationality,
+    };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
-  
+
     res.cookie("token", token, { httpOnly: true });
     res.send(formattingResponse(token, { value: true }));
-   // res.send("NAME: " + decodedUserInfo.name + " ; ADRESSE: " + decodedUserInfo.address.streetAddress + ", " + decodedUserInfo.address.locality + " ; GEBURTSTAG: " +  decodedUserInfo.birthdate )
+    // res.send("NAME: " + decodedUserInfo.name + " ; ADRESSE: " + decodedUserInfo.address.streetAddress + ", " + decodedUserInfo.address.locality + " ; GEBURTSTAG: " +  decodedUserInfo.birthdate )
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
     throw error;
   }
 
- // console.log("Access Token: " + JSON.stringify(responseJSON.access_token));
+  // console.log("Access Token: " + JSON.stringify(responseJSON.access_token));
 });
 
 app.get("/testdb.userdaten", async (req, res) => {
@@ -178,10 +199,13 @@ app.get("/testdb.userdaten", async (req, res) => {
 
 app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
   const token = req.cookies.token; //so bekommen wir den Token
-  console.log("in server Token: " + token)
+  console.log("in server Token: " + token);
   const decoded = jwt_decode(token);
-  console.log("in server decoded Token: " + decoded)
-  const userIdHash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  console.log("in server decoded Token: " + decoded);
+  const userIdHash = await getHash(
+    decoded.user.vorname,
+    decoded.user.streetAddress
+  );
 
   const query = `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
   connectionDekomdb.getConnection((err, ourConnection) => {
@@ -220,7 +244,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 
   const token = req.cookies.token;
   const decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -256,7 +280,7 @@ app.post("/user/save", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -276,7 +300,7 @@ app.post("/user/save/signature", cookieJWTAuth, async (req, resData) => {
 app.post("/antrag/save/signature", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -296,7 +320,7 @@ app.post("/antrag/save/signature", cookieJWTAuth, async (req, resData) => {
 app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   let date_ob = new Date();
 
@@ -374,7 +398,7 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
 app.get("/user/identify/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(
@@ -415,7 +439,7 @@ app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log(`SELECT FROM dekomdb.userdocuments WHERE ID=${antragId}`);
@@ -458,7 +482,7 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
   let decoded = jwt_decode(token);
-  const hash = await getHash(decoded.user.vorname,decoded.user.streetAddress);
+  const hash = await getHash(decoded.user.vorname, decoded.user.streetAddress);
 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log(`DELETE FROM dekomdb.userdocuments WHERE ID=${antragId}`);

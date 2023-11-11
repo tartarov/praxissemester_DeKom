@@ -11,6 +11,7 @@ import { LogBox } from "react-native";
 LogBox.ignoreLogs(["EventEmitter.removeListener('didUpdateDimensions', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`."]);
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreLogs(['Animated.event'])
+LogBox.ignoreLogs(['[Unhandled promise rejection: Error: Authentication is already in progress]'])
 ///// +++REMOVE IF DEPENDECY FIXED++++
 
 const App = () => {

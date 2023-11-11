@@ -26,7 +26,7 @@ const ImageHeight = ImageWidth * 0.6;
 
 console.log("ENUMCOLOR: " + colorEnum.primary);
 function Ausweis({ data, refrence }) {
-  console.log("DÖÖTA: " + JSON.stringify(data.document.name))
+  console.log("DÖÖTA: " + JSON.stringify(data.document))
   const maxSize = 34;
   const minSize = 10;
   const navigation = useNavigation();
@@ -102,12 +102,12 @@ function Ausweis({ data, refrence }) {
                 <Text
                   style={[styles.heading, { paddingTop: 0, paddingLeft: 20 }]}
                 >
-                  Personalausweisnummer
+                  Typ des Dokuments
                 </Text>
                 <View style={styles.textNummer}>
-                  <CustomText style={[styles.textNummer, { letterSpacing: 3 }]}>
-                    {data.document.nummer}
-                  </CustomText>
+                  <Text style={[styles.textNummer, { letterSpacing: 3 }]}>
+                    {data.document.dokumentTyp}
+                  </Text>
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.heading}>Geburtstag</Text>
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Nexa-ExtraLight",
     flexDirection: "row",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginLeft: 0,
     marginTop: 0,
   },
