@@ -62,27 +62,6 @@ export const AuthProvider = ({ children }) => {
           "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
         );
       }
-
-      /*
-      dispatch({ type: "SET_LOADING", payload: true });
-      const response = await fetch(
-        `https://dekom.ddns.net:4222/testdb.userdaten?pin=${userPin}`
-      );
-      const requiredToken = await response.json();
-      const token = requiredToken.token
-
-      console.log("TOKEN: " + token)
-      if (token) {
-        dispatch({ type: "SET_TOKEN", payload: token });
-        AsyncStorage.setItem("userToken", token);
-        SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " })
-      } else {
-        Alert.alert(
-          "Etwas ist schiefgelaufen.",
-          "Deine ID oder PIN ist falsch. Bitte veruche es erneut."
-        );
-      }
-      */
     } catch (error) {
       console.log(`Error during login: ${error.message}`);
     } finally {

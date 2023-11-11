@@ -229,29 +229,33 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
     decoded.user.userid
   );
 
-  const query = `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
+  const query = `INSERT INTO dekomdb.dekom_user (USER_ID_HASH) VALUES ('${userIdHash}') ON DUPLICATE KEY UPDATE USER_ID_HASH = USER_ID_HASH;` ;// `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
+  
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(query, (error, results, fields) => {
       if (error) {
         console.log("An error occurred:", error.message);
         throw error;
       } else {
-        if (results.length) {
+        if (results.serverStatus == 2 ) {
           console.log("User found successfully.");
+          /*
           let buf = "";
           if (results[0].SIGNATUR !== null) {
             buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
           } else {
             buf = "";
           }
+          */
           res.send(
             formattingResponse(token, {
               value: true,
               result: results,
-              signature: buf,
+           //   signature: buf,
             })
           );
         } else {
+          console.log("results: " + (JSON.stringify(results)))
           console.log("User-------- not found.");
           res.send(formattingResponse(token, { value: false }));
         }
