@@ -144,11 +144,21 @@ app.get("/auth", async (req, res) => {
       decodedUserInfo["https://ref-ausweisident.eid-service.de/placeOfBirth"];
     const issuingState =
       decodedUserInfo["https://ref-ausweisident.eid-service.de/issuingState"];
-      const documentType = decodedUserInfo['https://ref-ausweisident.eid-service.de/documentType']
-      const nationality = decodedUserInfo['https://ref-ausweisident.eid-service.de/nationality']
+    const documentType =
+      decodedUserInfo["https://ref-ausweisident.eid-service.de/documentType"];
+    const nationality =
+      decodedUserInfo["https://ref-ausweisident.eid-service.de/nationality"];
+
     const pobFormatted = placeOfBirth.formatted;
-    console.log("dateOfExpiry: " + dateOfExpiry);
-    console.log("pobFormatted: " + pobFormatted);
+
+    var birthdayDate = new Date(decodedUserInfo.birthdate);
+    var bdFormatted = birthdayDate.getDate() + '.' + (birthdayDate.getMonth() + 1) + '.' + birthdayDate.getFullYear();
+
+    var expiryDate = new Date(dateOfExpiry);
+    var exdFormatted = expiryDate.getDate() + '.' + (expiryDate.getMonth() + 1) + '.' + expiryDate.getFullYear();
+
+  
+
     let user = {
       vorname: decodedUserInfo.given_name,
       nachname: decodedUserInfo.family_name,
@@ -156,8 +166,8 @@ app.get("/auth", async (req, res) => {
       locality: decodedUserInfo.address.locality,
       postalCode: decodedUserInfo.address.postalCode,
       country: decodedUserInfo.address.country,
-      birthdate: decodedUserInfo.birthdate,
-      dateOfExpiry: dateOfExpiry,
+      birthdate: bdFormatted,
+      dateOfExpiry: exdFormatted,
       placeOfBirth: pobFormatted,
       issuingState: issuingState,
       documentType: documentType,
