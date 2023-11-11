@@ -44,9 +44,9 @@ function CustomDrawer( props ) {
           >
                <Pressable onPress={()=>{navigation.navigate("Settings")}}>
             {/* <Image source={require('../assets/images/pngwing.com.png')} style={{height:80, width: 80, margin: 20}} />  */}
-            {data[0].document.vorname == "Tim" ? (
+            {data[0].document.vorname == "ERIKA" ? (
               <Image
-                source={require("../assets/images/TimA.jpeg")}
+                source={require("../assets/images/Erika_Mustermann.png")}
                 style={{
                   height: 130,
                   width: 120,

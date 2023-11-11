@@ -149,19 +149,20 @@ function Ausweis({ data, refrence }) {
                   <Text style={styles.textCAN}>{data.document.can}</Text>
                 </View>
               </View>
-              {data.document.vorname == "Tim" ? (
+              {data.document.name == "MUSTERMANN" ? (
                 <Image
-                  source={require("../../assets/images/TimA.jpeg")}
+                  source={require("../../assets/images/Erika_Mustermann.png")}
                   style={{
-                    height: 170,
-                    width: 120,
+                    height: 220,
+                    width: 160,
                     margin: 0,
-                    marginLeft: -110,
+                    marginLeft: -140,
                     marginTop: 35,
                     marginBottom: 20,
                     borderRadius: 2,
                     right: 30,
                   }}
+                  
                 />
               ) : (
                 <Ionicons

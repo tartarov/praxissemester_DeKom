@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
 import Loader from "../components/animations/Loader";
 import colorEnum from "../components/DeKomColors";
+import * as SecureStore from "expo-secure-store";
 
 const { width } = Dimensions.get("screen");
 
@@ -24,12 +25,12 @@ function You({ navigation }) {
 
   const getData = async (key) => {
     try {
-      const data = await AsyncStorage.getItem(key);
+      const data = await SecureStore.getItemAsync(key)
       if (data !== null) {
         console.log("AsyncStorage JWT token: " + data);
         const decodedToken = jwtDecode(data);
 
-        serUserId(decodedToken.user.name, decodedToken.user.streetAddress);
+        serUserId(decodedToken.user.vorname, decodedToken.user.streetAddress);
         return decodedToken.user.pin;
       }
     } catch (error) {
