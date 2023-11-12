@@ -187,7 +187,7 @@ app.get("/auth", async (req, res) => {
       nationality: nationality,
     };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "1m",
+      expiresIn: "5m",
     });
 
     res.cookie("token", token, { httpOnly: true });

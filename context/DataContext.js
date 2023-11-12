@@ -119,43 +119,41 @@ export const DataProvider = ({ children }) => {
   };
 
   async function getUserData() {
-    const thisUser = await fetchData();
+    let isAuthenticationInProgress = false;
+    let thisUser;
 
+    thisUser = await SecureStore.getItemAsync("userToken", {
+      requireAuthentication: false,
+    });
+
+    /*
     const verificationStatus = await isVerified(thisUser);
 
     if (verificationStatus !== "verified") {
       return;
     }
 
-    const personalInfo = thisUser.body.result[0];
-    console.log("THIS USER IS: " + personalInfo);
-    const {
-      NAME,
-      VORNAME,
-      GEBURTSDATUM,
-      GEBURTSORT,
-      STAATSANGEHOERIGKEIT,
-      STRASSE,
-      HAUSNUMMER,
-      PLZ,
-      STADT,
-    } = personalInfo;
+   
 
     if (thisUser.body.value !== true) {
       return;
     }
+    */
+
+    const personalInfo = jwtDecode(thisUser);
+    console.log("THIS USER IS: " + JSON.stringify(personalInfo));
 
     let data = {
-      name: NAME,
-      vorname: VORNAME,
-      geburtstag: GEBURTSDATUM,
-      geburtsort: GEBURTSORT,
-      staatsangehoerigkeit: STAATSANGEHOERIGKEIT,
-      strasse: STRASSE,
-      hausnummer: HAUSNUMMER,
-      plz: PLZ,
-      stadt: STADT,
-      signatur: thisUser.body.signature,
+      name: personalInfo.user.nachname,
+      vorname: personalInfo.user.vorname,
+      geburtstag: personalInfo.user.birthdate,
+      geburtsort: personalInfo.user.placeOfBirth,
+      staatsangehoerigkeit: personalInfo.user.nationality,
+      strasse: personalInfo.user.streetAdress,
+     // hausnummer: HAUSNUMMER,
+      plz: personalInfo.user.postalCode,
+      stadt: personalInfo.user.locality,
+    //  signatur: thisUser.body.signature,
     };
     return data;
   }

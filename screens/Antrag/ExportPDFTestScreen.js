@@ -98,7 +98,7 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
                            userData.vorname + " " + userData.name
                          }</span><br>
                          <span id="adresseHolder" class="p">${
-                           userData.straße + " " + userData.hausnummer
+                           userData.straße
                          }</span><br>
                          <span id="ortHolder" class="p">${
                            userData.postleitzahl + " " + userData.stadt

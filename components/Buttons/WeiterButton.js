@@ -1,5 +1,6 @@
 import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
 import colorEnum from '../DeKomColors';
+import React from 'react';
 
 
 const { width } = Dimensions.get('screen');
