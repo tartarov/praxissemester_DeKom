@@ -58,54 +58,67 @@ export const DataProvider = ({ children }) => {
       }
     );
     const thisUser = await respond.json();
-    setUserData(thisUser)
+    setUserData(thisUser);
     return thisUser;
   };
 
   const getWalletData = async () => {
-    const thisUser = await SecureStore.getItemAsync("userToken");
-    const personalInfo = jwtDecode(thisUser)  
-    console.log("personalInfo: " + personalInfo.user.vorname)
-    const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
-      personalInfo;
-/*
-    if (thisUser.body.value !== true) {
-      return;
+    let isAuthenticationInProgress = false;
+    let thisUser;
+    try {
+      if (isAuthenticationInProgress == false) {
+        thisUser = await SecureStore.getItemAsync("userToken", {
+          requireAuthentication: false,
+        });
+
+        const personalInfo = jwtDecode(thisUser);
+        console.log("personalInfo: " + personalInfo.user.vorname);
+        const { NAME, VORNAME, GEBURTSDATUM, GEBURTSORT, STAATSANGEHOERIGKEIT } =
+          personalInfo;
+        /*
+        if (thisUser.body.value !== true) {
+          return;
+        }
+    
+        const verificationStatus = await isVerified(thisUser);
+    
+        if (verificationStatus !== "verified") {
+          return;
+        }
+        */
+    
+        console.log("NAME: " + NAME);
+        //Data of Personalausweis
+        currentData[0].document = {
+          ...currentData[0].document,
+          name: personalInfo.user.nachname,
+          vorname: personalInfo.user.vorname,
+          geburtstag: personalInfo.user.birthdate,
+          gueltigBis: personalInfo.user.dateOfExpiry,
+          geburtsort: personalInfo.user.placeOfBirth,
+          staatsangehoerigkeit: personalInfo.user.nationality,
+          dokumentTyp: personalInfo.user.documentType,
+        };
+    
+        //Data of Fuehrerschein
+        currentData[1].document = {
+          ...currentData[1].document,
+          name: NAME,
+          vorname: VORNAME,
+          geburtstag: GEBURTSDATUM,
+          geburtsort: GEBURTSORT,
+        };
+    
+        setData(currentData);
+
+        isAuthenticationInProgress = true;
+      }
+    } catch (error) {
+      console.log("auth already in progress");
     }
-
-    const verificationStatus = await isVerified(thisUser);
-
-    if (verificationStatus !== "verified") {
-      return;
-    }
-    */
-
-    console.log("NAME: " + NAME)
-    //Data of Personalausweis
-    currentData[0].document = {
-      ...currentData[0].document,
-      name:  personalInfo.user.nachname,
-      vorname: personalInfo.user.vorname,
-      geburtstag: personalInfo.user.birthdate,
-      gueltigBis: personalInfo.user.dateOfExpiry,
-      geburtsort: personalInfo.user.placeOfBirth,
-      staatsangehoerigkeit: personalInfo.user.nationality,
-      dokumentTyp: personalInfo.user.documentType,
-    };
-
-    //Data of Fuehrerschein
-    currentData[1].document = {
-      ...currentData[1].document,
-      name: NAME,
-      vorname: VORNAME,
-      geburtstag: GEBURTSDATUM,
-      geburtsort: GEBURTSORT,
-    };
-
-    setData(currentData);
   };
 
-  async function getUserData () {
+  async function getUserData() {
     const thisUser = await fetchData();
 
     const verificationStatus = await isVerified(thisUser);
@@ -115,7 +128,7 @@ export const DataProvider = ({ children }) => {
     }
 
     const personalInfo = thisUser.body.result[0];
-    console.log("THIS USER IS: " + personalInfo)
+    console.log("THIS USER IS: " + personalInfo);
     const {
       NAME,
       VORNAME,
@@ -132,7 +145,6 @@ export const DataProvider = ({ children }) => {
       return;
     }
 
-
     let data = {
       name: NAME,
       vorname: VORNAME,
@@ -146,7 +158,7 @@ export const DataProvider = ({ children }) => {
       signatur: thisUser.body.signature,
     };
     return data;
-  };
+  }
 
   return (
     <DataContext.Provider
@@ -155,7 +167,7 @@ export const DataProvider = ({ children }) => {
         data,
         userData,
         getUserData,
-        fetchData
+        fetchData,
       }}
     >
       {children}

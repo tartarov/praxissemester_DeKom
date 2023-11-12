@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Login from "./Login";
 import SignUpNav from "./SignUpFlow/SignUpNav";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "../../components/animations/Loader";
 import DrawerNavigator from "../../navigations/DrawerNavigator";
 
-let alreadyCalled = false;
  function AuthHandler () {
+  
+    let alreadyCalled = false;
     const { isLoading, userToken, userSignedUp, isSignedUp } =
       useContext(AuthContext);
   
