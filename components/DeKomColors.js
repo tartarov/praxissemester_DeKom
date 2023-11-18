@@ -5,7 +5,9 @@ const colorEnum = {
     tertiary: "#B8C7B2", // Celadon Green
     quartiary: "#EDEEEC", //Pale Silver
     accent: "#EDEEEC",
-    textcolor: "#0A0A09" // Rich Black
+    textcolor: "#0A0A09", // Rich Black
+    aufenthaltsTitelcolor: "#C6E2FF" ,
+    aufenthaltsTitelcolor2:"#FFB6C1"
   };
   
   export default colorEnum;

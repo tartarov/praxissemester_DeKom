@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading, userToken, userSignedUp } = state;
   const ipAddress = "dekom.ddns.net";
+  // 4222 für Laptop : 4097 für standPC
   const [idCardData, setidCardData] = useState("");
 
   const startAuth = () => {

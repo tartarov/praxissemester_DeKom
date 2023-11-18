@@ -7,7 +7,8 @@ function WalletHandler ({data, refrence}){
 
      let document = <Ausweis data={data} />
 
-     if (data.title == 'Personalausweis'){
+     if (data.documentType == 'ID'){
+      console.log("Ich bin im data. documentType!! == " + data.documentType )
         document = <Ausweis data={data} />
      } else if (data.title == 'Führerschein') {
         document = <Fuehrerschein data={data} />

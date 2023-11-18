@@ -69,7 +69,7 @@ function Ausweis({ data, refrence }) {
   //if (isFingerprintRead) {  || Object.keys(decodedToken).length > 0
     return (
       <>
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: data.document.dokumentTyp == "AR" ? colorEnum.aufenthaltsTitelcolor : colorEnum.quartiary,}]}>
           <View style={{ flexDirection: "column" }}>
             <Text
               style={[
@@ -79,10 +79,13 @@ function Ausweis({ data, refrence }) {
                   alignSelf: "center",
                   textAlign: "center",
                   marginTop: 10,
+                  backgroundColor:  data.document.dokumentTyp == "AR" ? colorEnum.aufenthaltsTitelcolor2 : "",
+                  borderRadius: 5,
+                  paddingHorizontal: 82
                 },
               ]}
             >
-              {data.title}
+              {data.document.dokumentTyp == "AR" ? "Aufenthaltstitel" : "Personalausweis"}
             </Text>
             <Text
               style={[
@@ -149,7 +152,7 @@ function Ausweis({ data, refrence }) {
                   <Text style={styles.textCAN}>{data.document.can}</Text>
                 </View>
               </View>
-              {data.document.name == "MUSTERMANN" ? (
+              {data.document.vorname == "ERIKA" ? (
                 <Image
                   source={require("../../assets/images/Erika_Mustermann.png")}
                   style={{
@@ -159,7 +162,65 @@ function Ausweis({ data, refrence }) {
                     marginLeft: -140,
                     marginTop: 35,
                     marginBottom: 20,
-                    borderRadius: 2,
+                    borderRadius: 10,
+                    right: 30,
+                  }}
+                  
+                />
+              ) : (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={100}
+                  style={{
+                    marginTop: 30,
+                    marginBottom: 70,
+                    color: colorEnum.primary,
+                    marginRight: 10,
+                    marginLeft: 30,
+                    right: 20,
+                  }}
+                />
+              )}
+               {data.document.vorname == "HANS-GÜNTHER" ? (
+                <Image
+                  source={require("../../assets/images/Drebenbusch-Dalgoßen.jpeg")}
+                  style={{
+                    height: 220,
+                    width: 160,
+                    margin: 0,
+                    marginLeft: -280,
+                    marginTop: 35,
+                    marginBottom: 20,
+                    borderRadius: 10,
+                    right: 30,
+                  }}
+                  
+                />
+              ) : (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={100}
+                  style={{
+                    marginTop: 30,
+                    marginBottom: 70,
+                    color: colorEnum.primary,
+                    marginRight: 10,
+                    marginLeft: 30,
+                    right: 20,
+                  }}
+                />
+              )}
+                 {data.document.vorname == "ANDRÉ" ? (
+                <Image
+                  source={require("../../assets/images/Missing-Person.png")}
+                  style={{
+                    height: 220,
+                    width: 160,
+                    margin: 0,
+                    marginLeft: -415,
+                    marginTop: 35,
+                    marginBottom: 20,
+                    borderRadius: 10,
                     right: 30,
                   }}
                   
@@ -227,6 +288,7 @@ function Ausweis({ data, refrence }) {
                         paddingRight: 28,
                         paddingTop: 0,
                         color: colorEnum.textcolor,
+                     //   backgroundColor: colorEnum.aufenthaltsTitelcolor2,
                         marginLeft:
                           fontSizeNachname < maxSize
                             ? fontSizeNachname * 1
@@ -257,7 +319,7 @@ const styles = StyleSheet.create({
     height: ImageHeight + 350,
     elevation: 16,
     borderRadius: 10,
-    backgroundColor: colorEnum.quartiary,
+    backgroundColor: colorEnum.aufenthaltsTitelcolor,
     opacity: 1,
     borderWidth: 1,
     borderColor: colorEnum.secondary,
@@ -284,6 +346,8 @@ const styles = StyleSheet.create({
   textContainerInitials: {
     paddingTop: 2,
     paddingLeft: 10,
+    //backgroundColor: colorEnum.aufenthaltsTitelcolor2,
+    //filter: 'blur(10px)',
   },
   heading: {
     fontSize: 12,
