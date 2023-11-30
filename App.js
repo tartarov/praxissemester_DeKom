@@ -4,6 +4,7 @@ import { AuthProvider} from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext";
 import { MainStackNavigator } from "./navigations/Stacknavigator";
 import { AntragProvider } from "./context/AntragContext";
+import { EnvProvider } from "./context/EnvContext";
 
 ///// <- ignores this Log because I dont have control over the deprecation of the removeListener. +++REMOVE IF DEPENDECY FIXED++++
 import { LogBox } from "react-native";
@@ -16,6 +17,7 @@ LogBox.ignoreLogs(['[Unhandled promise rejection: Error: Authentication is alrea
 
 const App = () => {
   return (
+    <EnvProvider>
     <AuthProvider>
       <DataProvider>
         <AntragProvider>
@@ -25,6 +27,7 @@ const App = () => {
         </AntragProvider>
       </DataProvider>
     </AuthProvider>
+    </EnvProvider>
   );
 };
 
