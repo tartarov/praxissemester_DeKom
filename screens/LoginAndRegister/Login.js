@@ -35,6 +35,7 @@ import BottomSheetPUK from "../../components/BottomSheetPUK.js";
 import BottomSheetCAN from "../../components/BottomSheetCAN.js";
 import colorEnum from "../../components/DeKomColors.js";
 import { Ionicons } from "@expo/vector-icons";
+import ProgressBar from "../../components/Progressbar.js";
 
 const LoginSchema = Yup.object().shape({
   id: Yup.string()
@@ -108,11 +109,8 @@ export default function Login({ navigation }) {
   const { Aa2_Connector } = NativeModules;
   const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
-  const runAuth = () =>{
-    startAuth();
-    }
-
   useEffect(() => {
+    startAuth();
     eventEmitter.addListener("pJson", (data) => {
       console.log("Received pJson: " + data);
       gotTheData(data);
@@ -125,17 +123,15 @@ export default function Login({ navigation }) {
   const gotTheData = async (data) => {
     let fromAa2 = JSON.parse(data);
     console.log("Got The Data! : " + fromAa2.msg);
-  
+
     setidCardData(fromAa2);
   };
   console.log("after Received JSON");
 
-  
   if (idCardData.hasOwnProperty("url")) {
-  console.log("Der Schlüssel 'url' ist vorhanden.");
-  var urlValue = idCardData.url;
-  login(urlValue)
- 
+    console.log("Der Schlüssel 'url' ist vorhanden.");
+    var urlValue = idCardData.url;
+    login(urlValue);
   }
 
   /*
@@ -147,10 +143,8 @@ export default function Login({ navigation }) {
 
   */
 
-  if(idCardData.msg === "ACCESS_RIGHTS"){
-    Aa2_Connector.sendCommand(
-  "{\"cmd\": \"ACCEPT\"}"
-    )
+  if (idCardData.msg === "ACCESS_RIGHTS") {
+    Aa2_Connector.sendCommand('{"cmd": "ACCEPT"}');
   }
 
   if (idCardData.msg === "ENTER_PIN") {
@@ -239,33 +233,22 @@ export default function Login({ navigation }) {
                 eine Aktion erscheint
               </CustomText>
             )}
-
-        <Button
-          title="Start Auth"
-          label="Start Auth"
-          onPress={() => {
-            runAuth()
-          }}
-        />
+             <View style={{
+              marginTop:20,
+             
+             // backgroundColor:"red",
+                }}>
+            <ProgressBar progress={idCardData.progress} /> 
+          </View>
             {(idCardData.msg === "INSERT_CARD" ||
-              idCardData.msg === undefined) && <Nfc_tutorial />}
-            {!(
-              idCardData.msg === "INSERT_CARD" ||
-              idCardData.msg === undefined ||
-              idCardData.msg === "ENTER_PIN" ||
-              idCardData.msg === "ENTER_PUK" ||
-              idCardData.msg === "ENTER_CAN" ||
-              idCardData.msg === "STATUS" ||
-              idCardData.msg === "AUTH"
-            ) && <Nfc_tutorial />}
+              idCardData.msg === undefined) && <Nfc_tutorial /> }
 
             {(idCardData.msg === "ENTER_PIN" ||
               idCardData.msg === "ENTER_PUK" ||
+              idCardData.msg === "STATUS" ||
               idCardData.msg === "ENTER_CAN") && <Processer />}
 
-            {idCardData.msg === "STATUS" && <Correct />}
-
-            {idCardData.msg === "AUTH" && <Correct />}
+            {idCardData.process === 100 && <Correct />}
           </View>
           <View
             style={{
