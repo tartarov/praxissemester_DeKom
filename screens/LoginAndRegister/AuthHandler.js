@@ -54,7 +54,7 @@ import EnvironmentOption from "../EnvironmentOption";
     }
 
     if (mock == true) {
-      return <Login />;
+      return <DrawerNavigator/>;
     }
 
     return <EnvironmentOption/>

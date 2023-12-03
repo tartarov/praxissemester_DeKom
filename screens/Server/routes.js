@@ -14,6 +14,8 @@ var http = require("http");
 const fs = require("fs");
 global.atob = require("atob");
 global.Blob = require("node-blob");
+const jwksClient = require('jwks-rsa');
+const {promisify} = require('node:util');
 
 const connectionTestdb = mysql.createPool({
   host: process.env.TEST_DB_HOST,
@@ -72,6 +74,37 @@ const getHash = async (userid) => {
   return hash;
 };
 
+const allowedIssuers = [
+`https://ref-ausweisident.eid-service.de`
+];
+
+const fetchJwksUri = async (issuer) => {
+  if (!allowedIssuers.includes(issuer)) {
+    throw new Error(`The issuer ${issuer} is not trusted here!`);
+  }
+  const response = await fetch(`${issuer}/.well-known/openid-configuration`);
+  const {jwks_uri} = await response.json();
+  return jwks_uri;
+};
+
+const getKey = (jwksUri) => (header, callback) => {
+  const client = jwksClient({jwksUri});
+  client.getSigningKey(header.kid, (err, key) => {
+    console.log("HEADER.KID: " + JSON.stringify(header))
+    if (err) {
+      console.log(err)
+      return callback(err);
+    }
+    callback(null, key.publicKey || key.rsaPublicKey);
+  });
+};
+
+const verify = async token => {
+  const {iss: issuer} = jwt.decode(token);
+  const jwksUri = await fetchJwksUri(issuer);
+  return promisify(jwt.verify)(token, getKey(jwksUri));
+};
+
 const getUserInfoToken = async (accessToken) => {
   console.log("in getUserInfoToken ist folgender AccesToken: " + accessToken);
 
@@ -89,7 +122,7 @@ const getUserInfoToken = async (accessToken) => {
       requestOptionsUserInfo
     );
     const userInfoJSON = await response2.text();
-    //  console.log("RESPONSE2: " + userInfoJSON)
+   //   console.log("SUCCSESSFUL: " + userInfoJSON)
     return userInfoJSON;
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
@@ -98,6 +131,7 @@ const getUserInfoToken = async (accessToken) => {
 };
 
 app.get("/auth", async (req, res) => {
+ // getJWKS_key()
   //https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
 
   console.log("requestquery: " + JSON.stringify(req.query.code));
@@ -134,7 +168,21 @@ app.get("/auth", async (req, res) => {
     responseJSON = await response.json();
     console.log(responseJSON);
     const accessToken = responseJSON.access_token;
+
+    const pubKey= "109720276927405124887672430833540525945"
+
+    const idToken = responseJSON.id_token;
+    console.log("ID-TOKEN : " + idToken)
+    const idTokenDecoded = jwt_decode(idToken)
+    idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) ? true : res.send(formattingResponse(null, { value: false }));
+     var jwksUri =  `https://ref-ausweisident.eid-service.de/jwks.json`
+     verify(idToken)
+  .then(() => console.log('Token verified successfully.'))
+  .catch(console.error);
+    //promisify(jwt.verify)(idToken, getKey(jwksUri));
+
     const userInfo = await getUserInfoToken(accessToken);
+   //  console.log(jwt.verify(idToken, pubKey))
     const decodedUserInfo = jwt_decode(userInfo);
     console.log("userInfo: " + JSON.stringify(decodedUserInfo));
     const dateOfExpiry =
