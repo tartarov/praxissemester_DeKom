@@ -67,6 +67,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+const nonce = "fb668ef8-925f-48ea-8850-39ff7efe17b4"
+
 const getHash = async (userid) => {
   const { createHmac } = await import("crypto");
   const secret = process.env.HASH_SECRET;
@@ -95,6 +97,7 @@ const getKey = (jwksUri) => (header, callback) => {
       console.log(err)
       return callback(err);
     }
+    console.log("key: " + JSON.stringify(key))
     callback(null, key.publicKey || key.rsaPublicKey);
   });
 };
@@ -130,8 +133,12 @@ const getUserInfoToken = async (accessToken) => {
   }
 };
 
+app.get("/getNonce", async (req, res) => {
+  res.send(formattingResponse(nonce, { value: true }))
+})
+
 app.get("/auth", async (req, res) => {
- // getJWKS_key()
+
   //https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
 
   console.log("requestquery: " + JSON.stringify(req.query.code));
@@ -169,20 +176,20 @@ app.get("/auth", async (req, res) => {
     console.log(responseJSON);
     const accessToken = responseJSON.access_token;
 
-    const pubKey= "109720276927405124887672430833540525945"
-
     const idToken = responseJSON.id_token;
     console.log("ID-TOKEN : " + idToken)
     const idTokenDecoded = jwt_decode(idToken)
-    idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) ? true : res.send(formattingResponse(null, { value: false }));
-     var jwksUri =  `https://ref-ausweisident.eid-service.de/jwks.json`
-     verify(idToken)
-  .then(() => console.log('Token verified successfully.'))
-  .catch(console.error);
-    //promisify(jwt.verify)(idToken, getKey(jwksUri));
+
+    //verfify ID Token
+    if( idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) &&  idTokenDecoded.nonce == nonce  ) {
+      verify(idToken)
+      .then(() => console.log('Token verified successfully.'))
+      .catch(console.error);
+    } else {
+      res.send(formattingResponse(null, { value: false }))
+    }
 
     const userInfo = await getUserInfoToken(accessToken);
-   //  console.log(jwt.verify(idToken, pubKey))
     const decodedUserInfo = jwt_decode(userInfo);
     console.log("userInfo: " + JSON.stringify(decodedUserInfo));
     const dateOfExpiry =

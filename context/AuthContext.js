@@ -37,11 +37,26 @@ export const AuthProvider = ({ children }) => {
   // 4222 für Laptop : 4097 für standPC
   const [idCardData, setidCardData] = useState("");
 
-  const startAuth = () => {
+  const getNonce = async () =>{
+    const response = await fetch(
+      `https://${ipAddress}:4222/getNonce`
+    );
+    const nonce = await response.json();
+
+    console.log(nonce.token)
+
+    if(nonce){
+      startAuth(nonce.token)
+    }
+
+  }
+
+  const startAuth = (nonce) => {
     Aa2_Connector.sendCommand(
-      '{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}' //scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality
+      `{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&nonce=${nonce}&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}` //scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality
     );
   };
+
 
   const login = async (url) => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -176,6 +191,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        getNonce,
         startAuth,
         login,
         logout,

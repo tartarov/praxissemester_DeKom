@@ -56,7 +56,7 @@ const DismissKeyboard = ({ children }) => (
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
-  const { startAuth } = useContext(AuthContext);
+  const { startAuth, getNonce } = useContext(AuthContext);
   const [idCardData, setidCardData] = useState("");
   const [showHelperText, setShowHelperText] = useState(false);
 
@@ -110,7 +110,8 @@ export default function Login({ navigation }) {
   const eventEmitter = new NativeEventEmitter(Aa2_Connector);
 
   useEffect(() => {
-    startAuth();
+    getNonce()
+   // startAuth();
     eventEmitter.addListener("pJson", (data) => {
       console.log("Received pJson: " + data);
       gotTheData(data);
