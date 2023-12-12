@@ -16,6 +16,7 @@ global.atob = require("atob");
 global.Blob = require("node-blob");
 const jwksClient = require('jwks-rsa');
 const {promisify} = require('node:util');
+const crypto = require('crypto');
 
 const connectionTestdb = mysql.createPool({
   host: process.env.TEST_DB_HOST,
@@ -67,7 +68,21 @@ app.use(function (req, res, next) {
   next();
 });
 
-const nonce = "fb668ef8-925f-48ea-8850-39ff7efe17b4"
+async function generateNonce() {
+  const nonceLength = 16; // Länge der Nonce-Zeichenfolge in Bytes
+
+  // Verwenden Sie die crypto.randomBytes-Methode, um zufällige Bytes zu generieren
+  const nonceBuffer = crypto.randomBytes(nonceLength);
+
+  // Konvertieren Sie die zufälligen Bytes in eine hexadezimale Zeichenfolge
+  const nonceValue = nonceBuffer.toString('hex');
+
+  console.log(nonceValue)
+  return nonceValue;
+}
+
+let nonce;
+//const nonce = "fb668ef8-925f-48ea-8850-39ff7efe17b4"
 
 const getHash = async (userid) => {
   const { createHmac } = await import("crypto");
@@ -134,6 +149,7 @@ const getUserInfoToken = async (accessToken) => {
 };
 
 app.get("/getNonce", async (req, res) => {
+  nonce = await generateNonce();
   res.send(formattingResponse(nonce, { value: true }))
 })
 
@@ -143,16 +159,16 @@ app.get("/auth", async (req, res) => {
 
   console.log("requestquery: " + JSON.stringify(req.query.code));
 
-  const uri_encoded_ClientId = encodeURIComponent("UF2RkWt7dI");
+  const uri_encoded_ClientId = encodeURIComponent("UF2RkWt7dI"); 
   console.log("URI encoded Client ID: " + uri_encoded_ClientId);
 
   const uri_encoded_Cs = encodeURIComponent(":B3?KZN1uN#rDn0sc?wxb");
   console.log("URI encoded secret: " + uri_encoded_Cs);
 
-  const authrozationHeader = uri_encoded_ClientId + ":" + uri_encoded_Cs;
-  console.log("raw authHeader: " + authrozationHeader);
+  const rawAuthorizationHeader = uri_encoded_ClientId + ":" + uri_encoded_Cs;
+  console.log("raw authHeader: " + rawAuthorizationHeader);
 
-  const authorizationHeader = new Buffer.from(authrozationHeader).toString(
+  const authorizationHeader = new Buffer.from(rawAuthorizationHeader).toString(
     "base64"
   );
   console.log("authorizationHeader: " + authorizationHeader);
@@ -181,6 +197,7 @@ app.get("/auth", async (req, res) => {
     const idTokenDecoded = jwt_decode(idToken)
 
     //verfify ID Token
+    console.log("zu verifizerter nonce: " + nonce)
     if( idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) &&  idTokenDecoded.nonce == nonce  ) {
       verify(idToken)
       .then(() => console.log('Token verified successfully.'))
