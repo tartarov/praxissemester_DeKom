@@ -415,10 +415,24 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
     await shareAsync(file.uri);
   };
 
+  const sendAntrag = async () =>{
+
+    const requestOptions = {
+      method: "POST"
+    };
+
+    const response = await fetch("https://dekom.ddns.net:4222/user/send/antrag", requestOptions)
+  
+    const antrag = await response.text();
+
+    console.log(antrag)
+  }
+
   return (
     <>
       <View style={styles.buttonContainer}>
         <Button label="Export PDF" onPress={generatePdf} />
+        <Button label="send Antrag" onPress={sendAntrag} />
         <View style={{ marginTop: 50 }}>
           <ButtonGhost
             title="Back"

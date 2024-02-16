@@ -69,14 +69,11 @@ app.use(function (req, res, next) {
 });
 
 async function generateNonce() {
-  const nonceLength = 16; // Länge der Nonce-Zeichenfolge in Bytes
-
-  // Verwenden Sie die crypto.randomBytes-Methode, um zufällige Bytes zu generieren
+  const nonceLength = 16; 
   const nonceBuffer = crypto.randomBytes(nonceLength);
-
-  // Konvertieren Sie die zufälligen Bytes in eine hexadezimale Zeichenfolge
   const nonceValue = nonceBuffer.toString('hex');
 
+  console.log(nonceBuffer)
   console.log(nonceValue)
   return nonceValue;
 }
@@ -113,7 +110,8 @@ const getKey = (jwksUri) => (header, callback) => {
       return callback(err);
     }
     console.log("key: " + JSON.stringify(key))
-    callback(null, key.publicKey || key.rsaPublicKey);
+    console.log("key: " + JSON.stringify(key.rsaPublicKey))
+    callback(null, key.rsaPublicKey);
   });
 };
 
@@ -197,7 +195,6 @@ app.get("/auth", async (req, res) => {
     const idTokenDecoded = jwt_decode(idToken)
 
     //verfify ID Token
-    console.log("zu verifizerter nonce: " + nonce)
     if( idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) &&  idTokenDecoded.nonce == nonce  ) {
       verify(idToken)
       .then(() => console.log('Token verified successfully.'))
@@ -259,7 +256,7 @@ app.get("/auth", async (req, res) => {
       nationality: nationality,
     };
     const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "15m",
     });
 
     res.cookie("token", token, { httpOnly: true });
@@ -294,9 +291,7 @@ app.get("/testdb.userdaten", async (req, res) => {
 
 app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
   const token = req.cookies.token; //so bekommen wir den Token
-  console.log("in server Token: " + token);
   const decoded = jwt_decode(token);
-  console.log("in server decoded Token: " + JSON.stringify(decoded));
   const userIdHash = await getHash(
     decoded.user.userid
   );
@@ -311,19 +306,10 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
       } else {
         if (results.serverStatus == 2 ) {
           console.log("User found successfully.");
-          /*
-          let buf = "";
-          if (results[0].SIGNATUR !== null) {
-            buf = new Buffer.from(results[0].SIGNATUR).toString("base64");
-          } else {
-            buf = "";
-          }
-          */
           res.send(
             formattingResponse(token, {
               value: true,
               result: results,
-           //   signature: buf,
             })
           );
         } else {
@@ -609,6 +595,20 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
     ourConnection.release();
   });
 });
+
+app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
+  try {
+    const response2 = await fetch(
+      `http://localhost:8080/submission?jsonData`);
+    const pendingAntrag = await response2.text();
+    console.log("pending Antrag is: " + pendingAntrag)
+    res.send(formattingResponse(pendingAntrag, { value: true }));
+  } catch (error) {
+    console.error(`Error during sending antrag: ${error.message}`);
+    throw error;
+  }
+})
+  
 
 const server = https.createServer(optionsNoIp, app);
 const serversimple = http.createServer(app);
