@@ -415,7 +415,9 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
     await shareAsync(file.uri);
   };
 
-  const sendAntrag = async () =>{
+  const sendAntrag = async (schema) =>{
+
+    console.log("fertiger Schema im Send Antrag: " + schema)
 
     const requestOptions = {
       method: "POST"
@@ -428,11 +430,77 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
     console.log(antrag)
   }
 
+  const fillAntrag = async () => {
+
+   const schema = await getSchemaURi();
+
+   const readySchema = await fillOutSchema(schema);
+
+   console.log("im FillAntrag ist das Schema: " + JSON.stringify(readySchema));
+
+   await sendAntrag(readySchema)
+
+  }
+
+  const getSchemaURi = async () =>{
+
+    const response = await fetch("https://dekom.ddns.net:4222/user/antrag/get/schemaUri")
+  
+    const schemaJson = await response.json();
+
+    console.log(schemaJson)
+
+    return schemaJson
+
+  }
+
+const fillOutSchema = async (schema) => {
+     //CHATGPT HELP TO FILL OUT SCHEMA-URI
+     async function fillTitle(schema, titleToFill, value) {
+      console.log("ich bin hier UNO")
+        // Überprüfe, ob das aktuelle Objekt ein Schema-Objekt ist
+        if (schema && typeof schema === 'object' ) {
+          console.log("ich bin hier DOS")
+            // Durchlaufe alle Schlüssel im aktuellen Objekt
+            for (let prop in schema) {
+              console.log("ich bin hier TRES")
+                // Wenn der aktuelle Schlüssel ein Objekt ist, durchsuche es rekursiv
+                if (typeof schema[prop] === 'object') {
+                  console.log("ich bin hier QUATRO")
+                    fillTitle(schema[prop], titleToFill, value);
+                }
+                // Wenn der Titel des aktuellen Schlüssels dem gesuchten Titel entspricht, befülle ihn mit dem Wert
+                if (schema[prop] && schema[prop]['title'] === titleToFill) {
+                  console.log("ich bin hier SINKO")
+                  console.log(schema[prop] && schema[prop]['title'])
+                  console.log(schema[prop])
+                    // Befülle den aktuellen Schlüssel mit dem Wert
+                    schema[prop] = value;
+  
+                    console.log("ich bin hier!!")
+                    return; // Beende die Funktion, nachdem der Schlüssel gefunden und befüllt wurde
+                }
+            }
+        }
+        return schema
+    }
+    
+    // Beispielaufruf der Funktion mit dem gegebenen Schema und Wert
+    let titleToFill = 'Familienname';
+    let valueToFill = 'Mustermann';
+    
+    const readyJson = await fillTitle(schema, titleToFill, valueToFill);
+
+    return readyJson;
+}
+
+
   return (
     <>
       <View style={styles.buttonContainer}>
         <Button label="Export PDF" onPress={generatePdf} />
         <Button label="send Antrag" onPress={sendAntrag} />
+        <Button label="fill Antrag" onPress={fillAntrag} />
         <View style={{ marginTop: 50 }}>
           <ButtonGhost
             title="Back"

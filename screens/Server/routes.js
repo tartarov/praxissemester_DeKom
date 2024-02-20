@@ -562,6 +562,7 @@ app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
+
 app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
@@ -603,6 +604,40 @@ app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
     const pendingAntrag = await response2.text();
     console.log("pending Antrag is: " + pendingAntrag)
     res.send(formattingResponse(pendingAntrag, { value: true }));
+  } catch (error) {
+    console.error(`Error during sending antrag: ${error.message}`);
+    throw error;
+  }
+})
+
+const getSchemaJson = async (schemaUri) => {
+  try {
+    const response2 = await fetch(
+      schemaUri);
+    const userInfoJSON = await response2.json();
+   //   console.log("SUCCSESSFUL: " + userInfoJSON)
+    return userInfoJSON;
+  } catch (error) {
+    console.error(`Error during authorization: ${error.message}`);
+    throw error;
+  }
+};
+
+
+app.get("/user/antrag/get/schemaUri", cookieJWTAuth, async(req,res)=>{
+  try {
+    const response = await fetch(
+      `http://localhost:8080/getSchemaUri`);
+    const schemaUri = await response.text();
+    console.log("pending Antrag is: " + schemaUri)
+    const schemaJson = await getSchemaJson(schemaUri)
+
+    console.log("SCHEMAJSON: " +  schemaJson );
+
+  console.log(schemaJson)
+
+  res.send(formattingResponse(schemaJson, { value: true }));
+
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);
     throw error;
