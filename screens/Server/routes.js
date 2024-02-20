@@ -599,8 +599,19 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
 
 app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
   try {
+    console.log("req.body: " + JSON.stringify(req.body))
+
+    const reqOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req.body),
+    };
+
     const response2 = await fetch(
-      `http://localhost:8080/submission?jsonData`);
+      `http://localhost:8080/submission`, reqOptions);
     const pendingAntrag = await response2.text();
     console.log("pending Antrag is: " + pendingAntrag)
     res.send(formattingResponse(pendingAntrag, { value: true }));

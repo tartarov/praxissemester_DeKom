@@ -417,11 +417,16 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
 
   const sendAntrag = async (schema) =>{
 
-    console.log("fertiger Schema im Send Antrag: " + schema)
-
     const requestOptions = {
-      method: "POST"
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(schema),
     };
+
+    console.log("BIST DU HIER?")
 
     const response = await fetch("https://dekom.ddns.net:4222/user/send/antrag", requestOptions)
   
@@ -448,13 +453,16 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
   
     const schemaJson = await response.json();
 
-    console.log(schemaJson)
-
     return schemaJson
 
   }
 
 const fillOutSchema = async (schema) => {
+
+  data = await getUserData();
+
+  console.log("DATA.NAME: " + data.name)
+
      //CHATGPT HELP TO FILL OUT SCHEMA-URI
      async function fillTitle(schema, titleToFill, value) {
       console.log("ich bin hier UNO")
@@ -470,24 +478,22 @@ const fillOutSchema = async (schema) => {
                     fillTitle(schema[prop], titleToFill, value);
                 }
                 // Wenn der Titel des aktuellen Schlüssels dem gesuchten Titel entspricht, befülle ihn mit dem Wert
-                if (schema[prop] && schema[prop]['title'] === titleToFill) {
+                if (schema[prop] && schema[prop]['title']) {
                   console.log("ich bin hier SINKO")
-                  console.log(schema[prop] && schema[prop]['title'])
-                  console.log(schema[prop])
-                    // Befülle den aktuellen Schlüssel mit dem Wert
-                    schema[prop] = value;
-  
-                    console.log("ich bin hier!!")
-                    return; // Beende die Funktion, nachdem der Schlüssel gefunden und befüllt wurde
-                }
+                  let titleIndex = titleToFill.indexOf(schema[prop]['title']);
+                  if (titleIndex !== -1 && titleIndex < value.length) {
+                    console.log("ich bin hier SEIS: " + titleIndex )
+                      schema[prop] = value[titleIndex];
+                  }
+              }
             }
         }
         return schema
     }
     
     // Beispielaufruf der Funktion mit dem gegebenen Schema und Wert
-    let titleToFill = 'Familienname';
-    let valueToFill = 'Mustermann';
+    let titleToFill = ['Familienname', 'Vornamen'];
+    let valueToFill = [data.name, data.vorname];
     
     const readyJson = await fillTitle(schema, titleToFill, valueToFill);
 
