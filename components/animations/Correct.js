@@ -5,13 +5,14 @@ import colorEnum from "../DeKomColors";
 
 function Correct() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colorEnum.primary }}>
+    <View style={{ flex: 1, alignItems: "center", backgroundColor: colorEnum.quartiary }}>
       <LottieView
-        autoPlay
+      autoPlay
         style={{
           width: 200,
-          height: 200,
-          backgroundColor: colorEnum.primary,
+          height: 230,
+          backgroundColor: colorEnum.quartiary,
+          borderRadius: 20
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
         source={require("../../assets/checkmark.json")}

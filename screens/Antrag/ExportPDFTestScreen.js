@@ -2,11 +2,12 @@ import Button from "../../components/Buttons/Button";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { DataContext } from "../../context/DataContext";
-import React, { useContext, useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import React, { useContext, useState, useRef, useCallback } from "react";
+import { StyleSheet, View, Image,   useWindowDimensions } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import AntragContext from "../../context/AntragContext";
 import colorEnum from "../../components/DeKomColors";
+import AntragReady from "../../components/AntragReady";
 
 
 let html;
@@ -15,8 +16,17 @@ let userData;
 export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params?.antragData || null;
   const {addToListe, getAntrag } = useContext(AntragContext)
+  const [antragSent, setAntragSent] = useState(false);
   const { getUserData } = useContext(DataContext);
+  const { height } = useWindowDimensions();
   //const [pdfUri, setPdfUri] = useState('');
+  const Antragdetail = useRef(null);
+
+
+  const openPinInput = useCallback(() => {
+    Antragdetail.current.expand();
+  }, []);
+
 
 console.log("antragData: " + JSON.stringify(antragData.signatur))
   function getCheckBoxValue(boolean) {
@@ -430,9 +440,16 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
 
     const response = await fetch("https://dekom.ddns.net:4222/user/send/antrag", requestOptions)
   
-    const antrag = await response.text();
+    const antrag = await response.json();
 
     console.log(antrag)
+    
+    console.log(typeof antrag.body.value)
+
+    if(antrag.body.value === true){
+      console.log("True ist eben true")
+       openPinInput()
+    }
   }
 
   const fillAntrag = async () => {
@@ -516,6 +533,8 @@ const fillOutSchema = async (schema) => {
             }}
           />
         </View>
+        <AntragReady
+        activeHeight={height * 0.6} ref={Antragdetail}/>
       </View>
     </>
   );
