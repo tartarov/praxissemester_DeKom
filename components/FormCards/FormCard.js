@@ -18,6 +18,7 @@ import CustomText from "../Font";
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AntragContext from "../../context/AntragContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -27,12 +28,31 @@ const ImageHeight = ImageWidth * 0.6;
 console.log("ENUMCOLOR: " + colorEnum.primary);
 
 function FormCard({ data, refrence }) {
+
+    const {extractFObjectsWithTitles} =
+    useContext(AntragContext);
+
+    let dataForFormObject;
+    let dataForFormObjectArray = [];
+
+    console.log("FormCard data: " + JSON.stringify(data))
+
+    useEffect(async () =>{
+        dataForFormObject = extractFObjectsWithTitles(data);
+        dataForFormObjectArray.push(dataForFormObject);
+        console.log(dataForFormObjectArray);
+    },[])
+
+if(dataForFormObjectArray){
+    console.log("dataForFormObject: " + JSON.stringify("Moin :-) : " + dataForFormObject))
     return (
       <>
         <View style={[styles.container,colorEnum.quartiary]}>
+            <Text>{JSON.stringify(data)}</Text>
         </View>
       </>
     );
+}
   }
 //}
 

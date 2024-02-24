@@ -44,15 +44,26 @@ function FormBlocks({navigation}) {
     useContext(AntragContext);
     const { data, getWalletData } = useContext(DataContext);
 
-    useEffect(()=>{
-        getContentFormBlock()
+    useEffect( ()=>{
+         getContentFormBlock()
+        if(contentInsideBlock){
+         console.log("contentInsideBlock in FORMBLOCK: " + JSON.stringify(contentInsideBlock))
+         const keys = Object.keys(contentInsideBlock);
+         console.log("keys[0]: " + keys[0])
+         const firstArrayKey = keys[0];
+         const firstArray = contentInsideBlock[firstArrayKey]
+         console.log("Das erste Array:", firstArray)
+        }
     },[])
 
 
        const formBlockArray = Array.from({ length: formBlock }, (_, index) => index + 1);
-       console.log("contentInsideBlock in FORMBLOCK: " + JSON.stringify(contentInsideBlock) )
 
-if(formBlock != 0){
+
+     
+
+if(formBlock != 0 && contentInsideBlock != null){
+    console.log("contentInsideBlock HIHIHAHA:  " + JSON.stringify(contentInsideBlock))
   return (
     <SafeAreaView>
                
@@ -82,7 +93,7 @@ if(formBlock != 0){
                   //  onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
                       console.log("pressed"),
-                        Vibration.vibrate(1000),
+                        Vibration.vibrate(100),
                         Alert.alert("Willst du diesen Daten bearbeiten?" + item);
                     }}
                   >
@@ -91,7 +102,7 @@ if(formBlock != 0){
                      {/*}   <Text style={styles.text}>{item.title}</Text> */}
                       </View>
                       <View style={styles.documentContainer}>
-                        <FormCard data={contentInsideBlock} scrollX = {scrollX} />
+                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} scrollX = {scrollX} />
                       </View>
                     </View>
                   </Pressable>

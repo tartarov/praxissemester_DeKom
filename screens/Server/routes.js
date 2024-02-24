@@ -634,6 +634,7 @@ const getSchemaJson = async (schemaUri) => {
   try {
     const response2 = await fetch(
       schemaUri);
+      console.log(response2)
     const userInfoJSON = await response2.json();
    //   console.log("SUCCSESSFUL: " + userInfoJSON)
     return userInfoJSON;

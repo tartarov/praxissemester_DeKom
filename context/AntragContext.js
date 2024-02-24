@@ -72,25 +72,31 @@ export function AntragProvider({ children }) {
   async function getContentFormBlock() {
     const schema = await getSchemaURi();
     const contentFormBlocks = {};
-  console.log("schema.token.$defs 22222: " + schema.token.$defs)
-  
     Object.keys(schema.token.$defs).forEach(gObjectName => {
       const gObject = schema.token.$defs[gObjectName];
-      const filteredKeys = [];
   
-      if (gObject && gObject.properties) {
-        Object.keys(gObject.properties).forEach(key => {
-          if (key.startsWith("F")) {
-            filteredKeys.push(key);
-          }
-        });
+      // Überprüfe, ob das aktuelle Objekt mit "G" beginnt
+      if (gObjectName.startsWith("G")) {
+        const filteredKeys = [];
+  
+        if (gObject && gObject.properties) {
+          Object.keys(gObject.properties).forEach(key => {
+            if (key.startsWith("F")) {
+              filteredKeys.push(key);
+            }
+          });
+        }
+  
+        // Füge das Objekt zu contentFormBlocks hinzu, nur wenn es F-Keys enthält
+        if (filteredKeys.length > 0) {
+          contentFormBlocks[gObjectName] = filteredKeys;
+        }
       }
-  
-      contentFormBlocks[gObjectName] = filteredKeys;
     });
   
-    console.log(contentFormBlocks)
-    getFormBlocksCount(contentFormBlocks)
+    console.log("Inhalt von contentFormBlocks: " + JSON.stringify(contentFormBlocks));
+    getFormBlocksCount(contentFormBlocks);
+    setContentInsideBlock(contentFormBlocks);
     return contentFormBlocks;
   }
 
@@ -108,11 +114,40 @@ export function AntragProvider({ children }) {
        countObjectsStartingWithG++;
     }
   });
- // console.log(filteredObjects)
-  console.log(countObjectsStartingWithG);
+
   setFormBlock(countObjectsStartingWithG)
-  setContentInsideBlock(contentFormBlocks)
   return filteredObjects;
+}
+
+async function extractFObjectsWithTitles(contentFormBlocks) {
+  console.log("HalliHallo hier ist euer MOSCHUSSS")
+
+  const schema = await getSchemaURi();
+
+  const fObjectsWithTitleAndType = {};
+  const fArrayWithTitleAndType = [];
+
+  console.log("contentFormBlocks in extractFObjectsWithTitles "+ contentFormBlocks)
+  // Iteriere über jedes G-Objekt im contentFormBlocks
+  Object.keys(contentFormBlocks).forEach(gObjectName => {
+
+    // Iteriere über jedes F-Objekt im aktuellen G-Objekt
+    contentFormBlocks.forEach(fKey => {
+      const fObject = schema.token.$defs[contentFormBlocks];
+
+      // Überprüfe, ob das F-Objekt die inneren Schlüssel "title" und "type" hat
+      if (fObject && fObject.title && fObject.type) {
+        // Lege das F-Objekt mit "title" und "type" in das neue Objekt
+        fObjectsWithTitleAndType[fKey] = {
+          title: fObject.title,
+          type: fObject.type
+        };
+      }
+    });
+  });
+
+  console.log("fObjectsWithTitleAndType: " + JSON.stringify(fObjectsWithTitleAndType))
+  return fObjectsWithTitleAndType;
 }
 
   const addToListe = async (file, signatur) => {
@@ -291,6 +326,7 @@ export function AntragProvider({ children }) {
         isLoading,
         formBlock,
         contentInsideBlock,
+        extractFObjectsWithTitles,
         getContentFormBlock,
         fillAntrag,
         getFormBlocksCount,
