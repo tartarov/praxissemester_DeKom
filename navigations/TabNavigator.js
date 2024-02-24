@@ -22,6 +22,7 @@ import Antragmenue from "../components/AntragListeDrawer";
 import ScanMe from "../screens/ScanMe";
 import AntragSignatureCaptures from "../screens/Antrag/AntragSignatureScreen";
 import colorEnum from "../components/DeKomColors";
+import FormBlocks from "../screens/Antrag/FormBlocks";
 
 
 const Tab = Platform.OS === 'ios' ? createMaterialTopTabNavigator() : createBottomTabNavigator();
@@ -205,8 +206,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="FragenScreen"
-        component={FragenScreen}
+        name="FormBlockScreen"
+        component={FormBlocks}
         options={{
           headerShown: false,
           tabBarButton: () => <View style={{ width: 0, height: 0 }}></View>,

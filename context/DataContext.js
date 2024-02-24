@@ -141,18 +141,22 @@ export const DataProvider = ({ children }) => {
     */
 
     const personalInfo = jwtDecode(thisUser);
-    //console.log("THIS USER IS: " + JSON.stringify(personalInfo));
+    console.log("personalInfo.user.birthdateSub: " + JSON.stringify(personalInfo.user.issuingState));
 
     let data = {
       name: personalInfo.user.nachname,
       vorname: personalInfo.user.vorname,
       geburtstag: personalInfo.user.birthdate,
+      geburtstagTag: personalInfo.user.birthdateSub.birthday,
+      geburtstagMonat: personalInfo.user.birthdateSub.birthmonth, 
+      geburtstagJahr: personalInfo.user.birthdateSub.birthyear, 
       geburtsort: personalInfo.user.placeOfBirth,
       staatsangehoerigkeit: personalInfo.user.nationality,
       strasse: personalInfo.user.streetAdress,
      // hausnummer: HAUSNUMMER,
       plz: personalInfo.user.postalCode,
       stadt: personalInfo.user.locality,
+      aussteller: personalInfo.user.issuingState,
     //  signatur: thisUser.body.signature,
     };
     return data;

@@ -3,32 +3,29 @@ import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { DataContext } from "../../context/DataContext";
 import React, { useContext, useState, useRef, useCallback } from "react";
-import { StyleSheet, View, Image,   useWindowDimensions } from "react-native";
+import { StyleSheet, View, Image, useWindowDimensions } from "react-native";
 import ButtonGhost from "../../components/Buttons/ButtonGhost";
 import AntragContext from "../../context/AntragContext";
 import colorEnum from "../../components/DeKomColors";
-import AntragReady from "../../components/AntragReady";
-
+import AntragReady from "../../components/AntragReadyBottomSheet";
 
 let html;
 let userData;
 
 export default function ExportPDFTestScreen({ route, navigation }) {
   const antragData = route.params?.antragData || null;
-  const {addToListe, getAntrag } = useContext(AntragContext)
+  const { addToListe, getAntrag } = useContext(AntragContext);
   const [antragSent, setAntragSent] = useState(false);
   const { getUserData } = useContext(DataContext);
   const { height } = useWindowDimensions();
   //const [pdfUri, setPdfUri] = useState('');
   const Antragdetail = useRef(null);
 
-
   const openPinInput = useCallback(() => {
     Antragdetail.current.expand();
   }, []);
 
-
-console.log("antragData: " + JSON.stringify(antragData.signatur))
+  console.log("antragData: " + JSON.stringify(antragData.signatur));
   function getCheckBoxValue(boolean) {
     if (boolean == true) {
       return "checked";
@@ -40,7 +37,7 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
   async function loadUserData() {
     data = await getUserData();
 
-     userData = {
+    userData = {
       vorname: data.vorname,
       name: data.name,
       geburtsname: data.name,
@@ -418,15 +415,14 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
         bottom: 50,
       },
     });
-    const uriFile = file.uri
-    addToListe(uriFile, userData.signatur)
-   // setPdfUri(uriFile); 
-   // getAntrag()
+    const uriFile = file.uri;
+    addToListe(uriFile, userData.signatur);
+    // setPdfUri(uriFile);
+    // getAntrag()
     await shareAsync(file.uri);
   };
 
-  const sendAntrag = async (schema) =>{
-
+  const sendAntrag = async (schema) => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -436,87 +432,158 @@ console.log("antragData: " + JSON.stringify(antragData.signatur))
       body: JSON.stringify(schema),
     };
 
-    console.log("BIST DU HIER?")
+    console.log("BIST DU HIER?");
 
-    const response = await fetch("https://dekom.ddns.net:4222/user/send/antrag", requestOptions)
-  
+    const response = await fetch(
+      "https://dekom.ddns.net:4222/user/send/antrag",
+      requestOptions
+    );
+
     const antrag = await response.json();
 
-    console.log(antrag)
-    
-    console.log(typeof antrag.body.value)
+    console.log(antrag);
 
-    if(antrag.body.value === true){
-      console.log("True ist eben true")
-       openPinInput()
+    console.log(typeof antrag.body.value);
+
+    if (antrag.body.value === true) {
+      console.log("True ist eben true");
+      openPinInput();
     }
-  }
+  };
 
   const fillAntrag = async () => {
+    const schema = await getSchemaURi();
 
-   const schema = await getSchemaURi();
+ //  const readySchema = await fillOutSchema(schema);
 
-   const readySchema = await fillOutSchema(schema);
+  const readySchema = getAllObjectsInSchema(schema);
 
-   console.log("im FillAntrag ist das Schema: " + JSON.stringify(readySchema));
+    console.log("im FillAntrag ist das Schema: " + JSON.stringify(readySchema));
 
-   await sendAntrag(readySchema)
+    await sendAntrag(readySchema);
+  };
 
-  }
+  const getSchemaURi = async () => {
+    const response = await fetch(
+      "https://dekom.ddns.net:4222/user/antrag/get/schemaUri"
+    );
 
-  const getSchemaURi = async () =>{
-
-    const response = await fetch("https://dekom.ddns.net:4222/user/antrag/get/schemaUri")
-  
     const schemaJson = await response.json();
 
-    return schemaJson
+    return schemaJson;
+  };
 
-  }
+  function getAllObjectsInSchema(schema) {
+  const filteredObjects = {};
+   let countObjectsStartingWithG = 0;
 
-const fillOutSchema = async (schema) => {
-
-  data = await getUserData();
-
-  console.log("DATA.NAME: " + data.name)
-
-     //CHATGPT HELP TO FILL OUT SCHEMA-URI
-     async function fillTitle(schema, titleToFill, value) {
-      console.log("ich bin hier UNO")
-        // Überprüfe, ob das aktuelle Objekt ein Schema-Objekt ist
-        if (schema && typeof schema === 'object' ) {
-          console.log("ich bin hier DOS")
-            // Durchlaufe alle Schlüssel im aktuellen Objekt
-            for (let prop in schema) {
-              console.log("ich bin hier TRES")
-                // Wenn der aktuelle Schlüssel ein Objekt ist, durchsuche es rekursiv
-                if (typeof schema[prop] === 'object') {
-                  console.log("ich bin hier QUATRO")
-                    fillTitle(schema[prop], titleToFill, value);
-                }
-                // Wenn der Titel des aktuellen Schlüssels dem gesuchten Titel entspricht, befülle ihn mit dem Wert
-                if (schema[prop] && schema[prop]['title']) {
-                  console.log("ich bin hier SINKO")
-                  let titleIndex = titleToFill.indexOf(schema[prop]['title']);
-                  if (titleIndex !== -1 && titleIndex < value.length) {
-                    console.log("ich bin hier SEIS: " + titleIndex )
-                      schema[prop] = value[titleIndex];
-                  }
-              }
-            }
-        }
-        return schema
+  Object.keys(schema.token.$defs).forEach(key => {
+    console.log("KEY: " + key.startsWith("G"))
+    if (key.startsWith("G")) {
+      filteredObjects[key] = schema.token.$defs[key];
+       countObjectsStartingWithG++;
     }
-    
+  });
+  console.log(filteredObjects)
+  console.log(countObjectsStartingWithG);
+  return filteredObjects;
+}
+
+  const fillOutSchema = async (schema) => {
+   const data = await getUserData();
+
+    console.log("DATA.NAME: " + data.name);
+
+    async function fillTitle(schema, titleToFill, value) {
+      if (schema && typeof schema === "object") {
+        for (let prop in schema) { 
+          if (typeof schema[prop] === "object") {   
+            fillTitle(schema[prop], titleToFill, value);
+          }
+        //  console.log(schema[prop].charAt(0));
+          if (schema[prop] && schema[prop]["title"]) {
+            let titleIndex = titleToFill.indexOf(schema[prop]["title"]);
+            if (titleIndex !== -1 && titleIndex < value.length) {
+              schema[prop] = value[titleIndex];
+            }
+          }
+        }
+      }
+      return schema;
+    }
+
     // Beispielaufruf der Funktion mit dem gegebenen Schema und Wert
-    let titleToFill = ['Familienname', 'Vornamen'];
-    let valueToFill = [data.name, data.vorname];
-    
+    let titleToFill = [
+      "Familienname",
+      "Vornamen",
+      "Geburtsdatum (teilbekannt)",
+      "Geburtsort",
+      "Staatsangehörigkeit",
+      "AusweisDokument (Fahrerlaubnis)",
+    //  "Anhang Ausweis",
+      "Lichtbild Person",
+      "Signatur (Unterschriftsbereich)",
+      "EU-Führerscheinnummer",
+      "Ausstellende Behörde Name",
+      "Ausstellungsdatum",
+      "FÜ - Datum der Fahrerlaubniserteilung",
+      "SC - FK_AM",
+      "SC - FK_A1",
+      "SC - FK_A2",
+      "SC - FK_A",
+      "SC - FK_B",
+      "SC - FK_BE",
+      "SC - FK_L",
+      "SC - FK_T",
+      "SC - FK_C1",
+      "SC - FK_C",
+      "SC - FK_C1E",
+      "SC - FK_CE",
+      "SC - FK_D1",
+      "SC - FK_D",
+      "SC - FK_D1E",
+      "SC - FK_DE",
+    ];
+    let valueToFill = [
+      data.name,
+      data.vorname,
+      {
+        Tag: data.geburtstagTag,
+        Monat: data.geburtstagMonat,
+        Jahr: data.geburtstagJahr,
+      },
+      data.geburtsort,
+      data.staatsangehoerigkeit === "D" ? "000" : "425",
+      "Führerschein?",
+   //   "Führerschein_UUID?",
+      "Lichtbild_UUID?",
+      "Signiert durch DeKom mithilfe von AusweisIDent",
+      "123456789?",
+      "Ausstellende_Behörde?",
+      "Austellungsdatum ?",
+      "DatumDerFaherlaubnismitteilung?",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+      "false",
+    ];
+
     const readyJson = await fillTitle(schema, titleToFill, valueToFill);
 
     return readyJson;
-}
-
+  };
 
   return (
     <>
@@ -533,8 +600,7 @@ const fillOutSchema = async (schema) => {
             }}
           />
         </View>
-        <AntragReady
-        activeHeight={height * 0.6} ref={Antragdetail}/>
+        <AntragReady activeHeight={height * 0.6} ref={Antragdetail} />
       </View>
     </>
   );
@@ -545,6 +611,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colorEnum.primary
+    backgroundColor: colorEnum.primary,
   },
 });

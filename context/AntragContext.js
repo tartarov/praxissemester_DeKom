@@ -12,41 +12,108 @@ export function AntragProvider({ children }) {
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
   const [ isLoading, setIsLoading ] = useState(false);
+  const [formBlock , setFormBlock] = useState(0);
+  const [contentInsideBlock, setContentInsideBlock] = useState(null)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
-
-  let initAntragAusstellerDaten = [
-    {
-      title: "Führungszeugnis",
-      document: {
-        ausstellDatum: "none",
-        ausstellerName: "Mustermann",
-        ausstellerVorname: "Max",
-        ausstellerNummer: "K4BN2912A",
-        einreichungsbehoerde: "keine Angabe",
-        bearbeiitungsStatus: "in Bearbeitung",
-        rueckverfolgungsnummer: "1357924680",
-        antragFileId: "123",
-      },
-    },
-    {
-      title: "ErwFuehrungszeugnis",
-      document: {
-        ausstellDatum: "none",
-        ausstellerName: "Mustermann",
-        ausstellerVorname: "Max",
-        ausstellerNummer: "K4BN2912A",
-        einreichungsbehoerde: "keine Angabe",
-        bearbeiitungsStatus: "keineAngabe",
-        rueckverfolgungsnummer: "1357924680",
-        antragFileId: "123",
-      },
-    },
-  ];
 
   useEffect(() => {
     setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
   }, []);
+
+  const sendAntrag = async (schema) => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(schema),
+    };
+
+    const response = await fetch(
+      "https://dekom.ddns.net:4222/user/send/antrag",
+      requestOptions
+    );
+
+    const antrag = await response.json();
+
+    console.log(antrag);
+
+    console.log(typeof antrag.body.value);
+
+    if (antrag.body.value === true) {
+      console.log("True ist eben true");
+      openPinInput();
+    }
+  };
+
+  const fillAntrag = async () => {
+    const schema = await getSchemaURi();
+
+ //  const readySchema = await fillOutSchema(schema);
+
+  const readySchema = getFormBlocksCount(schema);
+  console.log("im FillAntrag ist das Schema: " + JSON.stringify(readySchema));
+
+    await sendAntrag(readySchema);
+  };
+
+  const getSchemaURi = async () => {
+    const response = await fetch(
+      "https://dekom.ddns.net:4222/user/antrag/get/schemaUri"
+    );
+
+    const schemaJson = await response.json();
+
+    return schemaJson;
+  };
+
+  async function getContentFormBlock() {
+    const schema = await getSchemaURi();
+    const contentFormBlocks = {};
+  console.log("schema.token.$defs 22222: " + schema.token.$defs)
+  
+    Object.keys(schema.token.$defs).forEach(gObjectName => {
+      const gObject = schema.token.$defs[gObjectName];
+      const filteredKeys = [];
+  
+      if (gObject && gObject.properties) {
+        Object.keys(gObject.properties).forEach(key => {
+          if (key.startsWith("F")) {
+            filteredKeys.push(key);
+          }
+        });
+      }
+  
+      contentFormBlocks[gObjectName] = filteredKeys;
+    });
+  
+    console.log(contentFormBlocks)
+    getFormBlocksCount(contentFormBlocks)
+    return contentFormBlocks;
+  }
+
+
+ async function getFormBlocksCount(contentFormBlocks) {
+    
+    console.log("contentFormBlocks: " + contentFormBlocks)
+  const filteredObjects = {};
+   let countObjectsStartingWithG = 0;
+
+  Object.keys(contentFormBlocks).forEach(key => {
+    console.log("KEY: " + key.startsWith("G"))
+    if (key.startsWith("G")) {
+      filteredObjects[key] = contentFormBlocks[key];
+       countObjectsStartingWithG++;
+    }
+  });
+ // console.log(filteredObjects)
+  console.log(countObjectsStartingWithG);
+  setFormBlock(countObjectsStartingWithG)
+  setContentInsideBlock(contentFormBlocks)
+  return filteredObjects;
+}
 
   const addToListe = async (file, signatur) => {
     isVarifiedVar = isVerified;
@@ -222,6 +289,11 @@ export function AntragProvider({ children }) {
         antragAusstellerDaten,
         desiredAntrag,
         isLoading,
+        formBlock,
+        contentInsideBlock,
+        getContentFormBlock,
+        fillAntrag,
+        getFormBlocksCount,
         addToListe,
         getAntrag,
         removeAntrag: removeAntragById,

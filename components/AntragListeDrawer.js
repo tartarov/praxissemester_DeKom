@@ -35,7 +35,7 @@ const DATA = [
   {
     id: "1",
     title: "Führungszeugnis",
-    navigator: "FragenScreen",
+    navigator: "FormBlockScreen",
   },
   {
     id: "2",

@@ -230,6 +230,10 @@ app.get("/auth", async (req, res) => {
       "." +
       birthdayDate.getFullYear();
 
+    var bdDay = birthdayDate.getDate();
+    var bdMonth = birthdayDate.getMonth();
+    var bdYear = birthdayDate.getFullYear();
+
     var expiryDate = new Date(dateOfExpiry);
     var exdFormatted =
       expiryDate.getDate() +
@@ -249,6 +253,11 @@ app.get("/auth", async (req, res) => {
       postalCode: decodedUserInfo.address.postalCode,
       country: decodedUserInfo.address.country,
       birthdate: bdFormatted,
+      birthdateSub: {
+        birthday: bdDay,
+        birthmonth: bdMonth,
+        birthyear: bdYear,
+      },
       dateOfExpiry: exdFormatted,
       placeOfBirth: pobFormatted,
       issuingState: issuingState,

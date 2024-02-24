@@ -6,7 +6,7 @@ import colorEnum from "../DeKomColors";
 function Correct() {
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: colorEnum.quartiary }}>
-      <LottieView
+     <LottieView
       autoPlay
         style={{
           width: 200,
