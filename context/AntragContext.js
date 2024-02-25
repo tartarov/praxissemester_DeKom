@@ -74,7 +74,6 @@ export function AntragProvider({ children }) {
     const schema = await getSchemaURi();
     const contentFormBlocks = [];
     let countObjectsStartingWithG = 0;
-
     
     Object.keys(schema.token.$defs).forEach(gObjectName => {
         const gObject = schema.token.$defs[gObjectName];
@@ -100,20 +99,18 @@ export function AntragProvider({ children }) {
                             type: fObjectInSchema ? fObjectInSchema.type : null,
                             title: fObjectInSchema ? fObjectInSchema.title : null
                         };
-                       
-                        console.log("countObjectsStartingWithF: " + countObjectsStartingWithF)
                         gObjectData.properties.push(fObjectData);
                     }
                 });
             }
 
             contentFormBlocks.push(gObjectData);
+            setFormBlockAttributes(countObjectsStartingWithF)
         }
     });
 
     console.log("Inhalt von contentFormBlocks: " + JSON.stringify(contentFormBlocks));
     setFormBlock(countObjectsStartingWithG);
-    setFormBlockAttributes(countObjectsStartingWithF)
     setContentInsideBlock(contentFormBlocks);
     return contentFormBlocks;
   }

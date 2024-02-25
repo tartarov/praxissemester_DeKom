@@ -20,6 +20,8 @@ import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntragContext from "../../context/AntragContext";
+import TextInput from "../TextInput";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const { width } = Dimensions.get("screen");
 
@@ -41,21 +43,57 @@ function FormCard({ data, attributes }) {
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
     <Text style={[styles.title, textColor]}>{item.title}</Text>
+    {item.type === "string" && (
+      <TextInput
+        placeholder={item.title}
+        autoCompleteType="text"
+        keyboardType="default"
+        autoCapitalize="none"
+        keyboardAppearance="dark"
+        returnKeyType="go"
+        returnKeyLabel="go"
+        // onChangeText={handleChange("verwendungszweck")}
+        // onBlur={handleBlur("verwendungszweck")}
+        // error={errors.verwendungszweck}
+        // touched={touched.verwendungszweck}
+        // onSubmitEditing={() => behörde.current?.focus()}
+      />
+    )}
+    {item.type === "boolean" && (
+      <BouncyCheckbox
+        // Implementiere CheckBox entsprechend deiner Anforderungen
+      />
+    )}
+    {(item.type === "integer" || item.type === "number") && (
+      <TextInput
+        // Implementiere NumericInput entsprechend deiner Anforderungen
+      />
+    )}
   </TouchableOpacity>
 );
 
+if (data.properties.length > 0) {
+  const titleOfFirstProperty = data.properties[0].title;
+  console.log("Title des ersten Elements: ", titleOfFirstProperty);
+} else {
+  console.log("properties-Array ist leer.");
+}
+
     const attributesForBlock = () =>{
-      console.log("attributes: " + attributes)
-      for(let i=0; i < attributes; i++){
+      console.log("attributes: " + 10)
+      for(let i=0; i <= 10; i++){
+        console.log("I: " + i)
+        if (data.properties[i]) {
         const valueAttributes = {
           id: i,
-          title: JSON.stringify(data.properties[i]),
-          //type: fObjectInSchema ? fObjectInSchema.type : null,
+          title: data.properties[i].title ? data.properties[i].title : null,
+          type: data.properties[i].type ? data.properties[i].type : null,
       };
-     
+    
       blockAttributes.properties.push(valueAttributes);
     }
-    console.log("blockAttributes: " + JSON.stringify(blockAttributes))
+    }
+    console.log("blockAttributes: " + JSON.stringify(blockAttributes.properties))
     return blockAttributes.properties
     }
 
@@ -76,7 +114,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
     return (
       <>
         <View style={[styles.container,colorEnum.quartiary]}>
-            <Text>{JSON.stringify(data.title)}</Text>
+            <Text style={[styles.titleHead]} >{data.title}</Text>
             <FlatList style={styles.flatlist}
             data={attributesForBlock()}
             renderItem={renderItem}
@@ -101,63 +139,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colorEnum.secondary,
   },
-  image: {
-    flex: 1,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colorEnum.secondary,
-    overflow: "hidden",
-    backgroundColor: colorEnum.tertiary,
-    marginBottom: 20,
+  item: {
+    padding: 5,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 5,
   },
-  dataContainer: {
-    paddingTop: 30,
-  },
-  group: {
-    flexDirection: "row",
-  },
-  textContainer: {
-    paddingTop: 15,
-    paddingLeft: 10,
-  },
-  textContainerInitials: {
-    paddingTop: 2,
-    paddingLeft: 10,
-    //backgroundColor: colorEnum.aufenthaltsTitelcolor2,
-    //filter: 'blur(10px)',
-  },
-  heading: {
-    fontSize: 12,
-    fontStyle: "italic",
-    fontFamily: "Nexa-ExtraLight",
-    color: colorEnum.textcolor,
-    paddingHorizontal: 10,
-  },
-  headingInitials: {
-    //fontSize: 34,
-    fontFamily: "Nexa-ExtraLight",
-    color: colorEnum.textcolor,
-    justifyContent: "center",
-  },
-  text: {
-    color: colorEnum.textcolor,
+  title: {
     fontSize: 16,
-    fontFamily: "Nexa-ExtraLight",
-    paddingHorizontal: 10,
+    fontWeight: "bold",
   },
-  textCAN: {
-    color: colorEnum.textcolor,
-    fontSize: 16,
-    fontFamily: "Nexa-ExtraLight",
-    right: 15,
-  },
-  textNummer: {
-    color: colorEnum.textcolor,
+  titleHead: {
     fontSize: 18,
-    fontFamily: "Nexa-ExtraLight",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    marginLeft: 0,
-    marginTop: 0,
+    fontWeight: "bold",
+    paddingBottom:10,
   },
 });

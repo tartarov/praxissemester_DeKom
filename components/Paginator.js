@@ -3,8 +3,6 @@ import { View, StyleSheet, Animated, useWindowDimensions } from "react-native";
 import colorEnum from "./DeKomColors";
 
 function Paginator({ data, scrollX }) {
-  console.log("data current State:" + data);
-  console.log("data current scrollx:" + scrollX);
   const { width } = useWindowDimensions();
   console.log("data in dem paginator: " + JSON.stringify(data))
 
