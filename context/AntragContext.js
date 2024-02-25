@@ -71,6 +71,7 @@ export function AntragProvider({ children }) {
   };
 
   async function getContentFormBlock() {
+    setIsLoading(true)
     const schema = await getSchemaURi();
     const contentFormBlocks = [];
     let countObjectsStartingWithG = 0;
@@ -112,6 +113,7 @@ export function AntragProvider({ children }) {
     console.log("Inhalt von contentFormBlocks: " + JSON.stringify(contentFormBlocks));
     setFormBlock(countObjectsStartingWithG);
     setContentInsideBlock(contentFormBlocks);
+    setIsLoading(false)
     return contentFormBlocks;
   }
 

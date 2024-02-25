@@ -19,23 +19,23 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
     buttonOuterContainer: {
-        borderRadius: 14,
-        margin: 9,
+        borderRadius:7,
+        margin: 10,
         overflow: 'hidden',
         //width: width * 0.5,
         elevation: 5,
     },
     buttonInnerContainer:{
         backgroundColor: colorEnum.tertiary,
-        paddingHorizontal: 32,
-        paddingTop:18,
-        paddingBottom:18
+        paddingHorizontal: 0,
+        paddingTop:0,
+        paddingBottom:0
     },
     buttonText: {
-        color: colorEnum.quartiary,
+        color: colorEnum.primary,
         textAlign: 'center',
         padding: 10,
-        fontSize: 12,
+        fontSize: 20,
         fontFamily: 'Nexa-ExtraLight',
     },
     pressed: {

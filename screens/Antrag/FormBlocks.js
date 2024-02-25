@@ -28,6 +28,7 @@ import AntragHandler from "../../components/Antraghandler.js";
 import PaginatorDark from "../../components/PaginatorDark.js";
 import colorEnum from "../../components/DeKomColors.js";
 import FormCard from "../../components/FormCards/FormCard.js";
+import PrimaryButton from "../../components/Buttons/PrimaryButton.js";
 
 const { width } = Dimensions.get("screen");
 
@@ -56,17 +57,13 @@ function FormBlocks({navigation}) {
         }
     },[])
 
-
        const formBlockArray = Array.from({ length: formBlock }, (_, index) => index + 1);
-
-
-     
+       console.log(" formBlockArray: "+ formBlockArray[0])
 
 if(formBlock != 0 && contentInsideBlock != null){
-    console.log("contentInsideBlock HIHIHAHA:  " + JSON.stringify(contentInsideBlock))
   return (
-    <SafeAreaView>
-               
+    <SafeAreaView style={styles.container}>
+             <PrimaryButton>Absenden</PrimaryButton>
                <ScrollView
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -79,6 +76,9 @@ if(formBlock != 0 && contentInsideBlock != null){
           )}
         >
             <View style={styles.flatListContainer}>
+            {isLoading ? (
+          <Loader />
+        ): 
               <FlatList
                 horizontal
                 pagingEnabled
@@ -102,7 +102,7 @@ if(formBlock != 0 && contentInsideBlock != null){
                      {/*}   <Text style={styles.text}>{item.title}</Text> */}
                       </View>
                       <View style={styles.documentContainer}>
-                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} attributes = {formBlockAttributes} />
+                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} attributes = {formBlockAttributes} />              
                       </View>
                     </View>
                   </Pressable>
@@ -113,6 +113,7 @@ if(formBlock != 0 && contentInsideBlock != null){
                   { useNativeDriver: false }
                 )}
               />
+              }
             </View>
         <Paginator data={formBlock} scrollX={scrollX} /> 
         </ScrollView>
@@ -136,10 +137,11 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row"
   },
   flatListContainer: {
-    height: ITEM_WIDTH * 1.8,
-    marginTop: ITEM_HEIGHT * 0.05,
+    height: ITEM_WIDTH * 1.7,
+    marginTop: ITEM_HEIGHT * 0.08,
   },
   flatListContainer2: {
     height: ITEM_WIDTH * 1.6,

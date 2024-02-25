@@ -8,7 +8,10 @@ import {
   Image,
   Pressable,
   useWindowDimensions,
-  FlatList
+  FlatList,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -44,6 +47,9 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
     <Text style={[styles.title, textColor]}>{item.title}</Text>
     {item.type === "string" && (
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <TextInput
         placeholder={item.title}
         autoCompleteType="text"
@@ -58,6 +64,8 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         // touched={touched.verwendungszweck}
         // onSubmitEditing={() => behörde.current?.focus()}
       />
+          </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
     )}
     {item.type === "boolean" && (
       <BouncyCheckbox
@@ -131,7 +139,7 @@ export default FormCard;
 const styles = StyleSheet.create({
   container: {
     width: ImageWidth,
-    height: ImageHeight + 450,
+    height: ImageHeight + 400,
     elevation: 16,
     borderRadius: 10,
     backgroundColor: colorEnum.aufenthaltsTitelcolor,
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   titleHead: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
     paddingBottom:10,
   },
