@@ -15,6 +15,7 @@ export function AntragProvider({ children }) {
   const [formBlock , setFormBlock] = useState(0);
   const [formBlockAttributes, setFormBlockAttributes] = useState(0)
   const [contentInsideBlock, setContentInsideBlock] = useState(null)
+  const [formData, setFormData] = useState({});
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -49,15 +50,15 @@ export function AntragProvider({ children }) {
     }
   };
 
-  const fillAntrag = async () => {
-    const schema = await getSchemaURi();
+  const fillAntrag = async (antragPiece) => {
 
- //  const readySchema = await fillOutSchema(schema);
-
-  const readySchema = getFormBlocksCount(schema);
-  console.log("im FillAntrag ist das Schema: " + JSON.stringify(readySchema));
-
-    await sendAntrag(readySchema);
+  
+     setFormData((prevData) => ({
+      ...prevData,
+      antragPiece
+  }))
+  console.log(formData)
+    //await sendAntrag(readySchema);
   };
 
   const getSchemaURi = async () => {

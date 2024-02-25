@@ -119,7 +119,12 @@ const Antragmenue = forwardRef(
     const DataReal = [
       {
         id: "1",
-        title: contentInsideBlock[0].title,
+        title: "Fischereigesetz",
+        navigator: "FormBlockScreen",
+      },
+      {
+        id: "2",
+        title: "Antrag neuer Führerschein",
         navigator: "FormBlockScreen",
       },
     ];
@@ -232,8 +237,6 @@ const Antragmenue = forwardRef(
       );
     };
 
-    if(contentInsideBlock){
-      console.log("AAAAAAAAAAAAA: " + JSON.stringify(contentInsideBlock[0].title))
     return (
       <>
         <TouchableWithoutFeedback
@@ -264,7 +267,6 @@ const Antragmenue = forwardRef(
         </PanGestureHandler>
       </>
     );
-        }
   }
 );
 

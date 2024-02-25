@@ -25,24 +25,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntragContext from "../../context/AntragContext";
 import TextInput from "../TextInput";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Button from "../Buttons/Button";
 
 const { width } = Dimensions.get("screen");
 
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
 
-console.log("ENUMCOLOR: " + colorEnum.primary);
-
 function FormCard({ data, attributes }) {
 
-    const {extractFObjectsWithTitles} =
+    const {fillAntrag} =
     useContext(AntragContext);
 
     const blockAttributes = {
       properties: []
   };
 
-  
+  const filloutForm = []
+
+const formDataRef = useRef({});
+
+const handleInputChange = useCallback((id, value) => {
+    formDataRef.current[id] = value; // Wert im Ref aktualisieren
+}, []);
+
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
     <Text style={[styles.title, textColor]}>{item.title}</Text>
@@ -58,7 +64,11 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         keyboardAppearance="dark"
         returnKeyType="go"
         returnKeyLabel="go"
-        // onChangeText={handleChange("verwendungszweck")}
+       // ref={land}
+        onChangeText={(text) => handleInputChange(item.fObject,text)}
+      //  onSubmitEditing={() => filloutForm.push(land.current.value)}
+       // onChangeText={(text) => setFormData(item.fObject, text)}
+        //value={}  
         // onBlur={handleBlur("verwendungszweck")}
         // error={errors.verwendungszweck}
         // touched={touched.verwendungszweck}
@@ -69,12 +79,14 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
     )}
     {item.type === "boolean" && (
       <BouncyCheckbox
-        // Implementiere CheckBox entsprechend deiner Anforderungen
+      onPress={(isChecked) => handleCheckboxChange(item.fObject, isChecked)}
       />
     )}
     {(item.type === "integer" || item.type === "number") && (
       <TextInput
-        // Implementiere NumericInput entsprechend deiner Anforderungen
+      placeholder={item.title}
+      keyboardType="numeric"
+      onChangeText={(text) => handleInputChange(item.fObject,text)}
       />
     )}
   </TouchableOpacity>
@@ -89,11 +101,12 @@ if (data.properties.length > 0) {
 
     const attributesForBlock = () =>{
       console.log("attributes: " + 10)
-      for(let i=0; i <= 10; i++){
+      for(let i=0; i <= data.properties.length; i++){
         console.log("I: " + i)
         if (data.properties[i]) {
         const valueAttributes = {
           id: i,
+          fObject: data.properties[i].name ? data.properties[i].name : null, 
           title: data.properties[i].title ? data.properties[i].title : null,
           type: data.properties[i].type ? data.properties[i].type : null,
       };
@@ -118,6 +131,11 @@ if (data.properties.length > 0) {
       );
     };
 
+    const collectData = () => {
+      fillAntrag(formDataRef.current)
+      console.log("Gesammelte Daten:", formDataRef.current);
+      // Hier kannst du weitere Aktionen ausführen, z.B. Daten speichern, usw.
+    };
 
     return (
       <>
@@ -128,13 +146,14 @@ if (data.properties.length > 0) {
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
       />
+       <Button title="Daten sammeln" onPress={collectData} />
         </View>
       </>
     );
   }
 //}
 
-export default FormCard;
+export default React.memo(FormCard);
 
 const styles = StyleSheet.create({
   container: {
