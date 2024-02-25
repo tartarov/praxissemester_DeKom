@@ -3,6 +3,8 @@ import React, {
   useCallback,
   useImperativeHandle,
   forwardRef,
+  useContext,
+  useEffect,
 } from "react";
 import {
   FlatList,
@@ -28,6 +30,8 @@ import Animated, {
 import { HeaderBottomdrawer } from "./HeaderBottomDrawer";
 import { PanGestureHandler, ScrollView } from "react-native-gesture-handler";
 import colorEnum from "./DeKomColors";
+import AntragContext from "../context/AntragContext";
+import { DataContext } from "../context/DataContext";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -95,6 +99,30 @@ const Antragmenue = forwardRef(
     const newActiveHeight = height - activeHeight;
     const topAnimation = useSharedValue(height);
     const [selectedId, setSelectedId] = useState(null);
+
+    const {isLoading, formBlock, getFormBlocksCount, getContentFormBlock, contentInsideBlock, formBlockAttributes } =
+    useContext(AntragContext);
+    const { data, getWalletData } = useContext(DataContext);
+
+    useEffect( ()=>{
+         getContentFormBlock()
+        if(contentInsideBlock){
+         console.log("contentInsideBlock in FORMBLOCK: " + JSON.stringify(contentInsideBlock))
+         const keys = Object.keys(contentInsideBlock);
+         console.log("keys[0]: " + keys[0])
+         const firstArrayKey = keys[0];
+         const firstArray = contentInsideBlock[firstArrayKey]
+         console.log("Das erste Array:", firstArray)
+        }
+    },[])
+
+    const DataReal = [
+      {
+        id: "1",
+        title: contentInsideBlock[0].title,
+        navigator: "FormBlockScreen",
+      },
+    ];
 
     const animationStyle = useAnimatedStyle(() => {
       const top = topAnimation.value;
@@ -204,6 +232,8 @@ const Antragmenue = forwardRef(
       );
     };
 
+    if(contentInsideBlock){
+      console.log("AAAAAAAAAAAAA: " + JSON.stringify(contentInsideBlock[0].title))
     return (
       <>
         <TouchableWithoutFeedback
@@ -225,7 +255,7 @@ const Antragmenue = forwardRef(
             />
             <FlatList
               style={styles.flatlist}
-              data={DATA}
+              data={DataReal}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
               extraData={selectedId}
@@ -234,6 +264,7 @@ const Antragmenue = forwardRef(
         </PanGestureHandler>
       </>
     );
+        }
   }
 );
 
