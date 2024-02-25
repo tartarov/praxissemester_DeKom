@@ -8,6 +8,7 @@ import {
   Image,
   Pressable,
   useWindowDimensions,
+  FlatList
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -27,32 +28,63 @@ const ImageHeight = ImageWidth * 0.6;
 
 console.log("ENUMCOLOR: " + colorEnum.primary);
 
-function FormCard({ data, refrence }) {
+function FormCard({ data, attributes }) {
 
     const {extractFObjectsWithTitles} =
     useContext(AntragContext);
 
-    let dataForFormObject;
-    let dataForFormObjectArray = [];
+    const blockAttributes = {
+      properties: []
+  };
 
-    console.log("FormCard data: " + JSON.stringify(data))
+  
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+    <Text style={[styles.title, textColor]}>{item.title}</Text>
+  </TouchableOpacity>
+);
 
-    useEffect(async () =>{
-        dataForFormObject = extractFObjectsWithTitles(data);
-        dataForFormObjectArray.push(dataForFormObject);
-        console.log(dataForFormObjectArray);
-    },[])
+    const attributesForBlock = () =>{
+      console.log("attributes: " + attributes)
+      for(let i=0; i < attributes; i++){
+        const valueAttributes = {
+          id: i,
+          title: JSON.stringify(data.properties[i]),
+          //type: fObjectInSchema ? fObjectInSchema.type : null,
+      };
+     
+      blockAttributes.properties.push(valueAttributes);
+    }
+    console.log("blockAttributes: " + JSON.stringify(blockAttributes))
+    return blockAttributes.properties
+    }
 
-if(dataForFormObjectArray){
-    console.log("dataForFormObject: " + JSON.stringify("Moin :-) : " + dataForFormObject))
+    const renderItem = ({ item }) => {
+      const backgroundColor = colorEnum.aufenthaltsTitelcolor;
+      const color = item.id === "#DCD7C9";
+  
+      return (
+        <Item
+          item={item}
+          backgroundColor={{ backgroundColor }}
+          textColor={{ color }}
+        />
+      );
+    };
+
+
     return (
       <>
         <View style={[styles.container,colorEnum.quartiary]}>
-            <Text>{JSON.stringify(data)}</Text>
+            <Text>{JSON.stringify(data.title)}</Text>
+            <FlatList style={styles.flatlist}
+            data={attributesForBlock()}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+      />
         </View>
       </>
     );
-}
   }
 //}
 

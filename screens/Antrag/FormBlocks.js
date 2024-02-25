@@ -40,7 +40,7 @@ const VISIBLE_ITEMS = 3;
 
 function FormBlocks({navigation}) {
     const scrollX = useRef(new Animated.Value(0)).current;
-    const {isLoading, formBlock, getFormBlocksCount, getContentFormBlock, contentInsideBlock } =
+    const {isLoading, formBlock, getFormBlocksCount, getContentFormBlock, contentInsideBlock, formBlockAttributes } =
     useContext(AntragContext);
     const { data, getWalletData } = useContext(DataContext);
 
@@ -102,7 +102,7 @@ if(formBlock != 0 && contentInsideBlock != null){
                      {/*}   <Text style={styles.text}>{item.title}</Text> */}
                       </View>
                       <View style={styles.documentContainer}>
-                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} scrollX = {scrollX} />
+                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} attributes = {formBlockAttributes} />
                       </View>
                     </View>
                   </Pressable>

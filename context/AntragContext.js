@@ -13,6 +13,7 @@ export function AntragProvider({ children }) {
   const { isVerified } = useContext(AuthContext);
   const [ isLoading, setIsLoading ] = useState(false);
   const [formBlock , setFormBlock] = useState(0);
+  const [formBlockAttributes, setFormBlockAttributes] = useState(0)
   const [contentInsideBlock, setContentInsideBlock] = useState(null)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
@@ -71,36 +72,53 @@ export function AntragProvider({ children }) {
 
   async function getContentFormBlock() {
     const schema = await getSchemaURi();
-    const contentFormBlocks = {};
+    const contentFormBlocks = [];
+    let countObjectsStartingWithG = 0;
+
+    
     Object.keys(schema.token.$defs).forEach(gObjectName => {
-      const gObject = schema.token.$defs[gObjectName];
-  
-      // Überprüfe, ob das aktuelle Objekt mit "G" beginnt
-      if (gObjectName.startsWith("G")) {
-        const filteredKeys = [];
-  
-        if (gObject && gObject.properties) {
-          Object.keys(gObject.properties).forEach(key => {
-            if (key.startsWith("F")) {
-              filteredKeys.push(key);
+        const gObject = schema.token.$defs[gObjectName];
+        const gObjectData = {
+            name: gObjectName,
+            type: gObject.type,
+            title: gObject.title,
+            properties: []
+        };
+
+        if (gObjectName.startsWith("G")) {
+            countObjectsStartingWithG++;
+            let countObjectsStartingWithF = 0;
+            
+            if (gObject && gObject.properties) {
+                Object.keys(gObject.properties).forEach(key => {
+                    if (key.startsWith("F")) {
+                      countObjectsStartingWithF++
+                        const fObjectName = key;
+                        const fObjectInSchema = schema.token.$defs[fObjectName];
+                        const fObjectData = {
+                            name: fObjectName,
+                            type: fObjectInSchema ? fObjectInSchema.type : null,
+                            title: fObjectInSchema ? fObjectInSchema.title : null
+                        };
+                       
+                        console.log("countObjectsStartingWithF: " + countObjectsStartingWithF)
+                        gObjectData.properties.push(fObjectData);
+                    }
+                });
             }
-          });
+
+            contentFormBlocks.push(gObjectData);
         }
-  
-        // Füge das Objekt zu contentFormBlocks hinzu, nur wenn es F-Keys enthält
-        if (filteredKeys.length > 0) {
-          contentFormBlocks[gObjectName] = filteredKeys;
-        }
-      }
     });
-  
+
     console.log("Inhalt von contentFormBlocks: " + JSON.stringify(contentFormBlocks));
-    getFormBlocksCount(contentFormBlocks);
+    setFormBlock(countObjectsStartingWithG);
+    setFormBlockAttributes(countObjectsStartingWithF)
     setContentInsideBlock(contentFormBlocks);
     return contentFormBlocks;
   }
 
-
+/*
  async function getFormBlocksCount(contentFormBlocks) {
     
     console.log("contentFormBlocks: " + contentFormBlocks)
@@ -114,10 +132,12 @@ export function AntragProvider({ children }) {
        countObjectsStartingWithG++;
     }
   });
+  
 
   setFormBlock(countObjectsStartingWithG)
   return filteredObjects;
 }
+*/
 
 async function extractFObjectsWithTitles(contentFormBlocks) {
   console.log("HalliHallo hier ist euer MOSCHUSSS")
@@ -326,10 +346,11 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
         isLoading,
         formBlock,
         contentInsideBlock,
+        formBlockAttributes,
         extractFObjectsWithTitles,
         getContentFormBlock,
         fillAntrag,
-        getFormBlocksCount,
+     //   getFormBlocksCount,
         addToListe,
         getAntrag,
         removeAntrag: removeAntragById,
