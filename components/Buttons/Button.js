@@ -11,14 +11,14 @@ export default function Button({ label, onPress }) {
         width: 245,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colorEnum.accent, 
+        backgroundColor: colorEnum.primary, 
        // elevation: 2
       }}
       activeOpacity={0.7}
       onPress={onPress}
     >
       <Text
-        style={{ fontSize: 18, color: colorEnum.primary, textTransform: 'uppercase', fontFamily: "Nexa-Heavy" }}
+        style={{ fontSize: 18, color: colorEnum.accent, textTransform: 'uppercase', fontFamily: "Nexa-Heavy" }}
       >
         {label}
       </Text>

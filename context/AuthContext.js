@@ -1,8 +1,9 @@
-import React, { createContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useEffect, useReducer, useState, useContext } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeEventEmitter, NativeModules } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { EnvContext } from "./EnvContext";
 
 export const AuthContext = createContext();
 
@@ -36,8 +37,11 @@ export const AuthProvider = ({ children }) => {
   const ipAddress = "dekom.ddns.net";
   // 4222 für Laptop : 4097 für standPC
   const [idCardData, setidCardData] = useState("");
+  const { mock } = useContext(EnvContext);
 
   const getNonce = async () =>{
+    if(!mock){
+      console.log("WAAAAAAAAAAAAAAAAAAAAAAAS222")
     const response = await fetch(
       `https://${ipAddress}:4222/getNonce`
     );
@@ -48,13 +52,25 @@ export const AuthProvider = ({ children }) => {
     if(nonce){
       startAuth(nonce.token)
     }
+  }else{
+    const url = "https://dekom.ddns.net:4222/mock/auth"
+    
+    login(url)
+  }
 
   }
 
   const startAuth = (nonce) => {
+    if(!mock){
+      console.log("WAAAAAAAAAAAAAAAAAAAAAAAS")
     Aa2_Connector.sendCommand(
       `{"cmd": "RUN_AUTH", "tcTokenURL": "https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&nonce=${nonce}&client_id=UF2RkWt7dI&acr_values=integrated", "developerMode": "false", "handleInterrupt": "false", "status": "true"}` //scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence+DateOfExpiry+IssuingState+RestrictedID+PlaceOfBirth+Nationality
     );
+    } else{
+      const url = "https://dekom.ddns.net:4222/mock/auth"
+      
+      login(url)
+    }
   };
 
 
@@ -126,7 +142,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        `https://${ipAddress}:4222/dekomdb.dekom_user/identify?token=${userToken}`
+        `https://${ipAddress}:4222/dekomdb.dekom_user/identify?token=${userToken}?mock=${mock}`
       );
       const confirmedUser = await response.json();
 

@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -44,15 +45,19 @@ function FormCard({ data, attributes }) {
   const filloutForm = []
 
 const formDataRef = useRef({});
+const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
 
-const handleInputChange = useCallback((id, value) => {
-    formDataRef.current[id] = value; // Wert im Ref aktualisieren
+console.log("DATA: " + Object.keys(data))
+
+const handleInputChange = useCallback((gObject, id, value) => {
+    formDataRef.current[[gObject,id]] = value; // Wert im Ref aktualisieren
 }, []);
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item.title}</Text>
-    {item.type === "string" && (
+    <Text style={[styles.title, textColor]}>{item}</Text>
+    {console.log("item: " +  item)}
+    {item === "string" && (
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -65,7 +70,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         returnKeyType="go"
         returnKeyLabel="go"
        // ref={land}
-        onChangeText={(text) => handleInputChange(item.fObject,text)}
+        onChangeText={(text) => handleInputChange(item.gObject, item.fObject,text)}
       //  onSubmitEditing={() => filloutForm.push(land.current.value)}
        // onChangeText={(text) => setFormData(item.fObject, text)}
         //value={}  
@@ -79,74 +84,91 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
     )}
     {item.type === "boolean" && (
       <BouncyCheckbox
-      onPress={(isChecked) => handleCheckboxChange(item.fObject, isChecked)}
+      onPress={(isChecked) => handleInputChange(item.gObject, item.fObject, isChecked)}
       />
     )}
     {(item.type === "integer" || item.type === "number") && (
       <TextInput
       placeholder={item.title}
       keyboardType="numeric"
-      onChangeText={(text) => handleInputChange(item.fObject,text)}
+      onChangeText={(text) => handleInputChange(item.gObject, item.fObject, text)}
       />
     )}
   </TouchableOpacity>
 );
 
-if (data.properties.length > 0) {
-  const titleOfFirstProperty = data.properties[0].title;
+if (data.length > 0) {
+  const titleOfFirstProperty = data[0].title;
   console.log("Title des ersten Elements: ", titleOfFirstProperty);
 } else {
   console.log("properties-Array ist leer.");
 }
 
-    const attributesForBlock = () =>{
-      console.log("attributes: " + 10)
-      for(let i=0; i <= data.properties.length; i++){
-        console.log("I: " + i)
-        if (data.properties[i]) {
+ //   const attributesForBlock = () =>{
+  //    for(let i=0; i <= data.length; i++){
+  //      if (data[i]) {
         const valueAttributes = {
-          id: i,
-          fObject: data.properties[i].name ? data.properties[i].name : null, 
-          title: data.properties[i].title ? data.properties[i].title : null,
-          type: data.properties[i].type ? data.properties[i].type : null,
+         // id: i,
+          gObject: data.name ? data.name : null, 
+          fObject: data.name ? data.name : null, 
+          title: data.title ? data.title : null,
+          type: data.type ? data.type : null,
       };
+
+      console.log(valueAttributes)
     
-      blockAttributes.properties.push(valueAttributes);
-    }
-    }
-    console.log("blockAttributes: " + JSON.stringify(blockAttributes.properties))
-    return blockAttributes.properties
-    }
+ //     blockAttributes.properties.push(valueAttributes);
+ //   }
+ //   }
+  //  console.log("blockAttributes: " + JSON.stringify(blockAttributes.properties))
+  //  return blockAttributes.properties
+  //  }
+
+  console.log(Object.keys(data))
 
     const renderItem = ({ item }) => {
       const backgroundColor = colorEnum.aufenthaltsTitelcolor;
       const color = item.id === "#DCD7C9";
   
+      console.log(data[item])
       return (
         <Item
-          item={item}
-          backgroundColor={{ backgroundColor }}
-          textColor={{ color }}
-        />
+        item={data[item]}
+        backgroundColor={{ backgroundColor }}
+        textColor={{ color }}
+      />
       );
     };
 
     const collectData = () => {
-      fillAntrag(formDataRef.current)
+
+      if(Object.keys(formDataRef.current).length == data.properties.length){
+        setBackground("lightgreen" );
+         fillAntrag(formDataRef.current)
+      } else {
+        setBackground("lightcoral" );
+        Alert.alert("Fehler", "Bitte füllen Sie alle Felder aus.");
+      }
+
+      console.log("DATA INSIDE FORMCARD: " + JSON.stringify(data))
       console.log("Gesammelte Daten:", formDataRef.current);
       // Hier kannst du weitere Aktionen ausführen, z.B. Daten speichern, usw.
     };
 
     return (
       <>
-        <View style={[styles.container,colorEnum.quartiary]}>
+        <View style={[styles.container,{ backgroundColor: background }]}>
+            <View style = {{alignItems: "center", padding: 15}}>
             <Text style={[styles.titleHead]} >{data.title}</Text>
+            </View>
             <FlatList style={styles.flatlist}
-            data={attributesForBlock()}
+            data={Object.keys(data)}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
       />
-       <Button title="Daten sammeln" onPress={collectData} />
+      <View style = {{alignItems: "center", padding: 30}}>
+       <Button label="speichern" onPress={collectData} />
+       </View>
         </View>
       </>
     );

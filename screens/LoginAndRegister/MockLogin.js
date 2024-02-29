@@ -54,7 +54,7 @@ import React, {
     </TouchableWithoutFeedback>
   );
   
-  export default function Login({ navigation }) {
+  export default function MockLogin({ navigation }) {
     const { login } = useContext(AuthContext);
     const { startAuth } = useContext(AuthContext);
     const [idCardData, setidCardData] = useState("");

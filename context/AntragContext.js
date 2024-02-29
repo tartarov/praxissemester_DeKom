@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useRef, useEffect } from "react";
 import { Alert, useWindowDimensions } from "react-native";
+import { object } from "yup";
 import { AuthContext } from "./AuthContext";
 
 const AntragContext = createContext();
@@ -16,21 +17,28 @@ export function AntragProvider({ children }) {
   const [formBlockAttributes, setFormBlockAttributes] = useState(0)
   const [contentInsideBlock, setContentInsideBlock] = useState(null)
   const [formData, setFormData] = useState({});
+  const [totalCount, setTotalCount] = useState(0)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
   useEffect(() => {
     setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
+    
   }, []);
+  
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
-  const sendAntrag = async (schema) => {
+  const sendAntrag = async (filledAntrag) => {
+    console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag))
     const requestOptions = {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(schema),
+      body: JSON.stringify(filledAntrag),
     };
 
     const response = await fetch(
@@ -40,10 +48,6 @@ export function AntragProvider({ children }) {
 
     const antrag = await response.json();
 
-    console.log(antrag);
-
-    console.log(typeof antrag.body.value);
-
     if (antrag.body.value === true) {
       console.log("True ist eben true");
       openPinInput();
@@ -52,13 +56,10 @@ export function AntragProvider({ children }) {
 
   const fillAntrag = async (antragPiece) => {
 
-  
      setFormData((prevData) => ({
       ...prevData,
-      antragPiece
+      ...antragPiece
   }))
-  console.log(formData)
-    //await sendAntrag(readySchema);
   };
 
   const getSchemaURi = async () => {
@@ -72,92 +73,103 @@ export function AntragProvider({ children }) {
   };
 
   async function getContentFormBlock() {
-    setIsLoading(true)
+    setIsLoading(true);
     const schema = await getSchemaURi();
     const contentFormBlocks = [];
+    let blockArray= [];
     let countObjectsStartingWithG = 0;
     
+    const processObject = (gObject, currentPath = []) => {
+        if (gObject && gObject.properties) {
+            Object.keys(gObject.properties).forEach(key => {
+                const nextGObject = schema.token.$defs[key];          
+                const newPath = [...currentPath, key];
+                
+                if (key.startsWith("G")) {
+                    processObject(nextGObject, newPath); 
+                } else if (key.startsWith("F")) {
+                    const fObjectName = key;
+                    const fObjectInSchema = schema.token.$defs[fObjectName];
+                    const fObjectData = {
+                        name: fObjectName,
+                        type: fObjectInSchema ? fObjectInSchema.type : null,
+                        title: fObjectInSchema ? fObjectInSchema.title : null,
+                        path: newPath.join('.') 
+                    };
+                    contentFormBlocks.push(fObjectData);
+                }
+            });
+        }
+    };
+
     Object.keys(schema.token.$defs).forEach(gObjectName => {
         const gObject = schema.token.$defs[gObjectName];
-        const gObjectData = {
-            name: gObjectName,
-            type: gObject.type,
-            title: gObject.title,
-            properties: []
-        };
-
+       
         if (gObjectName.startsWith("G")) {
+          const gObjectDataPrime = {
+              name: gObjectName,
+              type: gObject.type,
+              title: gObject.title
+          }
+            blockArray.push(gObjectDataPrime)
             countObjectsStartingWithG++;
-            let countObjectsStartingWithF = 0;
-            
-            if (gObject && gObject.properties) {
-                Object.keys(gObject.properties).forEach(key => {
-                    if (key.startsWith("F")) {
-                      countObjectsStartingWithF++
-                        const fObjectName = key;
-                        const fObjectInSchema = schema.token.$defs[fObjectName];
-                        const fObjectData = {
-                            name: fObjectName,
-                            type: fObjectInSchema ? fObjectInSchema.type : null,
-                            title: fObjectInSchema ? fObjectInSchema.title : null
-                        };
-                        gObjectData.properties.push(fObjectData);
-                    }
-                });
-            }
-
-            contentFormBlocks.push(gObjectData);
-            setFormBlockAttributes(countObjectsStartingWithF)
+            processObject(gObject, [gObjectName]);
         }
     });
 
-    console.log("Inhalt von contentFormBlocks: " + JSON.stringify(contentFormBlocks));
     setFormBlock(countObjectsStartingWithG);
     setContentInsideBlock(contentFormBlocks);
-    setIsLoading(false)
+    countProperties(contentFormBlocks);
+    setIsLoading(false);
     return contentFormBlocks;
+}
+
+  const countProperties = (contentInsideBlock) => {
+    let totalCount = 0;
+    contentInsideBlock.forEach((obj) => {
+        totalCount += obj.length;
+    });
+    console.log("totalCount: " + totalCount)
+    setTotalCount(totalCount)
+    return totalCount;
+};
+
+function createNestedObject(formData) {
+  const nestedObject = {}; // Das äußere Objekt
+
+  // Iteriere über die Schlüssel im FormData-Objekt
+  for (const key in formData) {
+      if (formData.hasOwnProperty(key)) {
+          const [gNumber, fNumber] = key.split(","); // Trenne den Schlüssel in G- und F-Nummerierungen
+
+          // Wenn die G-Nummerierung bereits im nestedObject existiert, füge die F-Nummerierung mit Wert hinzu
+          if (nestedObject.hasOwnProperty(gNumber)) {
+              nestedObject[gNumber][fNumber] = formData[key];
+          } else {
+              // Wenn die G-Nummerierung nicht im nestedObject existiert, erstelle sie und füge die F-Nummerierung mit Wert hinzu
+              nestedObject[gNumber] = { [fNumber]: formData[key] };
+          }
+      }
   }
 
-/*
- async function getFormBlocksCount(contentFormBlocks) {
-    
-    console.log("contentFormBlocks: " + contentFormBlocks)
-  const filteredObjects = {};
-   let countObjectsStartingWithG = 0;
-
-  Object.keys(contentFormBlocks).forEach(key => {
-    console.log("KEY: " + key.startsWith("G"))
-    if (key.startsWith("G")) {
-      filteredObjects[key] = contentFormBlocks[key];
-       countObjectsStartingWithG++;
-    }
-  });
-  
-
-  setFormBlock(countObjectsStartingWithG)
-  return filteredObjects;
+  console.log("NESTEDOBJECT ISSSSS:" + JSON.stringify(nestedObject))
+  return nestedObject;
 }
-*/
 
 async function extractFObjectsWithTitles(contentFormBlocks) {
-  console.log("HalliHallo hier ist euer MOSCHUSSS")
 
   const schema = await getSchemaURi();
 
   const fObjectsWithTitleAndType = {};
   const fArrayWithTitleAndType = [];
 
-  console.log("contentFormBlocks in extractFObjectsWithTitles "+ contentFormBlocks)
-  // Iteriere über jedes G-Objekt im contentFormBlocks
   Object.keys(contentFormBlocks).forEach(gObjectName => {
 
-    // Iteriere über jedes F-Objekt im aktuellen G-Objekt
     contentFormBlocks.forEach(fKey => {
       const fObject = schema.token.$defs[contentFormBlocks];
 
-      // Überprüfe, ob das F-Objekt die inneren Schlüssel "title" und "type" hat
       if (fObject && fObject.title && fObject.type) {
-        // Lege das F-Objekt mit "title" und "type" in das neue Objekt
+
         fObjectsWithTitleAndType[fKey] = {
           title: fObject.title,
           type: fObject.type
@@ -166,7 +178,6 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
     });
   });
 
-  console.log("fObjectsWithTitleAndType: " + JSON.stringify(fObjectsWithTitleAndType))
   return fObjectsWithTitleAndType;
 }
 
@@ -194,7 +205,7 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
       
       console.log("respond contains true => success... YUHU");
     }
-    console.log("addToListeTriggered");
+
     getAntrag();
   };
 
@@ -347,6 +358,10 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
         formBlock,
         contentInsideBlock,
         formBlockAttributes,
+        formData,
+        totalCount,
+        sendAntrag,
+        createNestedObject,
         extractFObjectsWithTitles,
         getContentFormBlock,
         fillAntrag,

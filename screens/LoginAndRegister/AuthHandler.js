@@ -6,6 +6,7 @@ import { EnvContext } from "../../context/EnvContext";
 import Loader from "../../components/animations/Loader";
 import DrawerNavigator from "../../navigations/DrawerNavigator";
 import EnvironmentOption from "../EnvironmentOption";
+import MockLogin from "./MockLogin";
 
  function AuthHandler () {
 
@@ -54,7 +55,7 @@ import EnvironmentOption from "../EnvironmentOption";
     }
 
     if (mock == true) {
-      return <DrawerNavigator/>;
+      return <MockLogin/>;
     }
 
     return <EnvironmentOption/>

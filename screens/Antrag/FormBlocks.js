@@ -38,47 +38,129 @@ const SPACING = 10;
 const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
+let filledAntrag;
 
-function FormBlocks({navigation}) {
-    const scrollX = useRef(new Animated.Value(0)).current;
-    const {isLoading, formBlock, getFormBlocksCount, getContentFormBlock, contentInsideBlock, formBlockAttributes } =
-    useContext(AntragContext);
-    const { data, getWalletData } = useContext(DataContext);
+function FormBlocks({ navigation }) {
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const {
+    isLoading,
+    formBlock,
+    formData,
+    getContentFormBlock,
+    createNestedObject,
+    sendAntrag,
+    contentInsideBlock,
+    formBlockAttributes,
+    totalCount,
+  } = useContext(AntragContext);
+  const { data, getWalletData } = useContext(DataContext);
 
-    useEffect( ()=>{
-         getContentFormBlock()
-        if(contentInsideBlock){
-         console.log("contentInsideBlock in FORMBLOCK: " + JSON.stringify(contentInsideBlock))
-         const keys = Object.keys(contentInsideBlock);
-         console.log("keys[0]: " + keys[0])
-         const firstArrayKey = keys[0];
-         const firstArray = contentInsideBlock[firstArrayKey]
-         console.log("Das erste Array:", firstArray)
+  useEffect(() => {
+    getContentFormBlock();
+  }, []);
+
+  useEffect(() => {
+    console.log("TOTALCOUNTTTTT: " + totalCount);
+    filledAntrag = createNestedObject(formData);
+  }, [formData]);
+
+  const formBlockArray = Array.from(
+    { length: formBlock },
+    (_, index) => index + 1
+  );
+  console.log(" formBlockArray: " + formBlockArray.length);
+  console.log("CONTENT INSIDE BLOCK:" + JSON.stringify(contentInsideBlock));
+
+  const convertArrayToObject = (contentInsideBlock) => {
+    const resultObject = {};
+
+    contentInsideBlock.forEach((item) => {
+      const pathArray = item.path.split(".");
+      let currentObject = resultObject;
+
+      pathArray.forEach((key, index) => {
+        if (!currentObject[key]) {
+          currentObject[key] = {};
         }
-    },[])
 
-       const formBlockArray = Array.from({ length: formBlock }, (_, index) => index + 1);
-       console.log(" formBlockArray: "+ formBlockArray[0])
+        if (index === pathArray.length - 1) {
+          if (key.startsWith("G")) {
+            currentObject[key] = {
+              properties: [
+                {
+                  name: item.name,
+                  type: item.type,
+                  title: item.title,
+                },
+              ],
+            };
+          } else if (key.startsWith("F")) {
+            if (!currentObject.properties) {
+              currentObject.properties = [];
+            }
+            currentObject.properties.push({
+              name: item.name,
+              type: item.type,
+              title: item.title,
+            });
+          }
+        } else {
+          currentObject = currentObject[key];
+        }
+      });
+    });
 
-if(formBlock != 0 && contentInsideBlock != null){
-  return (
-    <SafeAreaView style={styles.container}>
-             <PrimaryButton>Absenden</PrimaryButton>
-               <ScrollView
+    return resultObject;
+  };
+
+  const result = convertArrayToObject(contentInsideBlock);
+  const firstKey = Object.keys(result)[0];
+  const firstObject = result[firstKey];
+  console.log("Erstes Objekt: ", firstObject);
+
+  // Auf die properties des ersten Objekts zugreifen
+  if (firstObject && firstObject.properties) {
+    console.log("Properties des ersten Objekts: ", firstObject.properties);
+  }
+
+  // Auf ein verschachteltes G-Objekt zugreifen
+  const nestedGObject =
+    firstObject && firstObject.properties && firstObject.properties[0];
+  if (nestedGObject && nestedGObject.properties) {
+    console.log(
+      "Properties des verschachtelten G-Objekts: ",
+      nestedGObject.properties
+    );
+  }
+
+  if (formBlock != 0 && contentInsideBlock != null) {
+    return (
+      <SafeAreaView style={styles.container}>
+        {Object.keys(formData).length >= totalCount ? (
+          <PrimaryButton
+            onPress={() => {
+              sendAntrag(filledAntrag);
+            }}
+          >
+            Absenden
+          </PrimaryButton>
+        ) : null}
+
+        <ScrollView
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           scrollEnabled={true}
           bounces={true}
           decelerationRate={"fast"}
           onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX} } }],
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
             { useNativeDriver: false }
           )}
         >
-            <View style={styles.flatListContainer}>
+          <View style={styles.flatListContainer}>
             {isLoading ? (
-          <Loader />
-        ): 
+              <Loader />
+            ) : (
               <FlatList
                 horizontal
                 pagingEnabled
@@ -88,21 +170,25 @@ if(formBlock != 0 && contentInsideBlock != null){
                 decelerationRate={"fast"}
                 data={formBlockArray}
                 renderItem={({ item, index }) => (
-
                   <Pressable
-                  //  onPress={() => handleItemPress({ item })}
+                    //  onPress={() => handleItemPress({ item })}
                     onLongPress={() => {
                       console.log("pressed"),
                         Vibration.vibrate(100),
-                        Alert.alert("Willst du diesen Daten bearbeiten?" + item);
+                        Alert.alert(
+                          "Willst du diesen Daten bearbeiten?" + item
+                        );
                     }}
                   >
                     <View>
                       <View style={styles.textContainer}>
-                     {/*}   <Text style={styles.text}>{item.title}</Text> */}
+                        {/*}   <Text style={styles.text}>{item.title}</Text> */}
                       </View>
                       <View style={styles.documentContainer}>
-                        <FormCard data={contentInsideBlock[Object.keys(contentInsideBlock)[index]]} attributes = {formBlockAttributes} />              
+                        <FormCard
+                          data={Object.keys(result)[index]}
+                          attributes={formBlockAttributes}
+                        />
                       </View>
                     </View>
                   </Pressable>
@@ -113,13 +199,13 @@ if(formBlock != 0 && contentInsideBlock != null){
                   { useNativeDriver: false }
                 )}
               />
-              }
-            </View>
-        <Paginator data={formBlock} scrollX={scrollX} /> 
+            )}
+          </View>
+          <Paginator data={formBlock} scrollX={scrollX} />
         </ScrollView>
-    </SafeAreaView>
-  );
-                }
+      </SafeAreaView>
+    );
+  }
 }
 
 export default FormBlocks;
@@ -137,7 +223,7 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   flatListContainer: {
     height: ITEM_WIDTH * 1.7,

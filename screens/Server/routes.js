@@ -151,6 +151,38 @@ app.get("/getNonce", async (req, res) => {
   res.send(formattingResponse(nonce, { value: true }))
 })
 
+app.get("/mock/auth", async (req,res)=>{
+
+  let user = {
+    userid: "123456789",
+    vorname: "Max",
+    nachname: "Mustermann",
+    streetAdress: "Schildergasse",
+    locality: "Köln",
+    postalCode: "50733",
+    country: "Deutschland",
+    birthdate: "02.03.2005",
+    birthdateSub: {
+      birthday: "02",
+      birthmonth: "03",
+      birthyear: "2005",
+    },
+    dateOfExpiry: "05.12.2030",
+    placeOfBirth: "Ukraine",
+    issuingState: "D",
+    documentType: "ID",
+    nationality: "deutsch",
+  };
+  const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
+
+  res.cookie("token", token, { httpOnly: true });
+  res.send(formattingResponse(token, { value: true }));
+})
+
+
+
 app.get("/auth", async (req, res) => {
 
   //https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
@@ -322,6 +354,9 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
             })
           );
         } else {
+          if(req.mock){
+
+          }
           console.log("results: " + (JSON.stringify(results)))
           console.log("User-------- not found.");
           res.send(formattingResponse(token, { value: false }));
@@ -645,7 +680,7 @@ const getSchemaJson = async (schemaUri) => {
 };
 
 
-app.get("/user/antrag/get/schemaUri", cookieJWTAuth, async(req,res)=>{
+app.get("/user/antrag/get/schemaUri",cookieJWTAuth, async(req,res)=>{
   try {
     const response = await fetch(
       `http://localhost:8080/getSchemaUri`);
@@ -670,7 +705,72 @@ const server = https.createServer(optionsNoIp, app);
 const serversimple = http.createServer(app);
 
 // Starting our server.
-server.listen(process.env.PORT, process.env.IP, () => {
+server.listen(process.env.PORT, process.env.IP2, () => {
+
+  getContentFormBlock()
+  async function getContentFormBlock() {
+
+    const response = await fetch(
+      `http://localhost:8080/getSchemaUri`);
+    const schemaUri = await response.text();
+ let schema;
+    if(schemaUri){
+    const response2 = await fetch(
+      schemaUri);
+      console.log(response2)
+      schema = await response2.json();
+    console.log("SCHEMA: " + JSON.stringify(schema))
+
+    if(schema){
+    const contentFormBlocks = [];
+
+    const processObject = (gObject, currentPath = []) => {
+        const gObjectData = {
+            name: currentPath[currentPath.length - 1],
+            type: gObject.type,
+            title: gObject.title,
+            properties: []
+        };
+
+        if (gObject.properties) {
+            Object.keys(gObject.properties).forEach(key => {
+                const nextGObject = schema.$defs[key];
+                const newPath = [...currentPath, key];
+                
+                if (key.startsWith("G")) {
+                    const nestedGObject = processObject(nextGObject, newPath);
+                    gObjectData.properties.push(nestedGObject);
+                } else if (key.startsWith("F")) {
+                  const fObjectName = key;
+                  const fObjectInSchema = schema.$defs[fObjectName];
+                    const fObjectData = {
+                        name: key,
+                        type: fObjectInSchema ? fObjectInSchema.type : null,
+                        title: fObjectInSchema ? fObjectInSchema.title : null,
+                        path: newPath.join('.')
+                    };
+                    gObjectData.properties.push(fObjectData);
+                }
+            });
+        }
+        return gObjectData;
+    };
+
+    Object.keys(schema.$defs).forEach(gObjectName => {
+        const gObject = schema.$defs[gObjectName];
+       
+        if (gObjectName.startsWith("G")) {
+            const gObjectData = processObject(gObject, [gObjectName]);
+            contentFormBlocks.push(gObjectData);
+        }
+    });
+
+    console.log("contentformBlocks: "  + JSON.stringify(contentFormBlocks[0]))
+    return contentFormBlocks;
+  }
+  }
+}
+
   console.log(
     `Server has been started and listens to port ${process.env.PORT}.`
   );
