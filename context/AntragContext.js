@@ -55,11 +55,23 @@ export function AntragProvider({ children }) {
   };
 
   const fillAntrag = async (antragPiece) => {
-
-     setFormData((prevData) => ({
-      ...prevData,
-      ...antragPiece
-  }))
+    const filledAntrag = {}; // Neues Objekt, um das ausgefüllte Antragsformular zu speichern
+  
+    // Durchlaufe jedes Element im antragPiece
+    for (const [key, value] of Object.entries(antragPiece)) {
+      const [gObject, fObject] = key.split(','); // Trenne das G-Objekt und das F-Objekt
+  
+      // Überprüfe, ob das G-Objekt bereits im filledAntrag existiert, wenn nicht, füge es hinzu
+      if (!filledAntrag[gObject]) {
+        filledAntrag[gObject] = {};
+      }
+  
+      // Füge das F-Objekt dem entsprechenden G-Objekt hinzu
+      filledAntrag[gObject][fObject] = value;
+    }
+  
+    console.log("Filled Antrag:", filledAntrag);
+    // Hier kannst du weitere Aktionen ausführen, z.B. das fertige JSON speichern
   };
 
   const getSchemaURi = async () => {

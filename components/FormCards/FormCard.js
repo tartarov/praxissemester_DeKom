@@ -46,17 +46,37 @@ function FormCard({ data, attributes }) {
 
 const formDataRef = useRef({});
 const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
+const [isChecked, setIsChecked] = useState({});
 
 console.log("DATA: " + JSON.stringify(data))
 
-const handleInputChange = useCallback((gObject, id, value) => {
-    formDataRef.current[[gObject,id]] = value; // Wert im Ref aktualisieren
+// Funktion, um alle F-Objekte auf false zu setzen
+const initializeFormData = (data) => {
+  if (data && data.properties) {
+    data.properties.forEach((property) => {
+      if (property.type.startsWith('b')) {
+        formDataRef.current[property.path] = false;
+      }
+      if (property.type === 'object' && property.name.startsWith('G')) {
+        initializeFormData(property);
+      }
+    });
+  }
+};
+
+// Aufruf der Initialisierungsfunktion
+useEffect(() => {
+  initializeFormData(data);
+}, []);
+
+// Handler-Funktion für die Eingabeänderung
+const handleInputChange = useCallback((id, value) => {
+  formDataRef.current[id] = value; // Wert im Ref aktualisieren
 }, []);
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <View style={[styles.item, backgroundColor]}>
     <Text style={[styles.title, textColor]}>{item.name + " " + item.title}</Text>
-    {console.log("item: " +  JSON.stringify(item.name + JSON.stringify(item.properties)))}
     {item.type === "string" && (
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -69,29 +89,21 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         keyboardAppearance="dark"
         returnKeyType="go"
         returnKeyLabel="go"
-       // ref={land}
-        onChangeText={(text) => handleInputChange(item.gObject, item.fObject,text)}
-      //  onSubmitEditing={() => filloutForm.push(land.current.value)}
-       // onChangeText={(text) => setFormData(item.fObject, text)}
-        //value={}  
-        // onBlur={handleBlur("verwendungszweck")}
-        // error={errors.verwendungszweck}
-        // touched={touched.verwendungszweck}
-        // onSubmitEditing={() => behörde.current?.focus()}
+        onChangeText={(text) => handleInputChange(item.path,text)}
       />
           </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
     )}
     {item.type === "boolean" && (
       <BouncyCheckbox
-      onPress={(isChecked) => handleInputChange(item.gObject, item.fObject, isChecked)}
+      onPress={(isChecked) => handleInputChange(item.path, isChecked)}
       />
     )}
     {(item.type === "integer" || item.type === "number") && (
       <TextInput
       placeholder={item.title}
       keyboardType="numeric"
-      onChangeText={(text) => handleInputChange(item.gObject, item.fObject, text)}
+      onChangeText={(text) => handleInputChange(item.path, text)}
       />
     )}
     {(item.type === "object" && item.name.startsWith("G") ) && (
@@ -107,11 +119,41 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </View>
 );
 
+const countFObjects = (data) => {
+  let count = 0;
+
+  if (data && data.properties) {
+      // Durchlaufe alle Eigenschaften
+      data.properties.forEach((property) => {
+          // Wenn es sich um ein F-Objekt handelt, erhöhe den Zähler
+          if (property.type === 'string' || property.type === 'boolean' || property.type === 'integer' || property.type === 'number') {
+              count++;
+          }
+          // Wenn es sich um ein G-Objekt handelt, durchlaufe rekursiv seine Eigenschaften
+          if (property.type === 'object' && property.name.startsWith('G')) {
+              count += countFObjects(property);
+          }
+      });
+  }
+
+  return count;
+};
+
+// Aufruf der Funktion
+const totalFObjects = countFObjects(data);
+console.log("Gesamtanzahl der F-Objekte:", totalFObjects);
+
+    let allFObjects = []
+
     const renderItem = ({ item }) => {
       const backgroundColor = colorEnum.aufenthaltsTitelcolor;
       const color = "#DCD7C9";
   
+      if(item.name.startsWith("F")){
+        allFObjects.push(item.name)
+      }
       console.log("[item]: "+JSON.stringify(item))
+    //  console.log("allFObjects: " + allFObjects)
       return (
         <Item
         item={item}
@@ -122,8 +164,9 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
     };
 
     const collectData = () => {
+      console.log("totalFObjects: " + totalFObjects)
 
-      if(Object.keys(formDataRef.current).length == data.properties.length){
+      if(Object.keys(formDataRef.current).length == totalFObjects){
         setBackground("lightgreen" );
          fillAntrag(formDataRef.current)
       } else {
