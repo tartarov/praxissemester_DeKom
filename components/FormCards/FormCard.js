@@ -47,17 +47,17 @@ function FormCard({ data, attributes }) {
 const formDataRef = useRef({});
 const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
 
-console.log("DATA: " + Object.keys(data))
+console.log("DATA: " + JSON.stringify(data))
 
 const handleInputChange = useCallback((gObject, id, value) => {
     formDataRef.current[[gObject,id]] = value; // Wert im Ref aktualisieren
 }, []);
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item}</Text>
-    {console.log("item: " +  item)}
-    {item === "string" && (
+  <View style={[styles.item, backgroundColor]}>
+    <Text style={[styles.title, textColor]}>{item.name + " " + item.title}</Text>
+    {console.log("item: " +  JSON.stringify(item.name + JSON.stringify(item.properties)))}
+    {item.type === "string" && (
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -94,46 +94,27 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
       onChangeText={(text) => handleInputChange(item.gObject, item.fObject, text)}
       />
     )}
-  </TouchableOpacity>
+    {(item.type === "object" && item.name.startsWith("G") ) && (
+     item.properties.map((prop, index) => (
+      <Item
+          key={index}
+          item={prop}
+          backgroundColor={{ backgroundColor }}
+          textColor={"blue"}
+      />
+  ))
+    )}
+  </View>
 );
-
-if (data.length > 0) {
-  const titleOfFirstProperty = data[0].title;
-  console.log("Title des ersten Elements: ", titleOfFirstProperty);
-} else {
-  console.log("properties-Array ist leer.");
-}
-
- //   const attributesForBlock = () =>{
-  //    for(let i=0; i <= data.length; i++){
-  //      if (data[i]) {
-        const valueAttributes = {
-         // id: i,
-          gObject: data.name ? data.name : null, 
-          fObject: data.name ? data.name : null, 
-          title: data.title ? data.title : null,
-          type: data.type ? data.type : null,
-      };
-
-      console.log(valueAttributes)
-    
- //     blockAttributes.properties.push(valueAttributes);
- //   }
- //   }
-  //  console.log("blockAttributes: " + JSON.stringify(blockAttributes.properties))
-  //  return blockAttributes.properties
-  //  }
-
-  console.log(Object.keys(data))
 
     const renderItem = ({ item }) => {
       const backgroundColor = colorEnum.aufenthaltsTitelcolor;
-      const color = item.id === "#DCD7C9";
+      const color = "#DCD7C9";
   
-      console.log(data[item])
+      console.log("[item]: "+JSON.stringify(item))
       return (
         <Item
-        item={data[item]}
+        item={item}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
@@ -162,7 +143,7 @@ if (data.length > 0) {
             <Text style={[styles.titleHead]} >{data.title}</Text>
             </View>
             <FlatList style={styles.flatlist}
-            data={Object.keys(data)}
+            data={data.properties}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
       />
@@ -203,4 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingBottom:10,
   },
+  flatlist:{
+    overflow: "hidden",
+  }
 });

@@ -707,7 +707,7 @@ const serversimple = http.createServer(app);
 // Starting our server.
 server.listen(process.env.PORT, process.env.IP2, () => {
 
-  getContentFormBlock()
+      getContentFormBlock()
   async function getContentFormBlock() {
 
     const response = await fetch(
@@ -723,6 +723,7 @@ server.listen(process.env.PORT, process.env.IP2, () => {
 
     if(schema){
     const contentFormBlocks = [];
+    const processedGObjects = new Set(); 
 
     const processObject = (gObject, currentPath = []) => {
         const gObjectData = {
@@ -738,6 +739,7 @@ server.listen(process.env.PORT, process.env.IP2, () => {
                 const newPath = [...currentPath, key];
                 
                 if (key.startsWith("G")) {
+                  processedGObjects.add(key);
                     const nestedGObject = processObject(nextGObject, newPath);
                     gObjectData.properties.push(nestedGObject);
                 } else if (key.startsWith("F")) {
@@ -759,16 +761,36 @@ server.listen(process.env.PORT, process.env.IP2, () => {
     Object.keys(schema.$defs).forEach(gObjectName => {
         const gObject = schema.$defs[gObjectName];
        
-        if (gObjectName.startsWith("G")) {
+        if (gObjectName.startsWith("G") && !processedGObjects.has(gObjectName)) {
+            processedGObjects.add(gObjectName);
             const gObjectData = processObject(gObject, [gObjectName]);
             contentFormBlocks.push(gObjectData);
         }
     });
 
-    console.log("contentformBlocks: "  + JSON.stringify(contentFormBlocks[0]))
+    console.log("contentformBlocks: "  + JSON.stringify(contentFormBlocks[2]))
+    countGObjects(contentFormBlocks[0])
     return contentFormBlocks;
   }
   }
+}
+
+let count=0;
+function countGObjects(obj) {
+
+  if (obj.properties) {
+      obj.properties.forEach(prop => {
+          if (prop.hasOwnProperty('properties')) {
+              count += countGObjects(prop); // Rekursiver Aufruf für verschachtelte Objekte
+          } else {
+              if (prop.name.startsWith('G')) {
+                  count++;
+              }
+          }
+      });
+  }
+  console.log("Anzahl der G-Objekte im ersten Element:", count);
+  return count;
 }
 
   console.log(

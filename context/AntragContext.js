@@ -75,54 +75,61 @@ export function AntragProvider({ children }) {
   async function getContentFormBlock() {
     setIsLoading(true);
     const schema = await getSchemaURi();
-    const contentFormBlocks = [];
-    let blockArray= [];
-    let countObjectsStartingWithG = 0;
-    
-    const processObject = (gObject, currentPath = []) => {
-        if (gObject && gObject.properties) {
-            Object.keys(gObject.properties).forEach(key => {
-                const nextGObject = schema.token.$defs[key];          
-                const newPath = [...currentPath, key];
-                
-                if (key.startsWith("G")) {
-                    processObject(nextGObject, newPath); 
-                } else if (key.startsWith("F")) {
+    if(schema){
+      const contentFormBlocks = [];
+      const processedGObjects = new Set(); 
+  
+      const processObject = (gObject, currentPath = []) => {
+          const gObjectData = {
+              name: currentPath[currentPath.length - 1],
+              type: gObject.type,
+              title: gObject.title,
+              properties: []
+          };
+  
+          if (gObject.properties) {
+              Object.keys(gObject.properties).forEach(key => {
+                  const nextGObject = schema.token.$defs[key];
+                  const newPath = [...currentPath, key];
+                  
+                  if (key.startsWith("G")) {
+                    processedGObjects.add(key);
+                      const nestedGObject = processObject(nextGObject, newPath);
+                      gObjectData.properties.push(nestedGObject);
+                  } else if (key.startsWith("F")) {
                     const fObjectName = key;
                     const fObjectInSchema = schema.token.$defs[fObjectName];
-                    const fObjectData = {
-                        name: fObjectName,
-                        type: fObjectInSchema ? fObjectInSchema.type : null,
-                        title: fObjectInSchema ? fObjectInSchema.title : null,
-                        path: newPath.join('.') 
-                    };
-                    contentFormBlocks.push(fObjectData);
-                }
-            });
-        }
-    };
-
-    Object.keys(schema.token.$defs).forEach(gObjectName => {
-        const gObject = schema.token.$defs[gObjectName];
-       
-        if (gObjectName.startsWith("G")) {
-          const gObjectDataPrime = {
-              name: gObjectName,
-              type: gObject.type,
-              title: gObject.title
+                      const fObjectData = {
+                          name: key,
+                          type: fObjectInSchema ? fObjectInSchema.type : null,
+                          title: fObjectInSchema ? fObjectInSchema.title : null,
+                          path: newPath.join('.')
+                      };
+                      gObjectData.properties.push(fObjectData);
+                  }
+              });
           }
-            blockArray.push(gObjectDataPrime)
-            countObjectsStartingWithG++;
-            processObject(gObject, [gObjectName]);
-        }
-    });
+          return gObjectData;
+      };
+  
+      Object.keys(schema.token.$defs).forEach(gObjectName => {
+          const gObject = schema.token.$defs[gObjectName];
+         
+          if (gObjectName.startsWith("G") && !processedGObjects.has(gObjectName)) {
+              processedGObjects.add(gObjectName);
+              const gObjectData = processObject(gObject, [gObjectName]);
+              contentFormBlocks.push(gObjectData);
+          }
+      });
 
-    setFormBlock(countObjectsStartingWithG);
+   // setFormBlock(countObjectsStartingWithG);
     setContentInsideBlock(contentFormBlocks);
     countProperties(contentFormBlocks);
     setIsLoading(false);
     return contentFormBlocks;
+    }
 }
+
 
   const countProperties = (contentInsideBlock) => {
     let totalCount = 0;

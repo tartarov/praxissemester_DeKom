@@ -65,78 +65,16 @@ function FormBlocks({ navigation }) {
   }, [formData]);
 
   const formBlockArray = Array.from(
-    { length: formBlock },
+    { length: contentInsideBlock.length },
     (_, index) => index + 1
   );
-  console.log(" formBlockArray: " + formBlockArray.length);
+  console.log(" formBlockArray: " + contentInsideBlock.length);
   console.log("CONTENT INSIDE BLOCK:" + JSON.stringify(contentInsideBlock));
 
-  const convertArrayToObject = (contentInsideBlock) => {
-    const resultObject = {};
-
-    contentInsideBlock.forEach((item) => {
-      const pathArray = item.path.split(".");
-      let currentObject = resultObject;
-
-      pathArray.forEach((key, index) => {
-        if (!currentObject[key]) {
-          currentObject[key] = {};
-        }
-
-        if (index === pathArray.length - 1) {
-          if (key.startsWith("G")) {
-            currentObject[key] = {
-              properties: [
-                {
-                  name: item.name,
-                  type: item.type,
-                  title: item.title,
-                },
-              ],
-            };
-          } else if (key.startsWith("F")) {
-            if (!currentObject.properties) {
-              currentObject.properties = [];
-            }
-            currentObject.properties.push({
-              name: item.name,
-              type: item.type,
-              title: item.title,
-            });
-          }
-        } else {
-          currentObject = currentObject[key];
-        }
-      });
-    });
-
-    return resultObject;
-  };
-
-  const result = convertArrayToObject(contentInsideBlock);
-  const firstKey = Object.keys(result)[0];
-  const firstObject = result[firstKey];
-  console.log("Erstes Objekt: ", firstObject);
-
-  // Auf die properties des ersten Objekts zugreifen
-  if (firstObject && firstObject.properties) {
-    console.log("Properties des ersten Objekts: ", firstObject.properties);
-  }
-
-  // Auf ein verschachteltes G-Objekt zugreifen
-  const nestedGObject =
-    firstObject && firstObject.properties && firstObject.properties[0];
-  if (nestedGObject && nestedGObject.properties) {
-    console.log(
-      "Properties des verschachtelten G-Objekts: ",
-      nestedGObject.properties
-    );
-  }
-
-  if (formBlock != 0 && contentInsideBlock != null) {
+  if (contentInsideBlock.length != 0 && contentInsideBlock != null) {
     return (
       <SafeAreaView style={styles.container}>
-        {Object.keys(formData).length >= totalCount ? (
+        {Object.keys(formData).length >= contentInsideBlock.length ? (
           <PrimaryButton
             onPress={() => {
               sendAntrag(filledAntrag);
@@ -146,17 +84,7 @@ function FormBlocks({ navigation }) {
           </PrimaryButton>
         ) : null}
 
-        <ScrollView
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          scrollEnabled={true}
-          bounces={true}
-          decelerationRate={"fast"}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false }
-          )}
-        >
+
           <View style={styles.flatListContainer}>
             {isLoading ? (
               <Loader />
@@ -186,7 +114,7 @@ function FormBlocks({ navigation }) {
                       </View>
                       <View style={styles.documentContainer}>
                         <FormCard
-                          data={Object.keys(result)[index]}
+                          data={contentInsideBlock[index]}
                           attributes={formBlockAttributes}
                         />
                       </View>
@@ -201,8 +129,8 @@ function FormBlocks({ navigation }) {
               />
             )}
           </View>
-          <Paginator data={formBlock} scrollX={scrollX} />
-        </ScrollView>
+          <Paginator data={contentInsideBlock.length} scrollX={scrollX} />
+      
       </SafeAreaView>
     );
   }
