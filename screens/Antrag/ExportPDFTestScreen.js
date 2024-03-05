@@ -600,7 +600,6 @@ export default function ExportPDFTestScreen({ route, navigation }) {
             }}
           />
         </View>
-        <AntragReady activeHeight={height * 0.6} ref={Antragdetail} />
       </View>
     </>
   );

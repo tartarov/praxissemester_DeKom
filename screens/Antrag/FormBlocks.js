@@ -29,8 +29,10 @@ import PaginatorDark from "../../components/PaginatorDark.js";
 import colorEnum from "../../components/DeKomColors.js";
 import FormCard from "../../components/FormCards/FormCard.js";
 import PrimaryButton from "../../components/Buttons/PrimaryButton.js";
+import AntragReady from "../../components/AntragReadyBottomSheet.js";
 
 const { width } = Dimensions.get("screen");
+
 
 const DATA = dataSample;
 
@@ -38,13 +40,14 @@ const SPACING = 10;
 const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
-let filledAntrag;
+
+
 
 function FormBlocks({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const {
     isLoading,
-    formBlock,
+    fillAntrag,
     formData,
     getContentFormBlock,
     createNestedObject,
@@ -54,35 +57,32 @@ function FormBlocks({ navigation }) {
     totalCount,
   } = useContext(AntragContext);
   const { data, getWalletData } = useContext(DataContext);
+  const { height } = useWindowDimensions();
+  const antragdetail = useRef(null);
 
   useEffect(() => {
     getContentFormBlock();
   }, []);
 
-  useEffect(() => {
-    console.log("TOTALCOUNTTTTT: " + totalCount);
-    filledAntrag = createNestedObject(formData);
-  }, [formData]);
+console.log("formData im FormBlocks: " + formData)
 
   const formBlockArray = Array.from(
     { length: contentInsideBlock.length },
     (_, index) => index + 1
   );
-  console.log(" formBlockArray: " + contentInsideBlock.length);
-  console.log("CONTENT INSIDE BLOCK:" + JSON.stringify(contentInsideBlock));
 
   if (contentInsideBlock.length != 0 && contentInsideBlock != null) {
     return (
       <SafeAreaView style={styles.container}>
-        {Object.keys(formData).length >= contentInsideBlock.length ? (
+    {/*}    {Object.keys(formData).length >= contentInsideBlock.length ? ( */}
           <PrimaryButton
             onPress={() => {
-              sendAntrag(filledAntrag);
+              sendAntrag(formData, antragdetail);
             }}
           >
             Absenden
           </PrimaryButton>
-        ) : null}
+      {/*}  ) : null} */}
 
 
           <View style={styles.flatListContainer}>
@@ -130,7 +130,7 @@ function FormBlocks({ navigation }) {
             )}
           </View>
           <Paginator data={contentInsideBlock.length} scrollX={scrollX} />
-      
+          <AntragReady activeHeight={height * 0.6} ref={antragdetail} />
       </SafeAreaView>
     );
   }

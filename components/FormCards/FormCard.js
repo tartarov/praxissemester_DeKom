@@ -14,19 +14,14 @@ import {
   Keyboard,
   Alert
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
 import colorEnum from "../DeKomColors";
-import CustomText from "../Font";
-import * as SecureStore from "expo-secure-store";
-import jwtDecode from "jwt-decode";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntragContext from "../../context/AntragContext";
 import TextInput from "../TextInput";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Button from "../Buttons/Button";
+import { SelectList } from "react-native-dropdown-select-list";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const { width } = Dimensions.get("screen");
 
@@ -42,80 +37,138 @@ function FormCard({ data, attributes }) {
       properties: []
   };
 
-  const filloutForm = []
-
 const formDataRef = useRef({});
 const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
-const [isChecked, setIsChecked] = useState({});
 
-console.log("DATA: " + JSON.stringify(data))
+//const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-// Funktion, um alle F-Objekte auf false zu setzen
+const datePickerVisibilityRef  = useRef({});
+const [forceRerender, setForceRerender] = useState(false);
+const [showDate, setShowDate] = useState("Wähle das Datum aus");
+
+const showDatePicker = (itemName) => {
+  console.log("itemName: " + itemName)
+  console.log(datePickerVisibilityRef.current[itemName])
+  datePickerVisibilityRef.current[itemName] = true;
+  setForceRerender(prevState => !prevState); 
+};
+const hideDatePicker = (itemName, date) => {
+  const dateOnly = new Date(date).toISOString().split('T')[0];
+  console.log(dateOnly);
+  setShowDate(prevState => ({
+    ...prevState,
+    [itemName]: dateOnly
+  }));
+  datePickerVisibilityRef.current[itemName] = false;
+ // setForceRerender(prevState => !prevState); 
+};
+
 const initializeFormData = (data) => {
   if (data && data.properties) {
     data.properties.forEach((property) => {
+      if(property.type){
       if (property.type.startsWith('b')) {
-        formDataRef.current[property.path] = false;
+        formDataRef.current[property.path? property.path : property.name] = false;
+      }
+      if(property.format){
+        setShowDate("Wähle das Datum aus")
       }
       if (property.type === 'object' && property.name.startsWith('G')) {
         initializeFormData(property);
       }
+    }
     });
   }
 };
 
-// Aufruf der Initialisierungsfunktion
 useEffect(() => {
   initializeFormData(data);
 }, []);
 
-// Handler-Funktion für die Eingabeänderung
 const handleInputChange = useCallback((id, value) => {
-  formDataRef.current[id] = value; // Wert im Ref aktualisieren
+  formDataRef.current[id] = value; 
 }, []);
 
-const Item = ({ item, onPress, backgroundColor, textColor }) => (
+const Item = ({ item, onPress, backgroundColor, textColor}) => (
   <View style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item.name + " " + item.title}</Text>
+    <Text style={[styles.title, textColor]}>{ item.title}</Text>
+    {item.description? <Text style={[styles.description, textColor]}>{item.description}</Text> : null}
     {item.type === "string" && (
-      <KeyboardAvoidingView
+  <>
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <TextInput
-        placeholder={item.title}
-        autoCompleteType="text"
-        keyboardType="default"
-        autoCapitalize="none"
-        keyboardAppearance="dark"
-        returnKeyType="go"
-        returnKeyLabel="go"
-        onChangeText={(text) => handleInputChange(item.path,text)}
-      />
+        {/* Überprüfung, ob item.format vorhanden ist */}
+        {item.format ? (
+          <TouchableWithoutFeedback onPress={() => showDatePicker(item.name)}>
+          <View>
+          <Text style={{borderWidth: StyleSheet.hairlineWidth, borderRadius:8, margin:2, padding:13}}>{showDate[item.name]}</Text>
+          <DateTimePickerModal
+            isVisible={datePickerVisibilityRef.current[item.name]}
+           // ref={ref => datePickerRef.current[item.name] = ref}
+            mode="date"
+            onConfirm={(text) => [handleInputChange(item.path ? item.path : item.name, new Date(text).toISOString().split('T')[0]),  hideDatePicker(item.name, text)]}
+            onCancel={() => hideDatePicker(item.name)}
+          />
+          </View>
           </TouchableWithoutFeedback>
+        ) : item.enum ? (
+          <SelectList
+            placeholder={item.title}
+            setSelected={(text) => handleInputChange(item.path ? item.path : item.name, text)}
+            save="value"
+            searchPlaceholder="suche"
+            data={item.enum}
+            boxStyles={{borderWidth: StyleSheet.hairlineWidth, borderColor: "black"}}
+          />
+        ) : (
+          <TextInput
+            placeholder={item.title}
+            autoCompleteType="text"
+            keyboardType="default"
+            autoCapitalize="none"
+            keyboardAppearance="dark"
+            returnKeyType="go"
+            returnKeyLabel="go"
+            onChangeText={(text) => handleInputChange(item.path ? item.path : item.name, text)}
+          />
+        )}
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
-    )}
+  </>
+)}
     {item.type === "boolean" && (
       <BouncyCheckbox
-      onPress={(isChecked) => handleInputChange(item.path, isChecked)}
+      onPress={(isChecked) => handleInputChange(item.path? item.path : item.name, isChecked)}
       />
     )}
     {(item.type === "integer" || item.type === "number") && (
       <TextInput
       placeholder={item.title}
       keyboardType="numeric"
-      onChangeText={(text) => handleInputChange(item.path, text)}
+      onChangeText={(text) => handleInputChange(item.path? item.path : item.name, parseInt(text))}
       />
     )}
-    {(item.type === "object" && item.name.startsWith("G") ) && (
+    {(item.type === "object" ) && (
      item.properties.map((prop, index) => (
       <Item
           key={index}
           item={prop}
           backgroundColor={{ backgroundColor }}
           textColor={"blue"}
+        //  showDatePicker={showDatePicker}
+        //  hideDatePicker={hideDatePicker}
+         // datePickerVisibility={datePickerVisibility}
       />
   ))
     )}
+        {(item.array === true) && (
+      <TextInput
+      placeholder={item.title}
+      keyboardType="numeric"
+      onChangeText={(text) => handleInputChange(item.path, ["123",text])}
+      />
+      )}
   </View>
 );
 
@@ -126,11 +179,11 @@ const countFObjects = (data) => {
       // Durchlaufe alle Eigenschaften
       data.properties.forEach((property) => {
           // Wenn es sich um ein F-Objekt handelt, erhöhe den Zähler
-          if (property.type === 'string' || property.type === 'boolean' || property.type === 'integer' || property.type === 'number') {
+          if (property.type === 'string' || property.type === 'boolean' || property.type === 'integer' || property.type === 'number' || property.type === null) {
               count++;
           }
           // Wenn es sich um ein G-Objekt handelt, durchlaufe rekursiv seine Eigenschaften
-          if (property.type === 'object' && property.name.startsWith('G')) {
+          if (property.type === 'object' && property.name ? property.name.startsWith('G') : null) {
               count += countFObjects(property);
           }
       });
@@ -147,18 +200,20 @@ console.log("Gesamtanzahl der F-Objekte:", totalFObjects);
 
     const renderItem = ({ item }) => {
       const backgroundColor = colorEnum.aufenthaltsTitelcolor;
-      const color = "#DCD7C9";
+      const color = colorEnum.primary;
   
       if(item.name.startsWith("F")){
         allFObjects.push(item.name)
       }
-      console.log("[item]: "+JSON.stringify(item))
     //  console.log("allFObjects: " + allFObjects)
       return (
         <Item
         item={item}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
+       // showDatePicker={showDatePicker}
+       // hideDatePicker={hideDatePicker}
+        //datePickerVisibility={datePickerVisibility[item.name]}
       />
       );
     };
@@ -174,7 +229,6 @@ console.log("Gesamtanzahl der F-Objekte:", totalFObjects);
         Alert.alert("Fehler", "Bitte füllen Sie alle Felder aus.");
       }
 
-      console.log("DATA INSIDE FORMCARD: " + JSON.stringify(data))
       console.log("Gesammelte Daten:", formDataRef.current);
       // Hier kannst du weitere Aktionen ausführen, z.B. Daten speichern, usw.
     };
@@ -214,7 +268,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 5,
-    marginVertical: 8,
+    marginVertical: 5,
     marginHorizontal: 16,
     borderRadius: 5,
   },
@@ -226,6 +280,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     paddingBottom:10,
+  },
+  description: {
+    fontSize: 12,
+   // fontWeight: "bold",
+    padding:0,
   },
   flatlist:{
     overflow: "hidden",

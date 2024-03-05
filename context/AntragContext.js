@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useRef, useEffect } from "react";
+import React, { createContext, useState, useContext, useRef, useEffect, useCallback } from "react";
 import { Alert, useWindowDimensions } from "react-native";
 import { object } from "yup";
 import { AuthContext } from "./AuthContext";
@@ -21,6 +21,10 @@ export function AntragProvider({ children }) {
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
+  const openPinInput = useCallback((antragdetail) => {
+    antragdetail.current.expand();
+  }, []);
+
   useEffect(() => {
     setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
     
@@ -30,7 +34,7 @@ export function AntragProvider({ children }) {
     console.log(formData);
   }, [formData]);
 
-  const sendAntrag = async (filledAntrag) => {
+  const sendAntrag = async (filledAntrag, antragRef) => {
     console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag))
     const requestOptions = {
       method: "POST",
@@ -50,29 +54,37 @@ export function AntragProvider({ children }) {
 
     if (antrag.body.value === true) {
       console.log("True ist eben true");
-      openPinInput();
+      openPinInput(antragRef);
     }
   };
 
-  const fillAntrag = async (antragPiece) => {
-    const filledAntrag = {}; // Neues Objekt, um das ausgefüllte Antragsformular zu speichern
-  
-    // Durchlaufe jedes Element im antragPiece
-    for (const [key, value] of Object.entries(antragPiece)) {
-      const [gObject, fObject] = key.split(','); // Trenne das G-Objekt und das F-Objekt
-  
-      // Überprüfe, ob das G-Objekt bereits im filledAntrag existiert, wenn nicht, füge es hinzu
-      if (!filledAntrag[gObject]) {
-        filledAntrag[gObject] = {};
+const fillAntrag = async (antragPiece) => {
+ 
+  const updatedFormData = { ...formData };
+
+  for (const [key, value] of Object.entries(antragPiece)) {
+    const keyParts = key.split('.');
+    let currentObject = updatedFormData;
+    for (let i = 0; i < keyParts.length - 1; i++) {
+      const part = keyParts[i];
+      if (part.startsWith('G')) {
+        if (!currentObject[part]) {
+          currentObject[part] = {};
+        }
+        currentObject = currentObject[part];
       }
-  
-      // Füge das F-Objekt dem entsprechenden G-Objekt hinzu
-      filledAntrag[gObject][fObject] = value;
     }
-  
-    console.log("Filled Antrag:", filledAntrag);
-    // Hier kannst du weitere Aktionen ausführen, z.B. das fertige JSON speichern
-  };
+
+    const fObject = keyParts[keyParts.length - 1];
+    if (currentObject[fObject]) {
+      console.log(`Das F-Objekt ${fObject} existiert bereits im G-Objekt.`);
+    }
+    currentObject[fObject] = value;
+  }
+  setFormData(updatedFormData);
+
+  console.log("Filled Antrag:", updatedFormData);
+};
 
   const getSchemaURi = async () => {
     const response = await fetch(
@@ -87,58 +99,89 @@ export function AntragProvider({ children }) {
   async function getContentFormBlock() {
     setIsLoading(true);
     const schema = await getSchemaURi();
-    if(schema){
-      const contentFormBlocks = [];
-      const processedGObjects = new Set(); 
-  
-      const processObject = (gObject, currentPath = []) => {
-          const gObjectData = {
-              name: currentPath[currentPath.length - 1],
-              type: gObject.type,
-              title: gObject.title,
-              properties: []
-          };
-  
-          if (gObject.properties) {
-              Object.keys(gObject.properties).forEach(key => {
-                  const nextGObject = schema.token.$defs[key];
-                  const newPath = [...currentPath, key];
-                  
-                  if (key.startsWith("G")) {
-                    processedGObjects.add(key);
-                      const nestedGObject = processObject(nextGObject, newPath);
-                      gObjectData.properties.push(nestedGObject);
-                  } else if (key.startsWith("F")) {
-                    const fObjectName = key;
-                    const fObjectInSchema = schema.token.$defs[fObjectName];
-                      const fObjectData = {
-                          name: key,
-                          type: fObjectInSchema ? fObjectInSchema.type : null,
-                          title: fObjectInSchema ? fObjectInSchema.title : null,
-                          path: newPath.join('.')
-                      };
-                      gObjectData.properties.push(fObjectData);
-                  }
-              });
-          }
-          return gObjectData;
-      };
-  
-      Object.keys(schema.token.$defs).forEach(gObjectName => {
-          const gObject = schema.token.$defs[gObjectName];
-         
-          if (gObjectName.startsWith("G") && !processedGObjects.has(gObjectName)) {
-              processedGObjects.add(gObjectName);
-              const gObjectData = processObject(gObject, [gObjectName]);
-              contentFormBlocks.push(gObjectData);
-          }
-      });
+    if (schema) {
+        const contentFormBlocks = [];
+        const processedGObjects = new Set();
+        const usedFObjects = new Set(); // Hier werden alle verwendeten F-Objekte gespeichert
 
-   // setFormBlock(countObjectsStartingWithG);
-    setContentInsideBlock(contentFormBlocks);
-    countProperties(contentFormBlocks);
-    setIsLoading(false);
-    return contentFormBlocks;
+        const processObject = (gObject, currentPath = []) => {
+            const gObjectData = {
+                name: currentPath[currentPath.length - 1],
+                type: gObject.type,
+                title: gObject.title,
+                properties: []
+            };
+
+            if (gObject.properties) {
+                Object.keys(gObject.properties).forEach(key => {
+                    const nextGObject = schema.token.$defs[key];
+                    const newPath = [...currentPath, key];
+
+                    if (key.startsWith("G")) {
+                        processedGObjects.add(key);
+                        const nestedGObject = processObject(nextGObject, newPath);
+                        gObjectData.properties.push(nestedGObject);
+                    } else if (key.startsWith("F")) {
+                        const fObjectName = key;
+                        const fObjectInSchema = schema.token.$defs[fObjectName];
+                        console.log(fObjectInSchema.enum)
+                        const fObjectData = {
+                            name: key,
+                            type: fObjectInSchema ? fObjectInSchema.type : null,
+                            title: fObjectInSchema ? fObjectInSchema.title : null,
+                            array: gObject.properties[key].type === "array",
+                            enum:  fObjectInSchema ? fObjectInSchema.enum: null,
+                            format: fObjectInSchema ? fObjectInSchema.format : null,
+                            description: fObjectInSchema ? fObjectInSchema.description : null,
+                            path: newPath.join('.')
+                        };
+                        gObjectData.properties.push(fObjectData);
+                        // Füge das F-Objekt zu den verwendeten F-Objekten hinzu
+                        usedFObjects.add(key);
+                    }
+                });
+            }
+            return gObjectData;
+        };
+
+        Object.keys(schema.token.$defs).forEach(gObjectName => {
+            const gObject = schema.token.$defs[gObjectName];
+            if (gObjectName.startsWith("G") && !processedGObjects.has(gObjectName)) {
+                processedGObjects.add(gObjectName);
+                const gObjectData = processObject(gObject, [gObjectName]);
+                contentFormBlocks.push(gObjectData);
+            }
+        });
+
+        // Finde ungenutzte F-Objekte
+        const gObjectData = {
+          name: null,
+          type: "Ghost",
+          title:"Weiteres",
+          properties: []
+      };
+        const unusedFObjects = [];
+        Object.keys(schema.token.$defs).forEach(fObjectName => {
+            if (fObjectName.startsWith("F") && !usedFObjects.has(fObjectName)) {
+              const fObjectInSchema = schema.token.$defs[fObjectName];
+              const fObjectData = {
+                  name: fObjectName,
+                  type: fObjectInSchema ? fObjectInSchema.type : null,
+                  title: fObjectInSchema ? fObjectInSchema.title : null,
+              };
+              if(fObjectData.type && fObjectData.title){
+              gObjectData.properties.push(fObjectData)
+              }
+            }
+        });
+
+        contentFormBlocks.push(gObjectData)
+        console.log("Ungenutzte F-Objekte:", unusedFObjects);
+
+        setContentInsideBlock(contentFormBlocks);
+        countProperties(contentFormBlocks);
+        setIsLoading(false);
+        return contentFormBlocks;
     }
 }
 

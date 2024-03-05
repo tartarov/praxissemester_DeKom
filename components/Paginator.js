@@ -4,7 +4,6 @@ import colorEnum from "./DeKomColors";
 
 function Paginator({ data, scrollX }) {
   const { width } = useWindowDimensions();
-  console.log("data in dem paginator: " + JSON.stringify(data))
 
   let numberOfDots = 0;
 

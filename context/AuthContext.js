@@ -41,7 +41,6 @@ export const AuthProvider = ({ children }) => {
 
   const getNonce = async () =>{
     if(!mock){
-      console.log("WAAAAAAAAAAAAAAAAAAAAAAAS222")
     const response = await fetch(
       `https://${ipAddress}:4222/getNonce`
     );

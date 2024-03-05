@@ -26,7 +26,6 @@ const ImageHeight = ImageWidth * 0.6;
 
 console.log("ENUMCOLOR: " + colorEnum.primary);
 function Ausweis({ data, refrence }) {
-  console.log("DÖÖTA: " + JSON.stringify(data.document))
   const maxSize = 34;
   const minSize = 10;
   const navigation = useNavigation();
@@ -48,13 +47,8 @@ function Ausweis({ data, refrence }) {
   const [fontSizeNachname, setFontSizeNachname] = useState(maxSize);
   const [fontSizeVorname, setFontSizeVorname] = useState(maxSize);
 
-  console.log("fontSizeNachname: " + fontSizeNachname);
-  console.log("fontSizeVorname: " + fontSizeVorname);
-  console.log(fontSizeNachname < maxSize ? fontSizeNachname * 5 : 110);
-
   useEffect(() => {
     // Do your calculation here
-    console.log("textNachname.length" + textNachname.length);
     setWidthRatioNach(width / Math.max(textNachname.length, 2) / 1.5);
     setWidthRatioVor(width / Math.max(textVorname.length, 2) / 1.1);
   }, [textNachname, textVorname, width]);

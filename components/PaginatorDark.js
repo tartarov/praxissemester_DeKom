@@ -3,8 +3,6 @@ import React from "react";
 import colorEnum from "./DeKomColors";
 
 function PaginatorDark({ data, scrollX }) {
-  console.log("data current State:" + data);
-  console.log("data current scrollx:" + scrollX);
   const { width } = useWindowDimensions();
 
   if (data != null) {
