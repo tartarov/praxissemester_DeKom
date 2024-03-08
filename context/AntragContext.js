@@ -393,7 +393,8 @@ export function AntragProvider({ children }) {
           ausstellerVorname: "Max",
           ausstellerNummer: "K4BN2912A",
           einreichungsbehoerde: "Stadt Köln",
-          caseID: responseJSON.body.result[i].ANTRAG,
+          caseID: responseJSON.body?.result[0]?.CASE_ID,
+          submissionID: responseJSON.body?.result[0]?.SUBMISSION_ID,
           rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
         },
       };

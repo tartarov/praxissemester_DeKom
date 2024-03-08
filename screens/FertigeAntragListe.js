@@ -76,13 +76,13 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
             ) : (
               <Ionicons
                 name="person-circle-outline"
-                size={100}
+                size={50}
                 style={{
                   marginTop: 30,
-                  marginBottom: 70,
+                  marginBottom: 30,
                   color: colorEnum.textcolor,
-                  marginRight: 10,
-                  marginLeft: 30,
+                  marginRight: 0,
+                  marginLeft: 0,
                 }}
               />
             )}
@@ -188,62 +188,62 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
         <TouchableOpacity
           style={[
             styles.navigationButton,
-            selectedStatus === "in Bearbeitung" &&
+            selectedStatus === "SUBMITTED" &&
               styles.activeNavigationButton,
           ]}
           onPress={() => {
-            setSelectedStatus("in Bearbeitung");
+            setSelectedStatus("SUBMITTED");
             filterAndAnimateFlatList();
           }}
         >
           <Text
             style={[
               styles.navigationButtonText,
-              selectedStatus === "in Bearbeitung" &&
+              selectedStatus === "SUBMITTED" &&
                 styles.activeNavigationButtonText,
             ]}
           >
-            In Bearbeitung
+            SUBMITTED
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.navigationButton,
-            selectedStatus === "in zustellung" && styles.activeNavigationButton,
+            selectedStatus === "REJECTED" && styles.activeNavigationButton,
           ]}
           onPress={() => {
-            setSelectedStatus("in zustellung");
+            setSelectedStatus("REJECTED");
             filterAndAnimateFlatList();
           }}
         >
           <Text
             style={[
               styles.navigationButtonText,
-              selectedStatus === "in zustellung" &&
+              selectedStatus === "REJECTED" &&
                 styles.activeNavigationButtonText,
             ]}
           >
-            In Zustellung
+            REJECTED
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.navigationButton,
-            selectedStatus === "zugestellt" && styles.activeNavigationButton,
+            selectedStatus === "ACCEPTED" && styles.activeNavigationButton,
           ]}
           onPress={() => {
-            setSelectedStatus("zugestellt");
+            setSelectedStatus("ACCEPTED");
             filterAndAnimateFlatList();
           }}
         >
           <Text
             style={[
               styles.navigationButtonText,
-              selectedStatus === "zugestellt" &&
+              selectedStatus === "ACCEPTED" &&
                 styles.activeNavigationButtonText,
             ]}
           >
-            Zugestellt
+            ACCEPTED
           </Text>
         </TouchableOpacity>
       </View>
@@ -313,13 +313,15 @@ const styles = StyleSheet.create({
   title: {
     alignItems: "center",
     justifyContent: "center",
-    fontSize: 20,
+    fontSize: 14,
+    fontWeight: "500",
     paddingHorizontal: 50,
     textAlign: "center",
   },
   date: {
     alignItems: "center",
     justifyContent: "center",
+    fontWeight: "150",
     fontSize: 14,
     paddingHorizontal: 50,
     paddingVertical: 10,
