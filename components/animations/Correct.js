@@ -10,7 +10,7 @@ function Correct() {
       autoPlay
         style={{
           width: 200,
-          height: 230,
+          height: 120,
           backgroundColor: colorEnum.quartiary,
           borderRadius: 20
         }}

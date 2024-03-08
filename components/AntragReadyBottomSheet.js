@@ -33,6 +33,8 @@ import { Linking } from "react-native";
 import { Entypo as Icon } from "@expo/vector-icons";
 import colorEnum from "./DeKomColors";
 import Correct from "./animations/Correct.js";
+import AntragContext from "../context/AntragContext";
+import WeiterButton from "./Buttons/WeiterButton";
 
 const AntragReady = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
@@ -41,35 +43,7 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
   const [isTouched, setIsTouched] = useState(false);
   const [showDigits, setShowDigits] = useState(false);
 
-  const numberPad = [
-    { value: "1" },
-    { value: "2" },
-    { value: "3" },
-    { value: "4" },
-    { value: "5" },
-    { value: "6" },
-    { value: "7" },
-    { value: "8" },
-    { value: "9" },
-    { value: "0" },
-  ];
-
-  const handleNumberPress = (number) => {
-    setEnteredNumbers(enteredNumbers + number);
-    console.log(enteredNumbers.length);
-    if (enteredNumbers.length === 5) {
-      setIsTouched(true);
-    }
-  };
-
-  const handleBackspace = () => {
-    setEnteredNumbers(enteredNumbers.slice(0, -1));
-    if (enteredNumbers.length <= 6) {
-      setIsTouched(false);
-    }
-  };
-
-  const { login } = useContext(AuthContext);
+  const { caseID } = useContext(AntragContext);
 
   const animationStyle = useAnimatedStyle(() => {
     const top = topAnimation.value;
@@ -103,37 +77,6 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
     [expand, close]
   );
 
-  const { Aa2_Connector } = NativeModules;
-
-  const LoginSchema = Yup.object().shape({
-    can: Yup.string()
-      .min(6, "Too Short!")
-      .max(6, "Too Long!")
-      .required("Required"),
-  });
-
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      validationSchema: LoginSchema,
-      initialValues: { can: "" },
-      onSubmit: (values) => {
-        console.log("values.Pin: " + values.can);
-        const ourCan = values.can.toString();
-        console.log("ourPin: " + ourCan);
-        console.log("ourPin is the type of: " + typeof ourCan);
-        Aa2_Connector.sendCommand(
-          '{"cmd": "SET_CAN", "value": "' + ourCan + '"}'
-        );
-        //login(values.pin, values.id);
-      },
-    });
-
-  const can = useRef(null);
-
-  const toggleShowDigits = () => {
-    setShowDigits(!showDigits);
-  };
-
   return (
     <Animated.View style={[styles.container, animationStyle]}>
       <LogoText
@@ -147,6 +90,17 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
         {" "}
         Antrag abgesendet!{" "}
       </LogoText>
+      <LogoText
+        style={{
+          fontSize: 12,
+          alignSelf: "center",
+          padding: 20,
+          color: colorEnum.primary,
+        }}
+      >
+        CaseID erhalten:  {caseID}.
+        Verfolge den Status von diesem Antrag in deiner Liste beantragter Anträge.
+      </LogoText>
       <View
         style={{
           //alignSelf: "center",
@@ -154,6 +108,7 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
           borderRadius: 40,
         }}
       >
+        <WeiterButton onPress={close}>schließen</WeiterButton>
         <Correct />
       </View>
     </Animated.View>

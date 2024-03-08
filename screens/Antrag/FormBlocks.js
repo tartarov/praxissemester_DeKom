@@ -43,7 +43,7 @@ const VISIBLE_ITEMS = 3;
 
 
 
-function FormBlocks({ navigation }) {
+function FormBlocks({route}) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const {
     isLoading,
@@ -59,10 +59,12 @@ function FormBlocks({ navigation }) {
   const { data, getWalletData } = useContext(DataContext);
   const { height } = useWindowDimensions();
   const antragdetail = useRef(null);
+  
+  const leikaKey = route.params.leikaKey
 
   useEffect(() => {
-    getContentFormBlock();
-  }, []);
+    getContentFormBlock(JSON.stringify(route.params.leikaKey)); 
+  }, [leikaKey]);
 
 console.log("formData im FormBlocks: " + formData)
 

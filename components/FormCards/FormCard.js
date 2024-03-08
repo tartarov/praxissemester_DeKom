@@ -48,6 +48,21 @@ function FormCard({ data, attributes }) {
               property.path ? property.path : property.name
             ] = false;
           }
+          if (property.type.startsWith("s") || property.type.startsWith("n")) {
+            formDataRef.current[
+              property.path ? property.path : property.name
+            ] = "000";
+            if(property.format?.startsWith("d")){
+              formDataRef.current[
+                property.path ? property.path : property.name
+              ] = "2024-12-12";
+            }
+          }
+          if (property.type.startsWith("i")) {
+            formDataRef.current[
+              property.path ? property.path : property.name
+            ] = parseInt("1");
+          }
          
           if (property.type === "object" && property.name.startsWith("G")) {
             initializeFormData(property);
@@ -147,9 +162,6 @@ function FormCard({ data, attributes }) {
             item={prop}
             backgroundColor={{ backgroundColor }}
             textColor={"blue"}
-            // showDatePicker={showDatePicker}
-            // hideDatePicker={hideDatePicker}
-            // datePickerVisibility={datePickerVisibility}
           />
         ))}
       {item.array === true && (
@@ -201,15 +213,11 @@ function FormCard({ data, attributes }) {
         item={item}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
-        // showDatePicker={showDatePicker}
-        // hideDatePicker={hideDatePicker}
-        // datePickerVisibility={datePickerVisibility[item.name]}
       />
     );
   };
 
   const collectData = () => {
-    console.log("totalFObjects: " + totalFObjects);
 
     if (Object.keys(formDataRef.current).length == totalFObjects) {
       setBackground("lightgreen");

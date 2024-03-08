@@ -487,20 +487,7 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
     minutes +
     ":" +
     seconds;
-  console.log(
-    date +
-      "-" +
-      month +
-      "-" +
-      year +
-      " " +
-      hours +
-      ":" +
-      minutes +
-      ":" +
-      seconds
-  );
-
+ 
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("File ist " + req.body.file);
     connectionDekomdb.query(
@@ -509,7 +496,7 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
         hash,
         req.body.file,
         fullDate,
-        new Buffer.from(req.body.signatur, "base64"),
+        new Buffer.from(req.body.signatur? req.body.signatur : "abcdefg123=/", "base64"),
       ]),
       function (err, res) {
         if (err) {
@@ -651,7 +638,10 @@ app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(req.body),
+      body: JSON.stringify({
+        antrag: req.body.antrag,
+        schemaUri: req.body.schemaUri
+      }),
     };
 
     const response2 = await fetch(
@@ -667,12 +657,14 @@ app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
 
 const getSchemaJson = async (schemaUri) => {
   try {
+
+   
     const response2 = await fetch(
       schemaUri);
       console.log(response2)
-    const userInfoJSON = await response2.json();
-   //   console.log("SUCCSESSFUL: " + userInfoJSON)
-    return userInfoJSON;
+    const schemaJson = await response2.json();
+   console.log("SUCCSESSFUL: " + schemaUri)
+    return {schemaJson: schemaJson, schemaUri: schemaUri};
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
     throw error;
@@ -682,17 +674,18 @@ const getSchemaJson = async (schemaUri) => {
 
 app.get("/user/antrag/get/schemaUri",cookieJWTAuth, async(req,res)=>{
   try {
+
+    console.log(req.query.leikaKey)
+    parsedLeikaKey = req.query.leikaKey
+
+
     const response = await fetch(
-      `http://localhost:8080/getSchemaUri`);
+      `http://localhost:8080/getSchemaUri?leikaKey=${parsedLeikaKey}`);
     const schemaUri = await response.text();
     console.log("pending Antrag is: " + schemaUri)
-    const schemaJson = await getSchemaJson(schemaUri)
+    const schemadata = await getSchemaJson(schemaUri)
 
-    console.log("SCHEMAJSON: " +  schemaJson );
-
-  console.log(schemaJson)
-
-  res.send(formattingResponse(schemaJson, { value: true }));
+  res.send(formattingResponse(schemadata, { value: true }));
 
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);

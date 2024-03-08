@@ -105,8 +105,8 @@ const Antragmenue = forwardRef(
     const { data, getWalletData } = useContext(DataContext);
 
     useEffect( ()=>{
-         getContentFormBlock()
-        if(contentInsideBlock){
+         getContentFormBlock("99123456760610")
+     /*   if(contentInsideBlock){
          console.log("contentInsideBlock in FORMBLOCK: " + JSON.stringify(contentInsideBlock))
          const keys = Object.keys(contentInsideBlock);
          console.log("keys[0]: " + keys[0])
@@ -114,17 +114,22 @@ const Antragmenue = forwardRef(
          const firstArray = contentInsideBlock[firstArrayKey]
          console.log("Das erste Array:", firstArray)
         }
+        */
     },[])
+    
+    
 
     const DataReal = [
       {
         id: "1",
         title: "Fischereigesetz",
+        leikaKey: "https://schema.fitko.de/fim/s00000092_1.0.schema.json",
         navigator: "FormBlockScreen",
       },
       {
         id: "2",
         title: "Antrag neuer Führerschein",
+        leikaKey: 99123456760610,
         navigator: "FormBlockScreen",
       },
     ];
@@ -227,7 +232,8 @@ const Antragmenue = forwardRef(
           onPress={() => {
             setSelectedId(item.id),
               setTimeout(() => {
-                navigation.navigate(item.navigator);
+                console.log("ich wurde aufgerufen aaaah......" + item.leikaKey )
+                navigation.navigate(item.navigator, { leikaKey: item.leikaKey });
               }, 250),
               close();
           }}

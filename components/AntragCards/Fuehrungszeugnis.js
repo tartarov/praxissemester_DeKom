@@ -178,17 +178,12 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
           </View>
           <View style={styles.group}>
             <View style={styles.textContainer}>
-              <Text style={styles.heading}>Rückverfolgungsnummer</Text>
+              <Text style={styles.heading}>caseID</Text>
               <Text style={styles.text}>
-                {antragAusstellerDaten?.document?.rueckverfolgungsnummer}
+                {antragAusstellerDaten?.document?.caseID}
               </Text>
             </View>
-            <View style={[styles.textContainer, { marginLeft: 15 }]}>
-              <Text style={styles.heading}>Ausstelldatum</Text>
-              <Text style={[styles.text, { fontSize: 12 }]}>
-                {antragAusstellerDaten?.document?.ausstellDatum}
-              </Text>
-            </View>
+          
           </View>
           <View style={styles.group}>
             <View style={styles.textContainer}>
@@ -199,10 +194,12 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             </View>
             <View style={styles.ioniconContainer}></View>
             <View style={[styles.textContainer]}>
-              <Text style={styles.heading}>Nummer des Ausstellers</Text>
-              <Text style={[styles.text]}>
-                {antragAusstellerDaten?.document?.ausstellerNummer}
+            <View style={[styles.textContainer, { marginLeft: 15 }]}>
+              <Text style={styles.heading}>Ausstelldatum</Text>
+              <Text style={[styles.text, { fontSize: 12 }]}>
+                {antragAusstellerDaten?.document?.ausstellDatum}
               </Text>
+            </View>
               <View style={{flexDirection:"row", right:50, justifyContent:"space-between", marginHorizontal:-70, top:20}}>
               <TouchableOpacity onPress={transferFileFromCacheToDocumentDirectory}>
                 <Ionicons
@@ -307,7 +304,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontFamily: "Nexa-ExtraLight",
     color: colorEnum.textcolor,
-    paddingHorizontal: 4,
+    padding: 4,
   },
   headingInitials: {
     fontSize: 24,
@@ -323,6 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Nexa-Heavy",
     paddingHorizontal: 4,
+    fontWeight: "bold"
   },
   textCAN: {
     color: colorEnum.textcolor,

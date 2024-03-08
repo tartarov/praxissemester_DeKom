@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, useRef, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { Alert, useWindowDimensions } from "react-native";
 import { object } from "yup";
 import { AuthContext } from "./AuthContext";
@@ -12,12 +19,14 @@ export function AntragProvider({ children }) {
   const [antragFileId, setAntragFileId] = useState(null);
   const [bearbeitungsstatus, setBearbeitungsstatus] = useState([]);
   const { isVerified } = useContext(AuthContext);
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [formBlock , setFormBlock] = useState(0);
-  const [formBlockAttributes, setFormBlockAttributes] = useState(0)
-  const [contentInsideBlock, setContentInsideBlock] = useState(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [formBlock, setFormBlock] = useState(0);
+  const [formBlockAttributes, setFormBlockAttributes] = useState(0);
+  const [contentInsideBlock, setContentInsideBlock] = useState(null);
   const [formData, setFormData] = useState({});
-  const [totalCount, setTotalCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0);
+  const [caseID, setCaseID] = useState("");
+  const [schemaUri, setSchemaUri] = useState("")
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -27,22 +36,24 @@ export function AntragProvider({ children }) {
 
   useEffect(() => {
     setBearbeitungsstatus(["in Bearbeitung", "in zustellung", "zugestellt"]);
-    
   }, []);
-  
+
   useEffect(() => {
     console.log(formData);
   }, [formData]);
 
   const sendAntrag = async (filledAntrag, antragRef) => {
-    console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag))
+    console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag));
     const requestOptions = {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(filledAntrag),
+      body: JSON.stringify({
+        antrag: filledAntrag,
+        schemaUri: schemaUri
+      }),
     };
 
     const response = await fetch(
@@ -54,194 +65,201 @@ export function AntragProvider({ children }) {
 
     if (antrag.body.value === true) {
       console.log("True ist eben true");
-      openPinInput(antragRef);
-    }
-  };
-
-const fillAntrag = async (antragPiece) => {
- 
-  const updatedFormData = { ...formData };
-
-  for (const [key, value] of Object.entries(antragPiece)) {
-    const keyParts = key.split('.');
-    let currentObject = updatedFormData;
-    for (let i = 0; i < keyParts.length - 1; i++) {
-      const part = keyParts[i];
-      if (part.startsWith('G')) {
-        if (!currentObject[part]) {
-          currentObject[part] = {};
-        }
-        currentObject = currentObject[part];
+      const tokenObject = JSON.parse(antrag.token);
+      const caseID = tokenObject.caseID;
+      console.log(caseID);
+      setCaseID(caseID);
+      const toListeAdded = addToListe(caseID);
+      if (toListeAdded) {
+        openPinInput(antragRef);
       }
     }
-
-    const fObject = keyParts[keyParts.length - 1];
-    if (currentObject[fObject]) {
-      console.log(`Das F-Objekt ${fObject} existiert bereits im G-Objekt.`);
-    }
-    currentObject[fObject] = value;
-  }
-  setFormData(updatedFormData);
-
-  console.log("Filled Antrag:", updatedFormData);
-};
-
-  const getSchemaURi = async () => {
-    const response = await fetch(
-      "https://dekom.ddns.net:4222/user/antrag/get/schemaUri"
-    );
-
-    const schemaJson = await response.json();
-
-    return schemaJson;
   };
 
-  async function getContentFormBlock() {
+  const fillAntrag = async (antragPiece) => {
+    const updatedFormData = { ...formData };
+
+    for (const [key, value] of Object.entries(antragPiece)) {
+      const keyParts = key.split(".");
+      let currentObject = updatedFormData;
+      for (let i = 0; i < keyParts.length - 1; i++) {
+        const part = keyParts[i];
+        if (part.startsWith("G")) {
+          if (!currentObject[part]) {
+            currentObject[part] = {};
+          }
+          currentObject = currentObject[part];
+        }
+      }
+
+      const fObject = keyParts[keyParts.length - 1];
+      if (currentObject[fObject]) {
+        console.log(`Das F-Objekt ${fObject} existiert bereits im G-Objekt.`);
+      }
+      currentObject[fObject] = value;
+    }
+    setFormData(updatedFormData);
+
+    console.log("Filled Antrag:", updatedFormData);
+  };
+
+  const getSchemaURi = async (leikaKey) => {
+
+    console.log("LEIKA KEY IST IN GETSCHEMAURI: "+ leikaKey)
+
+    const response = await fetch(
+      `https://dekom.ddns.net:4222/user/antrag/get/schemaUri?leikaKey=${leikaKey}`
+    );
+
+    const schemaData = await response.json();
+    console.log("schemaData ist: " + schemaData.token.schemaUri)
+    setSchemaUri(schemaData.token.schemaUri)
+    return schemaData.token.schemaJson;
+  };
+
+  async function getContentFormBlock(leikaKey) {
     setIsLoading(true);
-    const schema = await getSchemaURi();
+    const schema = await getSchemaURi(leikaKey);
     if (schema) {
-        const contentFormBlocks = [];
-        const processedGObjects = new Set();
-        const usedFObjects = new Set(); // Hier werden alle verwendeten F-Objekte gespeichert
+      const contentFormBlocks = [];
+      const processedGObjects = new Set();
+      const usedFObjects = new Set(); // Hier werden alle verwendeten F-Objekte gespeichert
 
-        const processObject = (gObject, currentPath = []) => {
-            const gObjectData = {
-                name: currentPath[currentPath.length - 1],
-                type: gObject.type,
-                title: gObject.title,
-                properties: []
-            };
-
-            if (gObject.properties) {
-                Object.keys(gObject.properties).forEach(key => {
-                    const nextGObject = schema.token.$defs[key];
-                    const newPath = [...currentPath, key];
-
-                    if (key.startsWith("G")) {
-                        processedGObjects.add(key);
-                        const nestedGObject = processObject(nextGObject, newPath);
-                        gObjectData.properties.push(nestedGObject);
-                    } else if (key.startsWith("F")) {
-                        const fObjectName = key;
-                        const fObjectInSchema = schema.token.$defs[fObjectName];
-                        console.log(fObjectInSchema.enum)
-                        const fObjectData = {
-                            name: key,
-                            type: fObjectInSchema ? fObjectInSchema.type : null,
-                            title: fObjectInSchema ? fObjectInSchema.title : null,
-                            array: gObject.properties[key].type === "array",
-                            enum:  fObjectInSchema ? fObjectInSchema.enum: null,
-                            format: fObjectInSchema ? fObjectInSchema.format : null,
-                            description: fObjectInSchema ? fObjectInSchema.description : null,
-                            path: newPath.join('.')
-                        };
-                        gObjectData.properties.push(fObjectData);
-                        // Füge das F-Objekt zu den verwendeten F-Objekten hinzu
-                        usedFObjects.add(key);
-                    }
-                });
-            }
-            return gObjectData;
+      const processObject = (gObject, currentPath = []) => {
+        const gObjectData = {
+          name: currentPath[currentPath.length - 1],
+          type: gObject.type,
+          title: gObject.title,
+          properties: [],
         };
 
-        Object.keys(schema.token.$defs).forEach(gObjectName => {
-            const gObject = schema.token.$defs[gObjectName];
-            if (gObjectName.startsWith("G") && !processedGObjects.has(gObjectName)) {
-                processedGObjects.add(gObjectName);
-                const gObjectData = processObject(gObject, [gObjectName]);
-                contentFormBlocks.push(gObjectData);
-            }
-        });
+        if (gObject.properties) {
+          Object.keys(gObject.properties).forEach((key) => {
+            const nextGObject = schema.$defs[key];
+            const newPath = [...currentPath, key];
 
-        // Finde ungenutzte F-Objekte
-        const gObjectData = {
-          name: null,
-          type: "Ghost",
-          title:"Weiteres",
-          properties: []
-      };
-        const unusedFObjects = [];
-        Object.keys(schema.token.$defs).forEach(fObjectName => {
-            if (fObjectName.startsWith("F") && !usedFObjects.has(fObjectName)) {
-              const fObjectInSchema = schema.token.$defs[fObjectName];
+            if (key.startsWith("G")) {
+              processedGObjects.add(key);
+              const nestedGObject = processObject(nextGObject, newPath);
+              gObjectData.properties.push(nestedGObject);
+            } else if (key.startsWith("F")) {
+              const fObjectName = key;
+              const fObjectInSchema = schema.$defs[fObjectName];
               const fObjectData = {
-                  name: fObjectName,
-                  type: fObjectInSchema ? fObjectInSchema.type : null,
-                  title: fObjectInSchema ? fObjectInSchema.title : null,
+                name: key,
+                type: fObjectInSchema ? fObjectInSchema.type : null,
+                title: fObjectInSchema ? fObjectInSchema.title : null,
+                array: gObject.properties[key].type === "array",
+                enum: fObjectInSchema ? fObjectInSchema.enum : null,
+                format: fObjectInSchema ? fObjectInSchema.format : null,
+                description: fObjectInSchema
+                  ? fObjectInSchema.description
+                  : null,
+                path: newPath.join("."),
               };
-              if(fObjectData.type && fObjectData.title){
-              gObjectData.properties.push(fObjectData)
-              }
+              gObjectData.properties.push(fObjectData);
+              // Füge das F-Objekt zu den verwendeten F-Objekten hinzu
+              usedFObjects.add(key);
             }
-        });
+          });
+        }
+        return gObjectData;
+      };
 
-        contentFormBlocks.push(gObjectData)
-        console.log("Ungenutzte F-Objekte:", unusedFObjects);
+      Object.keys(schema.$defs).forEach((gObjectName) => {
+        const gObject = schema.$defs[gObjectName];
+        if (
+          gObjectName.startsWith("G") &&
+          !processedGObjects.has(gObjectName)
+        ) {
+          processedGObjects.add(gObjectName);
+          const gObjectData = processObject(gObject, [gObjectName]);
+          contentFormBlocks.push(gObjectData);
+        }
+      });
 
-        setContentInsideBlock(contentFormBlocks);
-        countProperties(contentFormBlocks);
-        setIsLoading(false);
-        return contentFormBlocks;
+      // Finde ungenutzte F-Objekte
+      const gObjectData = {
+        name: null,
+        type: "Ghost",
+        title: "Weiteres",
+        properties: [],
+      };
+      const unusedFObjects = [];
+      Object.keys(schema.$defs).forEach((fObjectName) => {
+        if (fObjectName.startsWith("F") && !usedFObjects.has(fObjectName)) {
+          const fObjectInSchema = schema.$defs[fObjectName];
+          const fObjectData = {
+            name: fObjectName,
+            type: fObjectInSchema ? fObjectInSchema.type : null,
+            title: fObjectInSchema ? fObjectInSchema.title : null,
+          };
+          if (fObjectData.type && fObjectData.title) {
+            gObjectData.properties.push(fObjectData);
+          }
+        }
+      });
+
+      contentFormBlocks.push(gObjectData);
+      setContentInsideBlock(contentFormBlocks);
+      countProperties(contentFormBlocks);
+      setIsLoading(false);
+      return contentFormBlocks;
     }
-}
-
+  }
 
   const countProperties = (contentInsideBlock) => {
     let totalCount = 0;
     contentInsideBlock.forEach((obj) => {
-        totalCount += obj.length;
+      totalCount += obj.length;
     });
-    console.log("totalCount: " + totalCount)
-    setTotalCount(totalCount)
+    setTotalCount(totalCount);
     return totalCount;
-};
+  };
 
-function createNestedObject(formData) {
-  const nestedObject = {}; // Das äußere Objekt
+  function createNestedObject(formData) {
+    const nestedObject = {}; // Das äußere Objekt
 
-  // Iteriere über die Schlüssel im FormData-Objekt
-  for (const key in formData) {
+    // Iteriere über die Schlüssel im FormData-Objekt
+    for (const key in formData) {
       if (formData.hasOwnProperty(key)) {
-          const [gNumber, fNumber] = key.split(","); // Trenne den Schlüssel in G- und F-Nummerierungen
+        const [gNumber, fNumber] = key.split(","); // Trenne den Schlüssel in G- und F-Nummerierungen
 
-          // Wenn die G-Nummerierung bereits im nestedObject existiert, füge die F-Nummerierung mit Wert hinzu
-          if (nestedObject.hasOwnProperty(gNumber)) {
-              nestedObject[gNumber][fNumber] = formData[key];
-          } else {
-              // Wenn die G-Nummerierung nicht im nestedObject existiert, erstelle sie und füge die F-Nummerierung mit Wert hinzu
-              nestedObject[gNumber] = { [fNumber]: formData[key] };
-          }
+        // Wenn die G-Nummerierung bereits im nestedObject existiert, füge die F-Nummerierung mit Wert hinzu
+        if (nestedObject.hasOwnProperty(gNumber)) {
+          nestedObject[gNumber][fNumber] = formData[key];
+        } else {
+          // Wenn die G-Nummerierung nicht im nestedObject existiert, erstelle sie und füge die F-Nummerierung mit Wert hinzu
+          nestedObject[gNumber] = { [fNumber]: formData[key] };
+        }
       }
+    }
+
+    console.log("NESTEDOBJECT ISSSSS:" + JSON.stringify(nestedObject));
+    return nestedObject;
   }
 
-  console.log("NESTEDOBJECT ISSSSS:" + JSON.stringify(nestedObject))
-  return nestedObject;
-}
+  async function extractFObjectsWithTitles(contentFormBlocks) {
+    const schema = await getSchemaURi();
 
-async function extractFObjectsWithTitles(contentFormBlocks) {
+    const fObjectsWithTitleAndType = {};
+    const fArrayWithTitleAndType = [];
 
-  const schema = await getSchemaURi();
+    Object.keys(contentFormBlocks).forEach((gObjectName) => {
+      contentFormBlocks.forEach((fKey) => {
+        const fObject = schema.token.$defs[contentFormBlocks];
 
-  const fObjectsWithTitleAndType = {};
-  const fArrayWithTitleAndType = [];
-
-  Object.keys(contentFormBlocks).forEach(gObjectName => {
-
-    contentFormBlocks.forEach(fKey => {
-      const fObject = schema.token.$defs[contentFormBlocks];
-
-      if (fObject && fObject.title && fObject.type) {
-
-        fObjectsWithTitleAndType[fKey] = {
-          title: fObject.title,
-          type: fObject.type
-        };
-      }
+        if (fObject && fObject.title && fObject.type) {
+          fObjectsWithTitleAndType[fKey] = {
+            title: fObject.title,
+            type: fObject.type,
+          };
+        }
+      });
     });
-  });
 
-  return fObjectsWithTitleAndType;
-}
+    return fObjectsWithTitleAndType;
+  }
 
   const addToListe = async (file, signatur) => {
     isVarifiedVar = isVerified;
@@ -255,7 +273,7 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
       credentials: "same-origin",
       body: JSON.stringify({
         file: file,
-        signatur: signatur,
+        signatur: signatur ? signatur : null,
       }),
     });
 
@@ -264,11 +282,11 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
-      
       console.log("respond contains true => success... YUHU");
     }
 
     getAntrag();
+    return true;
   };
 
   const getAntrag = async () => {
@@ -316,7 +334,7 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
             ausstellerNummer: "K4BN2912A",
             einreichungsbehoerde: "Stadt Köln",
             bearbeitungsStatus: bearbeitungsStatusValue,
-            rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
+            caseID: responseJSON.body.result[i].ANTRAG,
             antragColor: antragColor,
           },
         });
@@ -368,7 +386,7 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
           rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
         },
       };
-      setDesiredAntrag(foundAntrag)
+      setDesiredAntrag(foundAntrag);
     } else if (
       verificationStatus == "verified" &&
       responseJSON.body.value == false
@@ -422,6 +440,7 @@ async function extractFObjectsWithTitles(contentFormBlocks) {
         formBlockAttributes,
         formData,
         totalCount,
+        caseID,
         sendAntrag,
         createNestedObject,
         extractFObjectsWithTitles,
