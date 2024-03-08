@@ -27,6 +27,7 @@ export function AntragProvider({ children }) {
   const [totalCount, setTotalCount] = useState(0);
   const [caseID, setCaseID] = useState("");
   const [schemaUri, setSchemaUri] = useState("")
+  const [antragTitle, setAntragTitle] = useState("none")
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -42,8 +43,9 @@ export function AntragProvider({ children }) {
     console.log(formData);
   }, [formData]);
 
-  const sendAntrag = async (filledAntrag, antragRef) => {
+  const sendAntrag = async (filledAntrag, antragRef, antragTitle) => {
     console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag));
+    console.log("und unser AntragTitle ist: " + antragTitle);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -52,7 +54,7 @@ export function AntragProvider({ children }) {
       },
       body: JSON.stringify({
         antrag: filledAntrag,
-        schemaUri: schemaUri
+        schemaUri: schemaUri,
       }),
     };
 
@@ -69,7 +71,7 @@ export function AntragProvider({ children }) {
       const caseID = tokenObject.caseID;
       console.log(caseID);
       setCaseID(caseID);
-      const toListeAdded = addToListe(caseID);
+      const toListeAdded = addToListe(caseID, antragTitle, null);
       if (toListeAdded) {
         openPinInput(antragRef);
       }
@@ -261,9 +263,10 @@ export function AntragProvider({ children }) {
     return fObjectsWithTitleAndType;
   }
 
-  const addToListe = async (file, signatur) => {
+  const addToListe = async (file, antragName, signatur) => {
     isVarifiedVar = isVerified;
 
+    console.log("antragName: " + antragName)
     let respond = await fetch(`https://${ipAddress}:4222/user/save/antrag`, {
       method: "POST",
       headers: {
@@ -274,6 +277,7 @@ export function AntragProvider({ children }) {
       body: JSON.stringify({
         file: file,
         signatur: signatur ? signatur : null,
+        antragName: antragName
       }),
     });
 
@@ -323,7 +327,7 @@ export function AntragProvider({ children }) {
         }
 
         updatedItems.push({
-          title: "Führungszeugnis",
+          title: responseJSON.body.result[i].ANTRAGSNAME,
           document: {
             antragDir: responseJSON.body.result[i].ANTRAG,
             ausstellDatum: responseJSON.body.result[i].DATUM,
@@ -373,7 +377,7 @@ export function AntragProvider({ children }) {
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       const foundAntrag = {
-        title: "Führungszeugnis",
+        title:  responseJSON.body?.result[0]?.ANTRAGSNAME,
         document: {
           antragDir: responseJSON.body?.result[0]?.ANTRAG,
           ausstellDatum: responseJSON.body?.result[0]?.DATUM,
@@ -383,6 +387,7 @@ export function AntragProvider({ children }) {
           ausstellerVorname: "Max",
           ausstellerNummer: "K4BN2912A",
           einreichungsbehoerde: "Stadt Köln",
+          caseID: responseJSON.body.result[i].ANTRAG,
           rueckverfolgungsnummer: Math.floor(Math.random() * 1000000000),
         },
       };
@@ -441,6 +446,7 @@ export function AntragProvider({ children }) {
         formData,
         totalCount,
         caseID,
+        antragTitle,
         sendAntrag,
         createNestedObject,
         extractFObjectsWithTitles,

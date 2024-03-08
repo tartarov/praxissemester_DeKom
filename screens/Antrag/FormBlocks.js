@@ -61,6 +61,8 @@ function FormBlocks({route}) {
   const antragdetail = useRef(null);
   
   const leikaKey = route.params.leikaKey
+  const antragTitle = route.params.title
+  console.log("antragTitle: " + antragTitle)
 
   useEffect(() => {
     getContentFormBlock(JSON.stringify(route.params.leikaKey)); 
@@ -79,7 +81,7 @@ console.log("formData im FormBlocks: " + formData)
     {/*}    {Object.keys(formData).length >= contentInsideBlock.length ? ( */}
           <PrimaryButton
             onPress={() => {
-              sendAntrag(formData, antragdetail);
+              sendAntrag(formData, antragdetail, antragTitle);
             }}
           >
             Absenden

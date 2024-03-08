@@ -7,8 +7,8 @@ function AntragHandler ({antragAusstellerDaten, scrollY, signature}){
 
      let document = <Fuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} />
 
-
-     if (antragAusstellerDaten.title == 'Führungszeugnis'){
+   console.log("antragAusstellerDaten.title:" + antragAusstellerDaten.title)
+     if (antragAusstellerDaten.title == 'SDS - Antrag Führerschein Ausstellung' || antragAusstellerDaten.title == 'Antrag Selbstauskunft Verstoßdatei Seefischereigesetz' ){
         document = <Fuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} scrollY = {scrollY} signature={signature} />
      } else if (antragAusstellerDaten.title == 'ErwFuehrungszeugnis') {
         document = <ErwFuehrungszeugnis antragAusstellerDaten={antragAusstellerDaten} />

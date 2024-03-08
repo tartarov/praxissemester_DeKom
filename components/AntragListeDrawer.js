@@ -32,66 +32,10 @@ import { PanGestureHandler, ScrollView } from "react-native-gesture-handler";
 import colorEnum from "./DeKomColors";
 import AntragContext from "../context/AntragContext";
 import { DataContext } from "../context/DataContext";
+import alleAntraege from "./AlleAnträgeEnum";
 
 const { width } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
-const DATA = [
-  {
-    id: "1",
-    title: "Führungszeugnis",
-    navigator: "FormBlockScreen",
-  },
-  {
-    id: "2",
-    title: "erweitertes Führungszeugnis",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "3",
-    title: "Wohnsitz-Ummeldung",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "4",
-    title: "Kirchenaustritt",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "5",
-    title: "Kindergeld",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "6",
-    title: "Wohngeld",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "7",
-    title: "Arbeitslosengeld",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "8",
-    title: "neuer Personalausweiß",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "9",
-    title: "neuer Führerschein",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "10",
-    title: "BAFöG",
-    navigator: "ScreenDoesNotExist",
-  },
-  {
-    id: "11",
-    title: "Geburtsurkunde",
-    navigator: "ScreenDoesNotExist",
-  },
-];
 
 const Antragmenue = forwardRef(
   ({ navigation, isExpanded, activeHeight, props }, ref) => {
@@ -122,13 +66,13 @@ const Antragmenue = forwardRef(
     const DataReal = [
       {
         id: "1",
-        title: "Fischereigesetz",
+        title: alleAntraege.a,
         leikaKey: "https://schema.fitko.de/fim/s00000092_1.0.schema.json",
         navigator: "FormBlockScreen",
       },
       {
         id: "2",
-        title: "Antrag neuer Führerschein",
+        title: alleAntraege.b,
         leikaKey: 99123456760610,
         navigator: "FormBlockScreen",
       },
@@ -233,7 +177,7 @@ const Antragmenue = forwardRef(
             setSelectedId(item.id),
               setTimeout(() => {
                 console.log("ich wurde aufgerufen aaaah......" + item.leikaKey )
-                navigation.navigate(item.navigator, { leikaKey: item.leikaKey });
+                navigation.navigate(item.navigator, { leikaKey: item.leikaKey, title: item.title });
               }, 250),
               close();
           }}
