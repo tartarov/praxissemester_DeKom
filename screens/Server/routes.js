@@ -491,13 +491,15 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("Antragname ist " + req.body.antragName);
     connectionDekomdb.query(
-      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, ANTRAG, DATUM, SIGNATUR, ANTRAGSNAME) VALUES (?,?,?,?,?)",
+      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, CASE_ID, SUBMISSION_ID, DATUM, SIGNATUR, ANTRAGSNAME, STATUS) VALUES (?,?,?,?,?,?,?)",
       (values = [
         hash,
         req.body.file,
+        req.body.submissionID,
         fullDate,
         new Buffer.from(req.body.signatur? req.body.signatur : "abcdefg123=/", "base64"),
-        req.body.antragName
+        req.body.antragName,
+        req.body.submissionStatus
       ]),
       function (err, res) {
         if (err) {

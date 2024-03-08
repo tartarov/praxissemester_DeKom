@@ -69,9 +69,13 @@ export function AntragProvider({ children }) {
       console.log("True ist eben true");
       const tokenObject = JSON.parse(antrag.token);
       const caseID = tokenObject.caseID;
-      console.log(caseID);
+      const submissionID = tokenObject.submissionID;
+      const submissionStatus = tokenObject.submissionStatus;
+      console.log("caseID: " + caseID);
+      console.log("submissionID: " + submissionID)
+      console.log("submissionStatus: " + submissionStatus)
       setCaseID(caseID);
-      const toListeAdded = addToListe(caseID, antragTitle, null);
+      const toListeAdded = addToListe(caseID, submissionID, submissionStatus, antragTitle, null);
       if (toListeAdded) {
         openPinInput(antragRef);
       }
@@ -106,8 +110,6 @@ export function AntragProvider({ children }) {
   };
 
   const getSchemaURi = async (leikaKey) => {
-
-    console.log("LEIKA KEY IST IN GETSCHEMAURI: "+ leikaKey)
 
     const response = await fetch(
       `https://dekom.ddns.net:4222/user/antrag/get/schemaUri?leikaKey=${leikaKey}`
@@ -263,7 +265,7 @@ export function AntragProvider({ children }) {
     return fObjectsWithTitleAndType;
   }
 
-  const addToListe = async (file, antragName, signatur) => {
+  const addToListe = async (file, submissionID, submissionStatus, antragName, signatur) => {
     isVarifiedVar = isVerified;
 
     console.log("antragName: " + antragName)
@@ -277,7 +279,9 @@ export function AntragProvider({ children }) {
       body: JSON.stringify({
         file: file,
         signatur: signatur ? signatur : null,
-        antragName: antragName
+        antragName: antragName,
+        submissionID: submissionID,
+        submissionStatus: submissionStatus,
       }),
     });
 
@@ -312,14 +316,15 @@ export function AntragProvider({ children }) {
         let bearbeitungsStatusValue = bearbeitungsstatus[random];
         let antragColor;
 
-        switch (bearbeitungsStatusValue) {
-          case "in Bearbeitung":
-            antragColor = "yellow";
+        console.log("responseJSON.body.result[i].STATUS: " + responseJSON.body.result[i].STATUS)
+        switch (responseJSON.body.result[i].STATUS) {
+          case "SUBMITTED":
+            antragColor = "blue";
             break;
-          case "in zustellung":
-            antragColor = "white";
+          case "REJECTED":
+            antragColor = "red";
             break;
-          case "zugestellt":
+          case "ACCEPTED":
             antragColor = "green";
             break;
           default:
@@ -337,8 +342,9 @@ export function AntragProvider({ children }) {
             ausstellerVorname: "Max",
             ausstellerNummer: "K4BN2912A",
             einreichungsbehoerde: "Stadt Köln",
-            bearbeitungsStatus: bearbeitungsStatusValue,
-            caseID: responseJSON.body.result[i].ANTRAG,
+            bearbeitungsStatus: responseJSON.body.result[i].STATUS,
+            caseID: responseJSON.body.result[i].CASE_ID,
+            submissionID:  responseJSON.body.result[i].SUBMISSION_ID,
             antragColor: antragColor,
           },
         });

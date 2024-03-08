@@ -101,19 +101,19 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   let ionicon;
   let ioniconColor;
 
-  if (antragAusstellerDaten?.document?.bearbeitungsStatus === "in Bearbeitung") {
+  if (antragAusstellerDaten?.document?.bearbeitungsStatus === "SUBMITTED") {
     ionicon = "reload-circle-outline"; // Set red color for specific statuses
     ioniconColor = "brown";
   } else if (
-    antragAusstellerDaten?.document?.bearbeitungsStatus === "in zustellung"
+    antragAusstellerDaten?.document?.bearbeitungsStatus === "ACCEPTED"
   ) {
     ionicon = "checkmark-circle-outline";
-    ioniconColor = "orange"; // Set default color for other statuses
+    ioniconColor = "green"; // Set default color for other statuses
   } else if (
-    antragAusstellerDaten?.document?.bearbeitungsStatus === "zugestellt"
+    antragAusstellerDaten?.document?.bearbeitungsStatus === "REJECTED"
   ) {
     ionicon = "checkmark-done-circle-outline";
-    ioniconColor = "green";
+    ioniconColor = "red";
   }
 
   return (
@@ -124,56 +124,10 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
           { backgroundColor: interpolateColorY, opacity: opacity }, //opacity
         ]}
       >
-        <View style={{ flexDirection: "column", opacity: 1 }}>
+        <View style={{ flexDirection: "column", opacity: 1}}>
           <View style={{ flexDirection: "row", opacity: 1 }}>
-            {antragAusstellerDaten.title == "Führungszeugnis" ? (
-              <Image
-                source={require("../../assets/images/fuehrungszeugnis.png")}
-                style={{
-                  height: 200,
-                  width: 130,
-                  margin: 10,
-                  marginTop: 30,
-                  marginBottom: 30,
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "#2C3639",
-                }}
-              />
-            ) : (
-              <Ionicons
-                name="person-circle-outline"
-                size={100}
-                style={{
-                  marginTop: 30,
-                  marginBottom: 70,
-                  color: colorEnum.textcolor,
-                  marginRight: 10,
-                  marginLeft: 30,
-                }}
-              />
-            )}
             <View style={styles.dataContainer}>
-              <View style={styles.textNummer}>
-                <Text style={styles.text}>{antragAusstellerDaten.title}</Text>
-              </View>
-              <Text
-                style={[styles.heading, { fontSize: 8, top: 20, left: 10 }]}
-              >
-                deine Unterschrift:
-              </Text>
-              <Image
-                source={{
-                  uri: `data:image/png;base64,${antragAusstellerDaten?.document?.antragSignature}`,
-                }}
-                style={{
-                  height: 150,
-                  width: 100,
-                  marginLeft: 50,
-                  marginTop: 30,
-                  marginBottom: 30,
-                }}
-              />
+                <Text style={[styles.text, {textDecorationLine: "underline"}]}>{antragAusstellerDaten.title}</Text>    
             </View>
           </View>
           <View style={styles.group}>
@@ -187,21 +141,20 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
           </View>
           <View style={styles.group}>
             <View style={styles.textContainer}>
-              <Text style={styles.heading}>Einreichungsbehörde</Text>
+              <Text style={styles.heading}>SubmissionID</Text>
               <Text style={styles.text}>
-                {antragAusstellerDaten?.document?.einreichungsbehoerde}
+                {antragAusstellerDaten?.document?.submissionID}
               </Text>
             </View>
-            <View style={styles.ioniconContainer}></View>
-            <View style={[styles.textContainer]}>
-            <View style={[styles.textContainer, { marginLeft: 15 }]}>
+          </View>
+          <View style ={[styles.group, {padding:0}]}>           
+              <View style={[styles.textContainer, { marginBottom: 20 }]}>
               <Text style={styles.heading}>Ausstelldatum</Text>
               <Text style={[styles.text, { fontSize: 12 }]}>
                 {antragAusstellerDaten?.document?.ausstellDatum}
               </Text>
             </View>
-              <View style={{flexDirection:"row", right:50, justifyContent:"space-between", marginHorizontal:-70, top:20}}>
-              <TouchableOpacity onPress={transferFileFromCacheToDocumentDirectory}>
+       {/*}   <TouchableOpacity onPress={transferFileFromCacheToDocumentDirectory}>
                 <Ionicons
                   name="download-outline"
                   size={40}
@@ -217,22 +170,15 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
                   style={{ top: 0, left: 0}}
                 />
               </TouchableOpacity>
+      */}
               </View>
-            </View>
-          </View>
           <View style={{ flexDirection: "column" }}>
-            <View style={[styles.textContainer, { paddingLeft: 0 }]}>
-              <Text style={styles.textCAN}>
-                {antragAusstellerDaten?.document?.can}
-              </Text>
-            </View>
             <View
               style={{
                 alignItems: "center",
                 marginLeft: 10,
                 borderBottomWidth: 1,
                 width: 350,
-                marginTop:20,
                 borderBottomColor: colorEnum.textcolor,
                 // borderBottomWidth: StyleSheet.hairlineWidth,
               }}
@@ -241,7 +187,7 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
             <View style={{ alignItems: "center" }}>
               <View style={styles.textContainerInitials}>
                 <Text style={styles.headingInitials}>
-                  {antragAusstellerDaten?.document?.bearbeiitungsStatus}
+                  {antragAusstellerDaten?.document?.bearbeitungsStatus}
                 </Text>
               </View>
               <View style={styles.ioniconContainer}>
@@ -265,7 +211,7 @@ export default React.memo(Fuehrungszeugnis);
 const styles = StyleSheet.create({
   container: {
     width: ImageWidth,
-    height: ImageHeight + 350,
+    height: ImageHeight + 120,
   //  elevation: 16,
     borderRadius: 10,
     backgroundColor: colorEnum.quartiary,

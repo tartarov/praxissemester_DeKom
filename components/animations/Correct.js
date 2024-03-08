@@ -9,8 +9,8 @@ function Correct() {
      <LottieView
       autoPlay
         style={{
-          width: 200,
-          height: 120,
+          width: 100,
+          height: 80,
           backgroundColor: colorEnum.quartiary,
           borderRadius: 20
         }}

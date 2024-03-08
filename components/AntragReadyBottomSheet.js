@@ -98,7 +98,8 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
           color: colorEnum.primary,
         }}
       >
-        CaseID erhalten:  {caseID}.
+        CaseID erhalten: {" "}
+        <Text style={{ fontWeight: "bold" }}>{caseID}</Text>.
         Verfolge den Status von diesem Antrag in deiner Liste beantragter Anträge.
       </LogoText>
       <View
@@ -108,7 +109,9 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
           borderRadius: 40,
         }}
       >
+        <View style={{alignItems: "center"}}>
         <WeiterButton onPress={close}>schließen</WeiterButton>
+        </View>
         <Correct />
       </View>
     </Animated.View>
