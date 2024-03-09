@@ -67,7 +67,7 @@ const Antragmenue = forwardRef(
       {
         id: "1",
         title: alleAntraege.a,
-        leikaKey: "https://schema.fitko.de/fim/s00000092_1.0.schema.json",
+        leikaKey: 99001001000000,
         navigator: "FormBlockScreen",
       },
       {

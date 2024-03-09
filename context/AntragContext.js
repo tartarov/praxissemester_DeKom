@@ -28,6 +28,8 @@ export function AntragProvider({ children }) {
   const [caseID, setCaseID] = useState("");
   const [schemaUri, setSchemaUri] = useState("")
   const [antragTitle, setAntragTitle] = useState("none")
+  const [destionationID, setDestinationID] = useState("")
+  const [leikaKey, setLeikaKey] = useState("")
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -55,6 +57,8 @@ export function AntragProvider({ children }) {
       body: JSON.stringify({
         antrag: filledAntrag,
         schemaUri: schemaUri,
+        destinationID: destionationID,
+        leikaKey: leikaKey
       }),
     };
 
@@ -116,8 +120,10 @@ export function AntragProvider({ children }) {
     );
 
     const schemaData = await response.json();
-    console.log("schemaData ist: " + schemaData.token.schemaUri)
+    console.log("schemaData ist: " + JSON.stringify(schemaData.token.destinationID))
     setSchemaUri(schemaData.token.schemaUri)
+    setDestinationID(schemaData.token.destinationID)
+    setLeikaKey(leikaKey)
     return schemaData.token.schemaJson;
   };
 
@@ -316,7 +322,6 @@ export function AntragProvider({ children }) {
         let bearbeitungsStatusValue = bearbeitungsstatus[random];
         let antragColor;
 
-        console.log("responseJSON.body.result[i].STATUS: " + responseJSON.body.result[i].STATUS)
         switch (responseJSON.body.result[i].STATUS) {
           case "SUBMITTED":
             antragColor = "blue";

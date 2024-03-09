@@ -643,7 +643,9 @@ app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
       },
       body: JSON.stringify({
         antrag: req.body.antrag,
-        schemaUri: req.body.schemaUri
+        schemaUri: req.body.schemaUri,
+        destinationID: req.body.destinationID,
+        leikaKey: req.body.leikaKey
       }),
     };
 
@@ -684,11 +686,18 @@ app.get("/user/antrag/get/schemaUri",cookieJWTAuth, async(req,res)=>{
 
     const response = await fetch(
       `http://localhost:8080/getSchemaUri?leikaKey=${parsedLeikaKey}`);
-    const schemaUri = await response.text();
-    console.log("pending Antrag is: " + schemaUri)
-    const schemadata = await getSchemaJson(schemaUri)
+    const schemaDataString  = await response.text();
+    const schemaData = JSON.parse(schemaDataString);
+    console.log("pending Antrag is: " + schemaData)
+    console.log(schemaData.destinationID)
+    const schemaUriJson = await getSchemaJson(schemaData.schemaUri)
+    const schemaObject = {
+      schemaJson: schemaUriJson.schemaJson,
+      destinationID: schemaData.destinationID,
+      schemaUri: schemaUriJson.schemaUri
+    }
 
-  res.send(formattingResponse(schemadata, { value: true }));
+  res.send(formattingResponse(schemaObject, { value: true }));
 
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);
