@@ -56,9 +56,11 @@ function FormBlocks({route}) {
     formBlockAttributes,
     totalCount,
   } = useContext(AntragContext);
-  const { data, getWalletData } = useContext(DataContext);
+  const { data, getWalletData, getUserData } = useContext(DataContext);
   const { height } = useWindowDimensions();
+  const [userDataObj, setUserDataObj] = useState(null)
   const antragdetail = useRef(null);
+
   
   const leikaKey = route.params.leikaKey
   const antragTitle = route.params.title
@@ -68,6 +70,14 @@ function FormBlocks({route}) {
     getContentFormBlock(JSON.stringify(route.params.leikaKey)); 
   }, [leikaKey]);
 
+  useEffect(() => {
+    async function fetchData() {
+  const userData = await getUserData()
+  setUserDataObj(userData)
+    }
+    fetchData()
+  }, []);
+
 console.log("formData im FormBlocks: " + formData)
 
   const formBlockArray = Array.from(
@@ -75,7 +85,7 @@ console.log("formData im FormBlocks: " + formData)
     (_, index) => index + 1
   );
 
-  if (contentInsideBlock.length != 0 && contentInsideBlock != null) {
+  if (contentInsideBlock.length != 0 && contentInsideBlock != null && userDataObj) {
     return (
       <SafeAreaView style={styles.container}>
     {/*}    {Object.keys(formData).length >= contentInsideBlock.length ? ( */}
@@ -119,7 +129,7 @@ console.log("formData im FormBlocks: " + formData)
                       <View style={styles.documentContainer}>
                         <FormCard
                           data={contentInsideBlock[index]}
-                          attributes={formBlockAttributes}
+                          userData={userDataObj}
                         />
                       </View>
                     </View>
@@ -137,6 +147,8 @@ console.log("formData im FormBlocks: " + formData)
           <AntragReady activeHeight={height * 0.6} ref={antragdetail} />
       </SafeAreaView>
     );
+  } else{
+   return <Loader/>
   }
 }
 

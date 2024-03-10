@@ -23,21 +23,19 @@ import Button from "../Buttons/Button";
 import { SelectList } from "react-native-dropdown-select-list";
 //import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DateTimePickerModalComponent from "../../screens/Modals/DateTimePickerModal";
+import FormCardFieldFilled from "../FormCardFieldFilled";
 
 const { width } = Dimensions.get("screen");
 
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
 
-function FormCard({ data, attributes }) {
+function FormCard({ data, userData }) {
   const { fillAntrag } = useContext(AntragContext);
-
-  const blockAttributes = {
-    properties: [],
-  };
-
   const formDataRef = useRef({});
   const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
+
+  console.log("Nutzerdaten in FormBLocks: " + JSON.stringify(userData));
 
   const initializeFormData = (data) => {
     if (data && data.properties) {
@@ -49,21 +47,19 @@ function FormCard({ data, attributes }) {
             ] = false;
           }
           if (property.type.startsWith("s") || property.type.startsWith("n")) {
-            formDataRef.current[
-              property.path ? property.path : property.name
-            ] = "000";
-            if(property.format?.startsWith("d")){
+            formDataRef.current[property.path ? property.path : property.name] =
+              "000";
+            if (property.format?.startsWith("d")) {
               formDataRef.current[
                 property.path ? property.path : property.name
               ] = "2024-12-12";
             }
           }
           if (property.type.startsWith("i")) {
-            formDataRef.current[
-              property.path ? property.path : property.name
-            ] = parseInt("1");
+            formDataRef.current[property.path ? property.path : property.name] =
+              parseInt("1");
           }
-         
+
           if (property.type === "object" && property.name.startsWith("G")) {
             initializeFormData(property);
           }
@@ -93,34 +89,102 @@ function FormCard({ data, attributes }) {
           >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               {item.format ? (
-              
-                    <DateTimePickerModalComponent
-                      itemName={item.name}
-                      onConfirm={(text) => {
+                <DateTimePickerModalComponent
+                  itemName={item.name}
+                  onConfirm={(text) => {
+                    handleInputChange(
+                      item.path ? item.path : item.name,
+                      new Date(text).toISOString().split("T")[0]
+                    );
+                    //  hideDatePicker(item.name, text);
+                  }}
+                  //  onCancel={() => hideDatePicker(item.name)}
+                />
+              ) : item.enum ? (
+                <>
+                  {item.title === "Staatsangehörigkeit" ? (
+                       <FormCardFieldFilled
+                       data= {userData.staatsangehoerigkeit == "D"
+                       ? "000"
+                       : userData.staatsangehoerigkeit}
+                       setSelected={(text) => {
+                         handleInputChange(item.path ? item.path : item.name, text);
+                       }}
+                       item={item}
+                     />
+                  ) : item.title === "Monat" ? (
+                    <FormCardFieldFilled data={userData.geburtstagMonat} />
+                  ) : item.title === "Jahr" ? (
+                    <Text style={{ fontSize: 22, fontWeight: "800" }}>
+                      {userData.geburtstagJahr}
+                    </Text>
+                  ) : (
+                    <SelectList
+                      placeholder={item.title}
+                      setSelected={(text) =>
                         handleInputChange(
                           item.path ? item.path : item.name,
-                          new Date(text).toISOString().split("T")[0]
-                        );
-                      //  hideDatePicker(item.name, text);
+                          text
+                        )
+                      }
+                      save="value"
+                      searchPlaceholder="suche"
+                      data={item.enum}
+                      boxStyles={{
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: "black",
                       }}
-                    //  onCancel={() => hideDatePicker(item.name)}
-                      
                     />
-
-              ) : item.enum ? (
-                <SelectList
-                  placeholder={item.title}
-                  setSelected={(text) =>
-                    handleInputChange(item.path ? item.path : item.name, text)
-                  }
-                  save="value"
-                  searchPlaceholder="suche"
-                  data={item.enum}
-                  boxStyles={{
-                    borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: "black",
-                  }}
-                />
+                  )}
+                </>
+              ) : item.title === "Vornamen" ? (
+                <FormCardFieldFilled
+                data={userData.vorname}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
+              ) : item.title === "Familienname" ? (
+                <FormCardFieldFilled
+                data={userData.name}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
+              ) : item.title === "Geburtsort" ? (
+                <FormCardFieldFilled
+                data={userData.geburtsort}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
+              ) : item.title === "Straße" ? (
+                <FormCardFieldFilled
+                data={userData.strasse}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
+              ) : item.title === "Postleitzahl" ? (
+                <FormCardFieldFilled
+                data={userData.plz}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
+              ) : item.title === "Ort" ? (
+                <FormCardFieldFilled
+                data={userData.stadt}
+                onChangeText={(text) => {
+                  handleInputChange(item.path ? item.path : item.name, text);
+                }}
+                item={item}
+              />
               ) : (
                 <TextInput
                   placeholder={item.title}
@@ -146,15 +210,50 @@ function FormCard({ data, attributes }) {
           }
         />
       )}
+
       {(item.type === "integer" || item.type === "number") && (
-        <TextInput
-          placeholder={item.title}
-          keyboardType="numeric"
-          onChangeText={(text) =>
-            handleInputChange(item.path ? item.path : item.name, parseInt(text))
-          }
-        />
+        <>
+          {item.title === "Tag (ohne Monat und Jahr)" ? (
+                 <FormCardFieldFilled
+                 data={userData.geburtstagTag}
+                 onChangeText={(text) => {
+                   handleInputChange(item.path ? item.path : item.name, text);
+                 }}
+                 item={item}
+               />
+          ) : item.title === "Monat" ? (
+            <FormCardFieldFilled
+              data={userData.geburtstagMonat}
+              onChangeText={(text) => {
+                handleInputChange(item.path ? item.path : item.name, text);
+              }}
+              item={item}
+            />
+          ) : item.title === "Jahr" ? (
+            <FormCardFieldFilled
+            data={userData.geburtstagJahr}
+            onChangeText={(text) => {
+              handleInputChange(item.path ? item.path : item.name, text);
+            }}
+            item={item}
+          />
+          ) : (
+            <TextInput
+              placeholder={item.title}
+              autoCompleteType="text"
+              keyboardType="default"
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              returnKeyType="go"
+              returnKeyLabel="go"
+              onChangeText={(text) =>
+                handleInputChange(item.path ? item.path : item.name, text)
+              }
+            />
+          )}
+        </>
       )}
+
       {item.type === "object" &&
         item.properties.map((prop, index) => (
           <Item
@@ -218,7 +317,6 @@ function FormCard({ data, attributes }) {
   };
 
   const collectData = () => {
-
     if (Object.keys(formDataRef.current).length == totalFObjects) {
       setBackground("lightgreen");
       fillAntrag(formDataRef.current);
