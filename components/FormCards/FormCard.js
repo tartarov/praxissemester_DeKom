@@ -36,8 +36,9 @@ function FormCard({ data, userData }) {
   const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
 
   console.log("Nutzerdaten in FormBLocks: " + JSON.stringify(userData));
+  console.log("formData in FormBLocks: " + JSON.stringify(data));
 
-  const initializeFormData = (data) => {
+  const initializeFormData = (data, userData) => {
     if (data && data.properties) {
       data.properties.forEach((property) => {
         if (property.type) {
@@ -59,9 +60,51 @@ function FormCard({ data, userData }) {
             formDataRef.current[property.path ? property.path : property.name] =
               parseInt("1");
           }
+          if (property.title == "Staatsangehörigkeit") {
+            formDataRef.current[property.path ? property.path : property.name] =
+              userData.staatsangehoerigkeit == "D"
+                ? "000"
+                : userData.staatsangehoerigkeit;
+          }
+          if (property.title == "Vornamen") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.vorname
+          }
+          if (property.title == "Familienname") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.name
+          }
+          if (property.title == "Geburtsort") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.geburtsort
+          }
+          if (property.title == "Straße") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.strasse
+          }
+          if (property.title == "Postleitzahl") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.plz
+          }
+          if (property.title == "Ort") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.stadt
+          }
+          if (property.title == "Tag (ohne Monat und Jahr)") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.geburtstagTag
+          }
+          if (property.title == "Monat") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.geburtstagMonat
+          }
+          if (property.title == "Jahr") {
+            formDataRef.current[property.path ? property.path : property.name] =
+            userData.geburtstagJahr
+          }
 
           if (property.type === "object" && property.name.startsWith("G")) {
-            initializeFormData(property);
+            initializeFormData(property, userData);
           }
         }
       });
@@ -69,7 +112,7 @@ function FormCard({ data, userData }) {
   };
 
   useEffect(() => {
-    initializeFormData(data);
+    initializeFormData(data, userData);
   }, []);
 
   const handleInputChange = useCallback((id, value) => {
@@ -78,7 +121,9 @@ function FormCard({ data, userData }) {
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <View style={[styles.item, backgroundColor]}>
-      <Text style={[styles.title, textColor]}>{item.title}</Text>
+      <Text style={[styles.title, textColor]}>
+        {[item.title, item.required ? " (Pflichtfeld)" : null]}
+      </Text>
       {item.description ? (
         <Text style={[styles.description, textColor]}>{item.description}</Text>
       ) : null}
@@ -103,21 +148,20 @@ function FormCard({ data, userData }) {
               ) : item.enum ? (
                 <>
                   {item.title === "Staatsangehörigkeit" ? (
-                       <FormCardFieldFilled
-                       data= {userData.staatsangehoerigkeit == "D"
-                       ? "000"
-                       : userData.staatsangehoerigkeit}
-                       setSelected={(text) => {
-                         handleInputChange(item.path ? item.path : item.name, text);
-                       }}
-                       item={item}
-                     />
-                  ) : item.title === "Monat" ? (
-                    <FormCardFieldFilled data={userData.geburtstagMonat} />
-                  ) : item.title === "Jahr" ? (
-                    <Text style={{ fontSize: 22, fontWeight: "800" }}>
-                      {userData.geburtstagJahr}
-                    </Text>
+                    <FormCardFieldFilled
+                      data={
+                        userData.staatsangehoerigkeit == "D"
+                          ? "000"
+                          : userData.staatsangehoerigkeit
+                      }
+                      setSelected={(text) => {
+                        handleInputChange(
+                          item.path ? item.path : item.name,
+                          text
+                        );
+                      }}
+                      item={item}
+                    />
                   ) : (
                     <SelectList
                       placeholder={item.title}
@@ -139,52 +183,52 @@ function FormCard({ data, userData }) {
                 </>
               ) : item.title === "Vornamen" ? (
                 <FormCardFieldFilled
-                data={userData.vorname}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.vorname}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : item.title === "Familienname" ? (
                 <FormCardFieldFilled
-                data={userData.name}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.name}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : item.title === "Geburtsort" ? (
                 <FormCardFieldFilled
-                data={userData.geburtsort}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.geburtsort}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : item.title === "Straße" ? (
                 <FormCardFieldFilled
-                data={userData.strasse}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.strasse}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : item.title === "Postleitzahl" ? (
                 <FormCardFieldFilled
-                data={userData.plz}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.plz}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : item.title === "Ort" ? (
                 <FormCardFieldFilled
-                data={userData.stadt}
-                onChangeText={(text) => {
-                  handleInputChange(item.path ? item.path : item.name, text);
-                }}
-                item={item}
-              />
+                  data={userData.stadt}
+                  onChangeText={(text) => {
+                    handleInputChange(item.path ? item.path : item.name, text);
+                  }}
+                  item={item}
+                />
               ) : (
                 <TextInput
                   placeholder={item.title}
@@ -214,13 +258,13 @@ function FormCard({ data, userData }) {
       {(item.type === "integer" || item.type === "number") && (
         <>
           {item.title === "Tag (ohne Monat und Jahr)" ? (
-                 <FormCardFieldFilled
-                 data={userData.geburtstagTag}
-                 onChangeText={(text) => {
-                   handleInputChange(item.path ? item.path : item.name, text);
-                 }}
-                 item={item}
-               />
+            <FormCardFieldFilled
+              data={userData.geburtstagTag}
+              onChangeText={(text) => {
+                handleInputChange(item.path ? item.path : item.name, text);
+              }}
+              item={item}
+            />
           ) : item.title === "Monat" ? (
             <FormCardFieldFilled
               data={userData.geburtstagMonat}
@@ -231,12 +275,12 @@ function FormCard({ data, userData }) {
             />
           ) : item.title === "Jahr" ? (
             <FormCardFieldFilled
-            data={userData.geburtstagJahr}
-            onChangeText={(text) => {
-              handleInputChange(item.path ? item.path : item.name, text);
-            }}
-            item={item}
-          />
+              data={userData.geburtstagJahr}
+              onChangeText={(text) => {
+                handleInputChange(item.path ? item.path : item.name, text);
+              }}
+              item={item}
+            />
           ) : (
             <TextInput
               placeholder={item.title}

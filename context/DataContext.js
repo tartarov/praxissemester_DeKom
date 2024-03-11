@@ -142,7 +142,7 @@ export const DataProvider = ({ children }) => {
     */
 
     const personalInfo = jwtDecode(thisUser);
-    console.log("personalInfo.user.birthdateSub: " + JSON.stringify(personalInfo.user.issuingState));
+    console.log("personalInfo.user: " + JSON.stringify(personalInfo.user));
 
     let data = {
       name: personalInfo.user.nachname,

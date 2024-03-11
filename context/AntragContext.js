@@ -167,6 +167,11 @@ export function AntragProvider({ children }) {
                   : null,
                 path: newPath.join("."),
               };
+
+        // Überprüfe, ob das F-Objekt in required enthalten ist
+        const requiredFObjects = gObject.required || [];
+        fObjectData.required = requiredFObjects.includes(key);
+
               gObjectData.properties.push(fObjectData);
               // Füge das F-Objekt zu den verwendeten F-Objekten hinzu
               usedFObjects.add(key);
