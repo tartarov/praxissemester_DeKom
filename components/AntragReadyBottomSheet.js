@@ -23,18 +23,11 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import LogoText from "./LogoFont";
-import TextInputBlack from "./TextInputBlack";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { AuthContext } from "../context/AuthContext";
-import Button from "./Buttons/Button.js";
-import CustomText from "./Font";
-import { Linking } from "react-native";
-import { Entypo as Icon } from "@expo/vector-icons";
 import colorEnum from "./DeKomColors";
 import Correct from "./animations/Correct.js";
 import AntragContext from "../context/AntragContext";
 import WeiterButton from "./Buttons/WeiterButton";
+import SomethingWentWrong from "./animations/SomethingWentWrong";
 
 const AntragReady = forwardRef(({ activeHeight }, ref) => {
   const height = useWindowDimensions().height;
@@ -43,7 +36,7 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
   const [isTouched, setIsTouched] = useState(false);
   const [showDigits, setShowDigits] = useState(false);
 
-  const { caseID } = useContext(AntragContext);
+  const { caseID, failMessage } = useContext(AntragContext);
 
   const animationStyle = useAnimatedStyle(() => {
     const top = topAnimation.value;
@@ -78,7 +71,35 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
   );
 
   return (
-    <Animated.View style={[styles.container, animationStyle]}>
+    <Animated.View style={[styles.container, animationStyle, { backgroundColor: failMessage? "lightcoral" : colorEnum.quartiary, borderRadius:10}]}>
+      {failMessage?
+      <>
+       <LogoText
+       style={{
+         fontSize: 24,
+         alignSelf: "center",
+         paddingTop: 40,
+         color: colorEnum.primary,
+       }}
+     >
+       {" "}
+      Oh, oh. Absenden fehlgeschlagen.{" "}
+     </LogoText> 
+       <LogoText
+       style={{
+         fontSize: 12,
+         alignSelf: "center",
+         padding: 20,
+         color: colorEnum.primary,
+       }}
+     >
+       Etwas ist schiefgelaufen. Error Code:{" "}
+       <Text style={{ fontWeight: "200" }}>{[failMessage.status, ". Ursache: " , failMessage.error]}</Text>.
+        Fülle das Formular bitte nochmal aus und achte dabei auf die Vollständigkeit deiner Daten.
+     </LogoText>
+     </> 
+     :
+     <>
       <LogoText
         style={{
           fontSize: 30,
@@ -90,6 +111,7 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
         {" "}
         Antrag abgesendet!{" "}
       </LogoText>
+
       <LogoText
         style={{
           fontSize: 12,
@@ -102,6 +124,8 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
         <Text style={{ fontWeight: "bold" }}>{caseID}</Text>.
         Verfolge den Status von diesem Antrag in deiner Liste beantragter Anträge.
       </LogoText>
+      </>
+}
       <View
         style={{
           //alignSelf: "center",
@@ -112,7 +136,8 @@ const AntragReady = forwardRef(({ activeHeight }, ref) => {
         <View style={{alignItems: "center"}}>
         <WeiterButton onPress={close}>schließen</WeiterButton>
         </View>
-        <Correct />
+        {failMessage? <SomethingWentWrong/> : <Correct /> }
+     
       </View>
     </Animated.View>
   );
@@ -122,7 +147,6 @@ export default AntragReady;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colorEnum.quartiary,
     position: "absolute",
     top: 500,
     bottom: 0,

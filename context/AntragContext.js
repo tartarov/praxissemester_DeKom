@@ -30,10 +30,11 @@ export function AntragProvider({ children }) {
   const [antragTitle, setAntragTitle] = useState("none")
   const [destionationID, setDestinationID] = useState("")
   const [leikaKey, setLeikaKey] = useState("")
+  const [failMessage, setFailMessage] = useState(null)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
-  const openPinInput = useCallback((antragdetail) => {
+  const openMessage = useCallback((antragdetail) => {
     antragdetail.current.expand();
   }, []);
 
@@ -75,13 +76,17 @@ export function AntragProvider({ children }) {
       const caseID = tokenObject.caseID;
       const submissionID = tokenObject.submissionID;
       const submissionStatus = tokenObject.submissionStatus;
+      console.log("tokenObj: " + JSON.stringify(tokenObject))
       console.log("caseID: " + caseID);
       console.log("submissionID: " + submissionID)
       console.log("submissionStatus: " + submissionStatus)
       setCaseID(caseID);
-      const toListeAdded = addToListe(caseID, submissionID, submissionStatus, antragTitle, null);
-      if (toListeAdded) {
-        openPinInput(antragRef);
+      if (caseID && submissionID && submissionStatus) {
+         addToListe(caseID, submissionID, submissionStatus, antragTitle, null);
+         openMessage(antragRef);
+      } else{
+        setFailMessage(tokenObject)
+          openMessage(antragRef);
       }
     }
   };
@@ -464,6 +469,7 @@ export function AntragProvider({ children }) {
         totalCount,
         caseID,
         antragTitle,
+        failMessage,
         sendAntrag,
         createNestedObject,
         extractFObjectsWithTitles,

@@ -285,13 +285,13 @@ function FormCard({ data, userData }) {
             <TextInput
               placeholder={item.title}
               autoCompleteType="text"
-              keyboardType="default"
+              keyboardType="numeric"
               autoCapitalize="none"
               keyboardAppearance="dark"
               returnKeyType="go"
               returnKeyLabel="go"
               onChangeText={(text) =>
-                handleInputChange(item.path ? item.path : item.name, text)
+                handleInputChange(item.path ? item.path : item.name, parseInt(text))
               }
             />
           )}
