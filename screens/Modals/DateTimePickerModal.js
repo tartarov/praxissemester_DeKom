@@ -25,7 +25,7 @@ const DateTimePickerModalComponent = ({
     };
 
     const hideDatePicker = (itemName, date) => {
-      const dateOnly = new Date(date).toISOString().split("T")[0];
+      const dateOnly = new Date(date? date: null).toISOString().split("T")[0];
       console.log(dateOnly);
       showDate.current[itemName] = dateOnly;
       setShowDateOr({ ...showDate.current })
@@ -54,7 +54,7 @@ const DateTimePickerModalComponent = ({
             onConfirm(date);
             hideDatePicker(itemName, date);
           }}
-          onCancel={onCancel}
+          onCancel={(date) => hideDatePicker(itemName, date)}
         />
       </View>
     </TouchableWithoutFeedback>

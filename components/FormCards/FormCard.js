@@ -143,7 +143,7 @@ function FormCard({ data, userData }) {
                     );
                     //  hideDatePicker(item.name, text);
                   }}
-                  //  onCancel={() => hideDatePicker(item.name)}
+                    onCancel={() => hideDatePicker(item.name)}
                 />
               ) : item.enum ? (
                 <>
