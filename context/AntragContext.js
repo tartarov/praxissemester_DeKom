@@ -145,9 +145,11 @@ export function AntragProvider({ children }) {
           name: currentPath[currentPath.length - 1],
           type: gObject.type,
           title: gObject.title,
+          required: schema.required.includes(currentPath[currentPath.length - 1]),
           properties: [],
         };
 
+        console.log("schema.required.includes(currentPath[currentPath.length - 1]): " + schema.required.includes(currentPath[currentPath.length - 1]))
         if (gObject.properties) {
           Object.keys(gObject.properties).forEach((key) => {
             const nextGObject = schema.$defs[key];
@@ -203,9 +205,10 @@ export function AntragProvider({ children }) {
         name: null,
         type: "Ghost",
         title: "Weiteres",
+        required: true,
         properties: [],
       };
-      const unusedFObjects = [];
+    
       Object.keys(schema.$defs).forEach((fObjectName) => {
         if (fObjectName.startsWith("F") && !usedFObjects.has(fObjectName)) {
           const fObjectInSchema = schema.$defs[fObjectName];
@@ -213,8 +216,18 @@ export function AntragProvider({ children }) {
             name: fObjectName,
             type: fObjectInSchema ? fObjectInSchema.type : null,
             title: fObjectInSchema ? fObjectInSchema.title : null,
+            //array: gObject.properties[key].type === "array",
+            enum: fObjectInSchema ? fObjectInSchema.enum : null,
+            format: fObjectInSchema ? fObjectInSchema.format : null,
+            description: fObjectInSchema
+              ? fObjectInSchema.description
+              : null,
           };
           if (fObjectData.type && fObjectData.title) {
+            console.log( " schema.$defs.required: " + schema.required)
+            const requiredFObjects = schema.required || [];
+            fObjectData.required = requiredFObjects.includes(fObjectName);
+    
             gObjectData.properties.push(fObjectData);
           }
         }

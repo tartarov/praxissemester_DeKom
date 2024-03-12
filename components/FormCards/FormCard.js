@@ -123,9 +123,14 @@ function FormCard({ data, userData }) {
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <View style={[styles.item, backgroundColor]}>
+      <View style={{flexDirection: "row"}}>
       <Text style={[styles.title, textColor]}>
-        {[item.title, item.required ? " (Pflichtfeld)" : null]}
+        {item.title}
       </Text>
+      <Text style={[styles.pflichtfeld, {color:"red"}]}>
+        {item.required ? " (Pflichtfeld)" : null}
+      </Text>
+      </View>
       {item.description ? (
         <Text style={[styles.description, textColor]}>{item.description}</Text>
       ) : null}
@@ -321,33 +326,24 @@ function FormCard({ data, userData }) {
 
   const countFObjects = (data) => {
     let count = 0;
-
+  
     if (data && data.properties) {
       data.properties.forEach((property) => {
-        if (
-          property.type === "string" ||
-          property.type === "boolean" ||
-          property.type === "integer" ||
-          property.type === "number" ||
-          property.type === null
-        ) {
+        if (property.required == true) {
+          console.log("+1 :)  " + property.title )
           count++;
         }
-        if (
-          property.type === "object" && property.name
-            ? property.name.startsWith("G")
-            : null
-        ) {
+        if (property.type === "object" && property.name.startsWith("G")) {
           count += countFObjects(property);
         }
       });
     }
-
+  
     return count;
   };
-
   // Aufruf der Funktion
   const totalFObjects = countFObjects(data);
+  console.log("totalFObjects: " + totalFObjects)
 
   const renderItem = ({ item }) => {
     const backgroundColor = colorEnum.aufenthaltsTitelcolor;
@@ -363,12 +359,14 @@ function FormCard({ data, userData }) {
   };
 
   const collectData = () => {
-    if (Object.keys(formDataRef.current).length == totalFObjects) {
+    console.log(Object.keys(formDataRef.current).length)
+    console.log(totalFObjects)
+    if (Object.keys(formDataRef.current).length >= totalFObjects) {
       setBackground("lightgreen");
       fillAntrag(formDataRef.current);
     } else {
       setBackground("lightcoral");
-      Alert.alert("Fehler", "Bitte füllen Sie alle Felder aus.");
+      Alert.alert("Fehler", "Bitte füllen Sie alle Pflichtfelder aus.");
     }
 
     console.log("Gesammelte Daten:", formDataRef.current);
@@ -380,6 +378,7 @@ function FormCard({ data, userData }) {
       <View style={[styles.container, { backgroundColor: background }]}>
         <View style={{ alignItems: "center", padding: 15 }}>
           <Text style={[styles.titleHead]}>{data.title}</Text>
+          <Text style={[styles.pflichtkarte, { color: "red", textDecorationLine: "underline" }]}>{data.required ? " (Pflichtkarte)" : null}</Text>
         </View>
         <FlatList
           style={styles.flatlist}
@@ -417,6 +416,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  pflichtfeld: {
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+  pflichtkarte: {
+    fontSize: 14,
     fontWeight: "bold",
   },
   titleHead: {
