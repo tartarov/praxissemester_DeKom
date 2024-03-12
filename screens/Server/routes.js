@@ -688,16 +688,22 @@ app.get("/user/antrag/get/schemaUri",cookieJWTAuth, async(req,res)=>{
       `http://localhost:8080/getSchemaUri?leikaKey=${parsedLeikaKey}`);
     const schemaDataString  = await response.text();
     const schemaData = JSON.parse(schemaDataString);
-    console.log("pending Antrag is: " + schemaData)
+    console.log("pending Antrag is raw: " + JSON.stringify(schemaData))
+    console.log("pending Antrag is: " + schemaData.schemaUri)
     console.log(schemaData.destinationID)
-    const schemaUriJson = await getSchemaJson(schemaData.schemaUri)
-    const schemaObject = {
-      schemaJson: schemaUriJson.schemaJson,
-      destinationID: schemaData.destinationID,
-      schemaUri: schemaUriJson.schemaUri
+    if(!schemaData.Error){
+      const schemaUriJson = await getSchemaJson(schemaData.schemaUri)
+      const schemaObject = {
+        schemaJson: schemaUriJson.schemaJson,
+        destinationID: schemaData.destinationID,
+        schemaUri: schemaUriJson.schemaUri
+      }
+  
+    res.send(formattingResponse(schemaObject, { value: true }));
+    } else{
+      res.send(formattingResponse(schemaData.Error, { value: true }));
     }
 
-  res.send(formattingResponse(schemaObject, { value: true }));
 
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);

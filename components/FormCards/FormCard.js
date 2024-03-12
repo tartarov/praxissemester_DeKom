@@ -47,7 +47,7 @@ function FormCard({ data, userData }) {
               property.path ? property.path : property.name
             ] = false;
           }
-          if (property.type.startsWith("s") || property.type.startsWith("n")) {
+      /*    if (property.type.startsWith("s") || property.type.startsWith("n")) {
             formDataRef.current[property.path ? property.path : property.name] =
               "000";
             if (property.format?.startsWith("d")) {
@@ -56,10 +56,12 @@ function FormCard({ data, userData }) {
               ] = "2024-12-12";
             }
           }
+          
           if (property.type.startsWith("i")) {
             formDataRef.current[property.path ? property.path : property.name] =
               parseInt("1");
           }
+          */
           if (property.title == "Staatsangehörigkeit") {
             formDataRef.current[property.path ? property.path : property.name] =
               userData.staatsangehoerigkeit == "D"
