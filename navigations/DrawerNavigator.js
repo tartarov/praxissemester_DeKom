@@ -57,7 +57,7 @@ const DrawerNavigator = () => {
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons
-              name="documents-outline"
+              name="folder-open-outline"
               size={28}
               color={colorEnum.quartiary}
             />

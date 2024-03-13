@@ -76,13 +76,15 @@ export function AntragProvider({ children }) {
       const caseID = tokenObject.caseID;
       const submissionID = tokenObject.submissionID;
       const submissionStatus = tokenObject.submissionStatus;
+      const sentSubmission = tokenObject.sentSubmission;
       console.log("tokenObj: " + JSON.stringify(tokenObject))
       console.log("caseID: " + caseID);
       console.log("submissionID: " + submissionID)
       console.log("submissionStatus: " + submissionStatus)
+      console.log("sentSubmission: " + sentSubmission);
       setCaseID(caseID);
-      if (caseID && submissionID && submissionStatus) {
-         addToListe(caseID, submissionID, submissionStatus, antragTitle, null);
+      if (caseID && submissionID && submissionStatus && sentSubmission) {
+         addToListe(caseID, submissionID, submissionStatus, sentSubmission, antragTitle, null);
          openMessage(antragRef);
       } else{
         setFailMessage(tokenObject)
@@ -149,7 +151,6 @@ export function AntragProvider({ children }) {
           properties: [],
         };
 
-        console.log("schema.required.includes(currentPath[currentPath.length - 1]): " + schema.required.includes(currentPath[currentPath.length - 1]))
         if (gObject.properties) {
           Object.keys(gObject.properties).forEach((key) => {
             const nextGObject = schema.$defs[key];
@@ -294,7 +295,7 @@ export function AntragProvider({ children }) {
     return fObjectsWithTitleAndType;
   }
 
-  const addToListe = async (file, submissionID, submissionStatus, antragName, signatur) => {
+  const addToListe = async (file, submissionID, submissionStatus, sentSubmission, antragName, signatur) => {
     isVarifiedVar = isVerified;
 
     console.log("antragName: " + antragName)
@@ -311,6 +312,7 @@ export function AntragProvider({ children }) {
         antragName: antragName,
         submissionID: submissionID,
         submissionStatus: submissionStatus,
+        sentSubmission: sentSubmission,
       }),
     });
 
@@ -467,6 +469,38 @@ export function AntragProvider({ children }) {
     setIsLoading(false);
   };
 
+  const updateAntraege = async () => {
+      console.log("antragFile: " + JSON.stringify(antragFile))
+      console.log("antragFile.length: " + antragFile.length)
+      let antragSentSubmission = [];
+
+      for(let i= 0 ; i<antragFile.length; i++){
+        console.log(antragFile[i].SENTSUBMISSION)
+        antragSentSubmission.push(antragFile[i].SENTSUBMISSION)
+        console.log(antragSentSubmission)
+      }
+
+      const reqOptions = {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          antragArray: antragSentSubmission,
+        }),
+      }
+
+      const response = await fetch(
+        `https://dekom.ddns.net:4222/user/antrag/update/status`, reqOptions
+      );
+      const updatedAntraege = await response.json();
+      const tokenObject = updatedAntraege.body.result;
+      console.log("tokenObject updated: " + JSON.stringify(tokenObject))
+      getAntrag()
+
+  }
+
   return (
     <AntragContext.Provider
       value={{
@@ -493,6 +527,7 @@ export function AntragProvider({ children }) {
         getAntrag,
         removeAntrag: removeAntragById,
         getAntragById,
+        updateAntraege,
       }}
     >
       {children}

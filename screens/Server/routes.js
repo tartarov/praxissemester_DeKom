@@ -14,9 +14,9 @@ var http = require("http");
 const fs = require("fs");
 global.atob = require("atob");
 global.Blob = require("node-blob");
-const jwksClient = require('jwks-rsa');
-const {promisify} = require('node:util');
-const crypto = require('crypto');
+const jwksClient = require("jwks-rsa");
+const { promisify } = require("node:util");
+const crypto = require("crypto");
 
 const connectionTestdb = mysql.createPool({
   host: process.env.TEST_DB_HOST,
@@ -69,12 +69,12 @@ app.use(function (req, res, next) {
 });
 
 async function generateNonce() {
-  const nonceLength = 16; 
+  const nonceLength = 16;
   const nonceBuffer = crypto.randomBytes(nonceLength);
-  const nonceValue = nonceBuffer.toString('hex');
+  const nonceValue = nonceBuffer.toString("hex");
 
-  console.log(nonceBuffer)
-  console.log(nonceValue)
+  console.log(nonceBuffer);
+  console.log(nonceValue);
   return nonceValue;
 }
 
@@ -88,35 +88,33 @@ const getHash = async (userid) => {
   return hash;
 };
 
-const allowedIssuers = [
-`https://ref-ausweisident.eid-service.de`
-];
+const allowedIssuers = [`https://ref-ausweisident.eid-service.de`];
 
 const fetchJwksUri = async (issuer) => {
   if (!allowedIssuers.includes(issuer)) {
     throw new Error(`The issuer ${issuer} is not trusted here!`);
   }
   const response = await fetch(`${issuer}/.well-known/openid-configuration`);
-  const {jwks_uri} = await response.json();
+  const { jwks_uri } = await response.json();
   return jwks_uri;
 };
 
 const getKey = (jwksUri) => (header, callback) => {
-  const client = jwksClient({jwksUri});
+  const client = jwksClient({ jwksUri });
   client.getSigningKey(header.kid, (err, key) => {
-    console.log("HEADER.KID: " + JSON.stringify(header))
+    console.log("HEADER.KID: " + JSON.stringify(header));
     if (err) {
-      console.log(err)
+      console.log(err);
       return callback(err);
     }
-    console.log("key: " + JSON.stringify(key))
-    console.log("key: " + JSON.stringify(key.rsaPublicKey))
+    console.log("key: " + JSON.stringify(key));
+    console.log("key: " + JSON.stringify(key.rsaPublicKey));
     callback(null, key.rsaPublicKey);
   });
 };
 
-const verify = async token => {
-  const {iss: issuer} = jwt.decode(token);
+const verify = async (token) => {
+  const { iss: issuer } = jwt.decode(token);
   const jwksUri = await fetchJwksUri(issuer);
   return promisify(jwt.verify)(token, getKey(jwksUri));
 };
@@ -138,7 +136,7 @@ const getUserInfoToken = async (accessToken) => {
       requestOptionsUserInfo
     );
     const userInfoJSON = await response2.text();
-   //   console.log("SUCCSESSFUL: " + userInfoJSON)
+    //   console.log("SUCCSESSFUL: " + userInfoJSON)
     return userInfoJSON;
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
@@ -148,11 +146,10 @@ const getUserInfoToken = async (accessToken) => {
 
 app.get("/getNonce", async (req, res) => {
   nonce = await generateNonce();
-  res.send(formattingResponse(nonce, { value: true }))
-})
+  res.send(formattingResponse(nonce, { value: true }));
+});
 
-app.get("/mock/auth", async (req,res)=>{
-
+app.get("/mock/auth", async (req, res) => {
   let user = {
     userid: "123456789",
     vorname: "Max",
@@ -163,9 +160,9 @@ app.get("/mock/auth", async (req,res)=>{
     country: "Deutschland",
     birthdate: "02.03.2005",
     birthdateSub: {
-      birthday: "02",
-      birthmonth: "03",
-      birthyear: "2005",
+      birthday: 02,
+      birthmonth: 03,
+      birthyear: 2005,
     },
     dateOfExpiry: "05.12.2030",
     placeOfBirth: "Ukraine",
@@ -179,17 +176,14 @@ app.get("/mock/auth", async (req,res)=>{
 
   res.cookie("token", token, { httpOnly: true });
   res.send(formattingResponse(token, { value: true }));
-})
-
-
+});
 
 app.get("/auth", async (req, res) => {
-
   //https://ref-ausweisident.eid-service.de/oic/authorize?scope=openid+FamilyNames+GivenNames+DateOfBirth+PlaceOfResidence&response_type=code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth&state=123456&client_id=UF2RkWt7dI&acr_values=browser
 
   console.log("requestquery: " + JSON.stringify(req.query.code));
 
-  const uri_encoded_ClientId = encodeURIComponent("UF2RkWt7dI"); 
+  const uri_encoded_ClientId = encodeURIComponent("UF2RkWt7dI");
   console.log("URI encoded Client ID: " + uri_encoded_ClientId);
 
   const uri_encoded_Cs = encodeURIComponent(":B3?KZN1uN#rDn0sc?wxb");
@@ -223,16 +217,19 @@ app.get("/auth", async (req, res) => {
     const accessToken = responseJSON.access_token;
 
     const idToken = responseJSON.id_token;
-    console.log("ID-TOKEN : " + idToken)
-    const idTokenDecoded = jwt_decode(idToken)
+    console.log("ID-TOKEN : " + idToken);
+    const idTokenDecoded = jwt_decode(idToken);
 
     //verfify ID Token
-    if( idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) &&  idTokenDecoded.nonce == nonce  ) {
+    if (
+      idTokenDecoded.aud == decodeURIComponent(uri_encoded_ClientId) &&
+      idTokenDecoded.nonce == nonce
+    ) {
       verify(idToken)
-      .then(() => console.log('Token verified successfully.'))
-      .catch(console.error);
+        .then(() => console.log("Token verified successfully."))
+        .catch(console.error);
     } else {
-      res.send(formattingResponse(null, { value: false }))
+      res.send(formattingResponse(null, { value: false }));
     }
 
     const userInfo = await getUserInfoToken(accessToken);
@@ -274,7 +271,7 @@ app.get("/auth", async (req, res) => {
       "." +
       expiryDate.getFullYear();
 
-      console.log("userId: " + rid)
+    console.log("userId: " + rid);
 
     let user = {
       userid: rid,
@@ -333,19 +330,17 @@ app.get("/testdb.userdaten", async (req, res) => {
 app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
   const token = req.cookies.token; //so bekommen wir den Token
   const decoded = jwt_decode(token);
-  const userIdHash = await getHash(
-    decoded.user.userid
-  );
+  const userIdHash = await getHash(decoded.user.userid);
 
-  const query = `INSERT INTO dekomdb.dekom_user (USER_ID_HASH) VALUES ('${userIdHash}') ON DUPLICATE KEY UPDATE USER_ID_HASH = USER_ID_HASH;` ;// `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
-  
+  const query = `INSERT INTO dekomdb.dekom_user (USER_ID_HASH) VALUES ('${userIdHash}') ON DUPLICATE KEY UPDATE USER_ID_HASH = USER_ID_HASH;`; // `SELECT * FROM dekomdb.dekom_user WHERE USER_ID_HASH='${userIdHash}'`;
+
   connectionDekomdb.getConnection((err, ourConnection) => {
     connectionDekomdb.query(query, (error, results, fields) => {
       if (error) {
         console.log("An error occurred:", error.message);
         throw error;
       } else {
-        if (results.serverStatus == 2 ) {
+        if (results.serverStatus == 2) {
           console.log("User found successfully.");
           res.send(
             formattingResponse(token, {
@@ -354,10 +349,9 @@ app.get("/dekomdb.dekom_user/identify", cookieJWTAuth, async (req, res) => {
             })
           );
         } else {
-          if(req.mock){
-
+          if (req.mock) {
           }
-          console.log("results: " + (JSON.stringify(results)))
+          console.log("results: " + JSON.stringify(results));
           console.log("User-------- not found.");
           res.send(formattingResponse(token, { value: false }));
         }
@@ -487,19 +481,24 @@ app.post("/user/save/antrag", cookieJWTAuth, async (req, resData) => {
     minutes +
     ":" +
     seconds;
- 
+
   connectionDekomdb.getConnection((err, ourConnection) => {
     console.log("Antragname ist " + req.body.antragName);
     connectionDekomdb.query(
-      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, CASE_ID, SUBMISSION_ID, DATUM, SIGNATUR, ANTRAGSNAME, STATUS) VALUES (?,?,?,?,?,?,?)",
+      "INSERT INTO dekomdb.userdocuments (USER_ID_HASH, CASE_ID, SUBMISSION_ID, DESTINATION_ID, SENTSUBMISSION, DATUM, SIGNATUR, ANTRAGSNAME, STATUS) VALUES (?,?,?,?,?,?,?,?,?)",
       (values = [
         hash,
-        req.body.file,
-        req.body.submissionID,
+        req.body.sentSubmission.caseId,
+        req.body.sentSubmission.submissionId,
+        req.body.sentSubmission.destinationId,
+        JSON.stringify(req.body.sentSubmission),
         fullDate,
-        new Buffer.from(req.body.signatur? req.body.signatur : "abcdefg123=/", "base64"),
+        new Buffer.from(
+          req.body.signatur ? req.body.signatur : "abcdefg123=/",
+          "base64"
+        ),
         req.body.antragName,
-        req.body.submissionStatus
+        req.body.submissionStatus,
       ]),
       function (err, res) {
         if (err) {
@@ -596,7 +595,6 @@ app.get("/user/getById/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
-
 app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   let token = req.cookies.token;
   const { antragId } = req.query;
@@ -631,9 +629,9 @@ app.delete("/user/remove/antrag", cookieJWTAuth, async (req, resData) => {
   });
 });
 
-app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
+app.post("/user/send/antrag", cookieJWTAuth, async (req, res) => {
   try {
-    console.log("req.body: " + JSON.stringify(req.body))
+    console.log("req.body: " + JSON.stringify(req.body));
 
     const reqOptions = {
       method: "POST",
@@ -645,72 +643,132 @@ app.post("/user/send/antrag", cookieJWTAuth, async(req,res)=>{
         antrag: req.body.antrag,
         schemaUri: req.body.schemaUri,
         destinationID: req.body.destinationID,
-        leikaKey: req.body.leikaKey
+        leikaKey: req.body.leikaKey,
       }),
     };
 
     const response2 = await fetch(
-      `http://localhost:8080/submission`, reqOptions);
+      `http://localhost:8080/submission`,
+      reqOptions
+    );
     const pendingAntrag = await response2.text();
-    console.log("pending Antrag is: " + pendingAntrag)
+    console.log("pending Antrag is: " + pendingAntrag);
     res.send(formattingResponse(pendingAntrag, { value: true }));
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);
     throw error;
   }
-})
+});
 
 const getSchemaJson = async (schemaUri) => {
   try {
-
-   
-    const response2 = await fetch(
-      schemaUri);
-      console.log(response2)
+    const response2 = await fetch(schemaUri);
+    console.log(response2);
     const schemaJson = await response2.json();
-   console.log("SUCCSESSFUL: " + schemaUri)
-    return {schemaJson: schemaJson, schemaUri: schemaUri};
+    console.log("SUCCSESSFUL: " + schemaUri);
+    return { schemaJson: schemaJson, schemaUri: schemaUri };
   } catch (error) {
     console.error(`Error during authorization: ${error.message}`);
     throw error;
   }
 };
 
-
-app.get("/user/antrag/get/schemaUri",cookieJWTAuth, async(req,res)=>{
+app.get("/user/antrag/get/schemaUri", cookieJWTAuth, async (req, res) => {
   try {
-
-    console.log(req.query.leikaKey)
-    parsedLeikaKey = req.query.leikaKey
-
+    console.log(req.query.leikaKey);
+    parsedLeikaKey = req.query.leikaKey;
 
     const response = await fetch(
-      `http://localhost:8080/getSchemaUri?leikaKey=${parsedLeikaKey}`);
-    const schemaDataString  = await response.text();
+      `http://localhost:8080/getSchemaUri?leikaKey=${parsedLeikaKey}`
+    );
+    const schemaDataString = await response.text();
     const schemaData = JSON.parse(schemaDataString);
-    console.log("pending Antrag is raw: " + JSON.stringify(schemaData))
-    console.log("pending Antrag is: " + schemaData.schemaUri)
-    console.log(schemaData.destinationID)
-    if(!schemaData.Error){
-      const schemaUriJson = await getSchemaJson(schemaData.schemaUri)
+    console.log("pending Antrag is raw: " + JSON.stringify(schemaData));
+    console.log("pending Antrag is: " + schemaData.schemaUri);
+    console.log(schemaData.destinationID);
+    if (!schemaData.Error) {
+      const schemaUriJson = await getSchemaJson(schemaData.schemaUri);
       const schemaObject = {
         schemaJson: schemaUriJson.schemaJson,
         destinationID: schemaData.destinationID,
-        schemaUri: schemaUriJson.schemaUri
-      }
-  
-    res.send(formattingResponse(schemaObject, { value: true }));
-    } else{
+        schemaUri: schemaUriJson.schemaUri,
+      };
+
+      res.send(formattingResponse(schemaObject, { value: true }));
+    } else {
       res.send(formattingResponse(schemaData.Error, { value: true }));
     }
+  } catch (error) {
+    console.error(`Error during sending antrag: ${error.message}`);
+    throw error;
+  }
+});
 
+app.post("/user/antrag/update/status", cookieJWTAuth, async (req, resData) => {
+  try {
+    let statuscontrol = [];
+    let token = req.cookies.token;
+    console.log(req.body.antragArray);
+    parsedAntragArray = req.body.antragArray;
+
+    const reqOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        antragArray: parsedAntragArray,
+      }),
+    };
+
+    const response = await fetch(
+      `http://localhost:8080/updateAntraege`,
+      reqOptions
+    );
+    const schemaDataString = await response.text();
+    const schemaData = JSON.parse(schemaDataString);
+    console.log("pending Antrag is raw: " + JSON.stringify(schemaData));
+
+    connectionDekomdb.getConnection((err, ourConnection) => {
+      for (const entry of schemaData) {
+        const id = Object.keys(entry)[0];
+        const value = entry[id];
+      connectionDekomdb.query(
+        `UPDATE  dekomdb.userdocuments SET STATUS = ? WHERE SUBMISSION_ID = ?`, (values = [value, id]),
+        (err, res) => {
+          //(values = [antragId])
+          console.log("RES: " + JSON.stringify(res));
+          if (err) {
+            console.log(err);
+            throw err;
+          } else if (res) {
+            console.log("Document Updated ++++ : " + JSON.stringify(res));
+            statuscontrol.push(res);
+            if(statuscontrol.length == schemaData.length){
+              console.log(statuscontrol)
+              resData.send(
+                formattingResponse(token, {
+                  value: true,
+                  result: statuscontrol,
+                })
+              );
+            }
+          } else {
+            console.log("No Document found to remove -------- ");
+            resData.send(formattingResponse(token, { value: false }));
+          }
+        }
+      );
+      }
+      ourConnection.release();
+    });
 
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);
     throw error;
   }
-})
-  
+});
 
 const server = https.createServer(optionsNoIp, app);
 const serversimple = http.createServer(app);
