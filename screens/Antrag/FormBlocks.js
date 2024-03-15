@@ -64,7 +64,6 @@ function FormBlocks({route}) {
   
   const leikaKey = route.params.leikaKey
   const antragTitle = route.params.title
-  console.log("antragTitle: " + antragTitle)
 
   useEffect(() => {
     getContentFormBlock(JSON.stringify(route.params.leikaKey)); 
@@ -77,8 +76,6 @@ function FormBlocks({route}) {
     }
     fetchData()
   }, []);
-
-console.log("formData im FormBlocks: " + formData)
 
   const formBlockArray = Array.from(
     { length: contentInsideBlock.length },

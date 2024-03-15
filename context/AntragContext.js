@@ -26,11 +26,12 @@ export function AntragProvider({ children }) {
   const [formData, setFormData] = useState({});
   const [totalCount, setTotalCount] = useState(0);
   const [caseID, setCaseID] = useState("");
-  const [schemaUri, setSchemaUri] = useState("")
-  const [antragTitle, setAntragTitle] = useState("none")
-  const [destionationID, setDestinationID] = useState("")
-  const [leikaKey, setLeikaKey] = useState("")
-  const [failMessage, setFailMessage] = useState(null)
+  const [schemaUri, setSchemaUri] = useState("");
+  const [antragTitle, setAntragTitle] = useState("none");
+  const [destionationID, setDestinationID] = useState("");
+  const [leikaKey, setLeikaKey] = useState("");
+  const [failMessage, setFailMessage] = useState(null);
+  const [changedAntraege, setChangedAntraege] = useState(null)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -43,12 +44,10 @@ export function AntragProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    console.log(formData);
   }, [formData]);
 
   const sendAntrag = async (filledAntrag, antragRef, antragTitle) => {
-    console.log("FILLEDANTRAG: " + JSON.stringify(filledAntrag));
-    console.log("und unser AntragTitle ist: " + antragTitle);
+
     const requestOptions = {
       method: "POST",
       headers: {
@@ -59,7 +58,7 @@ export function AntragProvider({ children }) {
         antrag: filledAntrag,
         schemaUri: schemaUri,
         destinationID: destionationID,
-        leikaKey: leikaKey
+        leikaKey: leikaKey,
       }),
     };
 
@@ -77,18 +76,25 @@ export function AntragProvider({ children }) {
       const submissionID = tokenObject.submissionID;
       const submissionStatus = tokenObject.submissionStatus;
       const sentSubmission = tokenObject.sentSubmission;
-      console.log("tokenObj: " + JSON.stringify(tokenObject))
+      console.log("tokenObj: " + JSON.stringify(tokenObject));
       console.log("caseID: " + caseID);
-      console.log("submissionID: " + submissionID)
-      console.log("submissionStatus: " + submissionStatus)
+      console.log("submissionID: " + submissionID);
+      console.log("submissionStatus: " + submissionStatus);
       console.log("sentSubmission: " + sentSubmission);
       setCaseID(caseID);
       if (caseID && submissionID && submissionStatus && sentSubmission) {
-         addToListe(caseID, submissionID, submissionStatus, sentSubmission, antragTitle, null);
-         openMessage(antragRef);
-      } else{
-        setFailMessage(tokenObject)
-          openMessage(antragRef);
+        addToListe(
+          caseID,
+          submissionID,
+          submissionStatus,
+          sentSubmission,
+          antragTitle,
+          null
+        );
+        openMessage(antragRef);
+      } else {
+        setFailMessage(tokenObject);
+        openMessage(antragRef);
       }
     }
   };
@@ -121,16 +127,15 @@ export function AntragProvider({ children }) {
   };
 
   const getSchemaURi = async (leikaKey) => {
-
     const response = await fetch(
       `https://dekom.ddns.net:4222/user/antrag/get/schemaUri?leikaKey=${leikaKey}`
     );
 
     const schemaData = await response.json();
-    console.log("schemaData ist: " + JSON.stringify(schemaData.token.destinationID))
-    setSchemaUri(schemaData.token.schemaUri)
-    setDestinationID(schemaData.token.destinationID)
-    setLeikaKey(leikaKey)
+
+    setSchemaUri(schemaData.token.schemaUri);
+    setDestinationID(schemaData.token.destinationID);
+    setLeikaKey(leikaKey);
     return schemaData.token.schemaJson;
   };
 
@@ -147,7 +152,9 @@ export function AntragProvider({ children }) {
           name: currentPath[currentPath.length - 1],
           type: gObject.type,
           title: gObject.title,
-          required: schema.required.includes(currentPath[currentPath.length - 1]),
+          required: schema.required.includes(
+            currentPath[currentPath.length - 1]
+          ),
           properties: [],
         };
 
@@ -176,9 +183,9 @@ export function AntragProvider({ children }) {
                 path: newPath.join("."),
               };
 
-        // Überprüfe, ob das F-Objekt in required enthalten ist
-        const requiredFObjects = gObject.required || [];
-        fObjectData.required = requiredFObjects.includes(key);
+              // Überprüfe, ob das F-Objekt in required enthalten ist
+              const requiredFObjects = gObject.required || [];
+              fObjectData.required = requiredFObjects.includes(key);
 
               gObjectData.properties.push(fObjectData);
               // Füge das F-Objekt zu den verwendeten F-Objekten hinzu
@@ -209,7 +216,7 @@ export function AntragProvider({ children }) {
         required: true,
         properties: [],
       };
-    
+
       Object.keys(schema.$defs).forEach((fObjectName) => {
         if (fObjectName.startsWith("F") && !usedFObjects.has(fObjectName)) {
           const fObjectInSchema = schema.$defs[fObjectName];
@@ -220,15 +227,12 @@ export function AntragProvider({ children }) {
             //array: gObject.properties[key].type === "array",
             enum: fObjectInSchema ? fObjectInSchema.enum : null,
             format: fObjectInSchema ? fObjectInSchema.format : null,
-            description: fObjectInSchema
-              ? fObjectInSchema.description
-              : null,
+            description: fObjectInSchema ? fObjectInSchema.description : null,
           };
           if (fObjectData.type && fObjectData.title) {
-            console.log( " schema.$defs.required: " + schema.required)
             const requiredFObjects = schema.required || [];
             fObjectData.required = requiredFObjects.includes(fObjectName);
-    
+
             gObjectData.properties.push(fObjectData);
           }
         }
@@ -295,10 +299,16 @@ export function AntragProvider({ children }) {
     return fObjectsWithTitleAndType;
   }
 
-  const addToListe = async (file, submissionID, submissionStatus, sentSubmission, antragName, signatur) => {
+  const addToListe = async (
+    file,
+    submissionID,
+    submissionStatus,
+    sentSubmission,
+    antragName,
+    signatur
+  ) => {
     isVarifiedVar = isVerified;
 
-    console.log("antragName: " + antragName)
     let respond = await fetch(`https://${ipAddress}:4222/user/save/antrag`, {
       method: "POST",
       headers: {
@@ -338,6 +348,7 @@ export function AntragProvider({ children }) {
     const verificationStatus = await isVarifiedVar(responseJSON);
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
+      antragFile? setChangedAntraege(filterChangedAntrags(responseJSON.body.result)) : null;
       setAntragFile(responseJSON.body.result);
       setAntragFileId(responseJSON.body.result);
       const updatedItems = [];
@@ -374,7 +385,7 @@ export function AntragProvider({ children }) {
             einreichungsbehoerde: "Stadt Köln",
             bearbeitungsStatus: responseJSON.body.result[i].STATUS,
             caseID: responseJSON.body.result[i].CASE_ID,
-            submissionID:  responseJSON.body.result[i].SUBMISSION_ID,
+            submissionID: responseJSON.body.result[i].SUBMISSION_ID,
             antragColor: antragColor,
           },
         });
@@ -413,7 +424,7 @@ export function AntragProvider({ children }) {
 
     if (verificationStatus == "verified" && responseJSON.body.value == true) {
       const foundAntrag = {
-        title:  responseJSON.body?.result[0]?.ANTRAGSNAME,
+        title: responseJSON.body?.result[0]?.ANTRAGSNAME,
         document: {
           antragDir: responseJSON.body?.result[0]?.ANTRAG,
           ausstellDatum: responseJSON.body?.result[0]?.DATUM,
@@ -469,37 +480,62 @@ export function AntragProvider({ children }) {
     setIsLoading(false);
   };
 
-  const updateAntraege = async () => {
-      console.log("antragFile: " + JSON.stringify(antragFile))
-      console.log("antragFile.length: " + antragFile.length)
-      let antragSentSubmission = [];
+  const filterChangedAntrags = (antragsArray) => {
+    const changedAntrags = [];
 
-      for(let i= 0 ; i<antragFile.length; i++){
-        console.log(antragFile[i].SENTSUBMISSION)
-        antragSentSubmission.push(antragFile[i].SENTSUBMISSION)
-        console.log(antragSentSubmission)
-      }
-
-      const reqOptions = {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          antragArray: antragSentSubmission,
-        }),
-      }
-
-      const response = await fetch(
-        `https://dekom.ddns.net:4222/user/antrag/update/status`, reqOptions
+    for (let i = 0; i < antragsArray.length; i++) {
+      
+      const currentAntrag = antragsArray[i];
+      console.log("currentAntrag: " + JSON.stringify(currentAntrag))
+      console.log("antragFile.find(: " +  JSON.stringify(antragFile.find((antrag) => antrag.SUBMISSION_ID  === currentAntrag.SUBMISSION_ID )))
+      const previousAntrag = antragFile.find(
+        (antrag) => antrag.SUBMISSION_ID === currentAntrag.SUBMISSION_ID
       );
-      const updatedAntraege = await response.json();
-      const tokenObject = updatedAntraege.body.result;
-      console.log("tokenObject updated: " + JSON.stringify(tokenObject))
-      getAntrag()
 
-  }
+      if (
+        previousAntrag &&
+        previousAntrag.STATUS !== currentAntrag.STATUS
+      ) {
+        changedAntrags.push(currentAntrag);
+      }
+    }
+
+    return changedAntrags;
+  };
+
+  const updateAntraege = async () => {
+    setIsLoading(true);
+    let antragSentSubmission = [];
+
+    for (let i = 0; i < antragFile.length; i++) {
+      antragSentSubmission.push(antragFile[i].SENTSUBMISSION);
+    }
+
+    const reqOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        antragArray: antragSentSubmission,
+      }),
+    };
+
+    const response = await fetch(
+      `https://dekom.ddns.net:4222/user/antrag/update/status`,
+      reqOptions
+    );
+    const updatedAntraege = await response.json();
+    const tokenObject = updatedAntraege.body.result;
+    console.log("tokenObject updated: " + JSON.stringify(tokenObject));
+    getAntrag();
+    setIsLoading(false);
+  };
+
+  useEffect(()=>{
+    console.log("Geänderte Anträge: ", changedAntraege);
+  },[changedAntraege])
 
   return (
     <AntragContext.Provider
@@ -517,12 +553,13 @@ export function AntragProvider({ children }) {
         caseID,
         antragTitle,
         failMessage,
+        changedAntraege,
         sendAntrag,
         createNestedObject,
         extractFObjectsWithTitles,
         getContentFormBlock,
         fillAntrag,
-     //   getFormBlocksCount,
+        //   getFormBlocksCount,
         addToListe,
         getAntrag,
         removeAntrag: removeAntragById,

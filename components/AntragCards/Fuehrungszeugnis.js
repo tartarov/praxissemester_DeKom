@@ -114,6 +114,11 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
   ) {
     ionicon = "checkmark-done-circle-outline";
     ioniconColor = "red";
+  }  else if (
+    antragAusstellerDaten?.document?.bearbeitungsStatus === "NOTIFIED"
+  ) {
+    ionicon = "call-outline";
+    ioniconColor = "gold";
   }
 
   return (
@@ -193,8 +198,8 @@ function Fuehrungszeugnis({ antragAusstellerDaten, scrollY, signature }) {
               <View style={styles.ioniconContainer}>
                 <Ionicons
                   name={ionicon}
-                  size={60}
-                  style={{ color: ioniconColor, left: 140, bottom: 10 }}
+                  size={58}
+                  style={{ color: ioniconColor, left: 120, bottom: 10 }}
                 />
               </View>
             </View>

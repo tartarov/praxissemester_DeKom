@@ -35,9 +35,6 @@ function FormCard({ data, userData }) {
   const formDataRef = useRef({});
   const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
 
-  console.log("Nutzerdaten in FormBLocks: " + JSON.stringify(userData));
-  console.log("formData in FormBLocks: " + JSON.stringify(data));
-
   const initializeFormData = (data, userData) => {
     if (data && data.properties) {
       data.properties.forEach((property) => {
@@ -330,7 +327,6 @@ function FormCard({ data, userData }) {
     if (data && data.properties) {
       data.properties.forEach((property) => {
         if (property.required == true) {
-          console.log("+1 :)  " + property.title )
           count++;
         }
         if (property.type === "object" && property.name.startsWith("G")) {
@@ -359,8 +355,6 @@ function FormCard({ data, userData }) {
   };
 
   const collectData = () => {
-    console.log(Object.keys(formDataRef.current).length)
-    console.log(totalFObjects)
     if (Object.keys(formDataRef.current).length >= totalFObjects) {
       setBackground("lightgreen");
       fillAntrag(formDataRef.current);
