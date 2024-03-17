@@ -33,7 +33,6 @@ import AntragReady from "../../components/AntragReadyBottomSheet.js";
 
 const { width } = Dimensions.get("screen");
 
-
 const DATA = dataSample;
 
 const SPACING = 10;
@@ -41,40 +40,34 @@ const ITEM_WIDTH = width * 0.95;
 const ITEM_HEIGHT = ITEM_WIDTH * 0.8;
 const VISIBLE_ITEMS = 3;
 
-
-
-function FormBlocks({route}) {
+function FormBlocks({ route }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const {
     isLoading,
-    fillAntrag,
     formData,
     getContentFormBlock,
-    createNestedObject,
     sendAntrag,
     contentInsideBlock,
-    formBlockAttributes,
-    totalCount,
+    counterRequiredCardsChecked,
   } = useContext(AntragContext);
   const { data, getWalletData, getUserData } = useContext(DataContext);
   const { height } = useWindowDimensions();
-  const [userDataObj, setUserDataObj] = useState(null)
+  const [userDataObj, setUserDataObj] = useState(null);
   const antragdetail = useRef(null);
 
-  
-  const leikaKey = route.params.leikaKey
-  const antragTitle = route.params.title
+  const leikaKey = route.params.leikaKey;
+  const antragTitle = route.params.title;
 
   useEffect(() => {
-    getContentFormBlock(JSON.stringify(route.params.leikaKey)); 
+    getContentFormBlock(JSON.stringify(route.params.leikaKey));
   }, [leikaKey]);
 
   useEffect(() => {
     async function fetchData() {
-  const userData = await getUserData()
-  setUserDataObj(userData)
+      const userData = await getUserData();
+      setUserDataObj(userData);
     }
-    fetchData()
+    fetchData();
   }, []);
 
   const formBlockArray = Array.from(
@@ -82,10 +75,29 @@ function FormBlocks({route}) {
     (_, index) => index + 1
   );
 
-  if (contentInsideBlock.length != 0 && contentInsideBlock != null && userDataObj) {
+  const countRequiredGObjects = (dataArray) => {
+    let requiredCount = 0;
+    dataArray.forEach((item) => {
+      if (item.required) {
+        requiredCount++;
+      }
+    });
+    return requiredCount;
+  };
+
+  // Beispielaufruf mit Ihrem Datenarray
+  const requiredGObjectCount = countRequiredGObjects(contentInsideBlock);
+
+  console.log("Anzahl erforderlicher G-Objekte:", requiredGObjectCount);
+  console.log("counterRequiredCardsChecked: " + counterRequiredCardsChecked)
+  if (
+    contentInsideBlock.length != 0 &&
+    contentInsideBlock != null &&
+    userDataObj
+  ) {
     return (
       <SafeAreaView style={styles.container}>
-    {/*}    {Object.keys(formData).length >= contentInsideBlock.length ? ( */}
+        {counterRequiredCardsChecked >= requiredGObjectCount ? (
           <PrimaryButton
             onPress={() => {
               sendAntrag(formData, antragdetail, antragTitle);
@@ -93,59 +105,57 @@ function FormBlocks({route}) {
           >
             Absenden
           </PrimaryButton>
-      {/*}  ) : null} */}
+        ) : null}
 
-
-          <View style={styles.flatListContainer}>
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <FlatList
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                bounces={true}
-                snapToAlignment="start"
-                decelerationRate={"fast"}
-                data={formBlockArray}
-                renderItem={({ item, index }) => (
-                  <Pressable
-                    //  onPress={() => handleItemPress({ item })}
-                    onLongPress={() => {
-                      console.log("pressed"),
-                        Vibration.vibrate(100),
-                        Alert.alert(
-                          "Willst du diesen Daten bearbeiten?" + item
-                        );
-                    }}
-                  >
-                    <View>
-                      <View style={styles.textContainer}>
-                        {/*}   <Text style={styles.text}>{item.title}</Text> */}
-                      </View>
-                      <View style={styles.documentContainer}>
-                        <FormCard
-                          data={contentInsideBlock[index]}
-                          userData={userDataObj}
-                        />
-                      </View>
+        <View style={styles.flatListContainer}>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <FlatList
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              bounces={true}
+              snapToAlignment="start"
+              decelerationRate={"fast"}
+              data={formBlockArray}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  key={index}
+                  //  onPress={() => handleItemPress({ item })}
+                  onLongPress={() => {
+                    console.log("pressed"),
+                      Vibration.vibrate(100),
+                      Alert.alert("Willst du diesen Daten bearbeiten?" + item);
+                  }}
+                >
+                  <View>
+                    <View style={styles.textContainer}>
+                      {/*}   <Text style={styles.text}>{item.title}</Text> */}
                     </View>
-                  </Pressable>
-                )}
-                keyExtractor={(data) => data.title}
-                onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                  { useNativeDriver: false }
-                )}
-              />
-            )}
-          </View>
-          <Paginator data={contentInsideBlock.length} scrollX={scrollX} />
-          <AntragReady activeHeight={height * 0.6} ref={antragdetail} />
+                    <View style={styles.documentContainer}>
+                      <FormCard
+                        data={contentInsideBlock[index]}
+                        userData={userDataObj}
+                      />
+                    </View>
+                  </View>
+                </Pressable>
+              )}
+              keyExtractor={(data) => data.name}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            />
+          )}
+        </View>
+        <Paginator data={contentInsideBlock.length} scrollX={scrollX} />
+        <AntragReady activeHeight={height * 0.6} ref={antragdetail} />
       </SafeAreaView>
     );
-  } else{
-   return <Loader/>
+  } else {
+    return <Loader />;
   }
 }
 

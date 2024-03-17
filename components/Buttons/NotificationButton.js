@@ -42,15 +42,15 @@ function NotificationButton({ onPress }) {
   }, [changedAntraege]);
 
   const Item = ({ item, onPress, backgroundColor, textColor, statusColor }) => (
-    <>
-    <Text>Es gibt Statusneuigkeiten: </Text>
+    <View style={{alignItems:"center"}}>
+    <Text style={{fontWeight:"600", fontSize:16}}>Es gibt Statusneuigkeiten: </Text>
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>
         {item.ANTRAGSNAME + " => "}
       </Text>
       <Text style={{backgroundColor: statusColor, fontWeight:"600", textDecorationLine: "underline"}}>{item.STATUS}</Text>
     </TouchableOpacity>
-    </>
+    </View>
   );
 
   const renderItem = ({ item }) => {

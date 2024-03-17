@@ -29,11 +29,13 @@ const { width } = Dimensions.get("screen");
 
 const ImageWidth = width * 0.9;
 const ImageHeight = ImageWidth * 0.6;
+let requiredCardreqCount = 0 
 
 function FormCard({ data, userData }) {
-  const { fillAntrag } = useContext(AntragContext);
+  const { fillAntrag, countRequiredCardsChecked } = useContext(AntragContext);
   const formDataRef = useRef({});
   const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
+  const [pflichtKartenCountCheck, setplichtKartenCountCheck] = useState(0)
 
   const initializeFormData = (data, userData) => {
     if (data && data.properties) {
@@ -376,6 +378,10 @@ function FormCard({ data, userData }) {
     console.log(count)
     console.log(totalFObjects)
     if (count == totalFObjects.count) {
+      console.log(data.required)
+      if(data.required){
+        countRequiredCardsChecked(++requiredCardreqCount)
+      }
       setBackground("lightgreen");
       fillAntrag(formDataRef.current);
     } else {
@@ -392,7 +398,7 @@ function FormCard({ data, userData }) {
       <View style={[styles.container, { backgroundColor: background }]}>
         <View style={{ alignItems: "center", padding: 15 }}>
           <Text style={[styles.titleHead]}>{data.title}</Text>
-          <Text style={[styles.pflichtkarte, { color: "red", textDecorationLine: "underline" }]}>{data.required ? " (Pflichtkarte)" : null}</Text>
+          <Text style={[styles.pflichtkarte, { color: "red", textDecorationLine: "underline" }]}>{data.required ? "(Pflichtkarte)" : null}</Text>
         </View>
         <FlatList
           style={styles.flatlist}

@@ -32,6 +32,7 @@ export function AntragProvider({ children }) {
   const [leikaKey, setLeikaKey] = useState("");
   const [failMessage, setFailMessage] = useState(null);
   const [changedAntraege, setChangedAntraege] = useState(null)
+  const [counterRequiredCardsChecked, setCounterRequiredCardsChecked] = useState(null)
   const ipAddress = "dekom.ddns.net";
   let isVarifiedVar;
 
@@ -126,6 +127,11 @@ export function AntragProvider({ children }) {
     console.log("Filled Antrag:", updatedFormData);
   };
 
+  const countRequiredCardsChecked = (counter) => {
+    console.log("counter: " + counter)
+    setCounterRequiredCardsChecked(counter)
+  }
+ 
   const getSchemaURi = async (leikaKey) => {
     const response = await fetch(
       `https://dekom.ddns.net:4222/user/antrag/get/schemaUri?leikaKey=${leikaKey}`
@@ -554,6 +560,8 @@ export function AntragProvider({ children }) {
         antragTitle,
         failMessage,
         changedAntraege,
+        counterRequiredCardsChecked,
+        countRequiredCardsChecked,
         sendAntrag,
         createNestedObject,
         extractFObjectsWithTitles,
