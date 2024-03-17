@@ -13,6 +13,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Animated,
+  Easing
 } from "react-native";
 import { useState, useContext, useEffect, useRef, useCallback } from "react";
 import colorEnum from "../DeKomColors";
@@ -35,7 +37,16 @@ function FormCard({ data, userData }) {
   const { fillAntrag, countRequiredCardsChecked } = useContext(AntragContext);
   const formDataRef = useRef({});
   const [background, setBackground] = useState(colorEnum.aufenthaltsTitelcolor);
-  const [pflichtKartenCountCheck, setplichtKartenCountCheck] = useState(0)
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000, // Dauer der Animation in Millisekunden
+      useNativeDriver: true, // Führe die Animation auf dem nativen Thread aus (Performance)
+    }).start();
+  }, [fadeAnim]);
 
   const initializeFormData = (data, userData) => {
     if (data && data.properties) {
@@ -120,8 +131,20 @@ function FormCard({ data, userData }) {
     formDataRef.current[id] = value;
   }, []);
 
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <View style={[styles.item, backgroundColor]}>
+  function Item ({ item, index, backgroundColor, textColor }) {
+    const translateY = useRef(new Animated.Value(-50)).current;
+
+    useEffect(() => {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 1000, // Dauer der Animation in Millisekunden
+        delay: index * 200,
+        easing: Easing.out(Easing.exp), // Verzögerung basierend auf dem Index des Elements
+        useNativeDriver: true, // Führe die Animation auf dem nativen Thread aus (Performance)
+      }).start();
+    }, [translateY, index]);
+
+   return ( <Animated.View style={[styles.item, backgroundColor, {transform: [{ translateY: translateY }], opacity: fadeAnim,}]}>
       <View style={{flexDirection: "row"}}>
       <Text style={[styles.title, textColor]}>
         {item.title}
@@ -320,8 +343,8 @@ function FormCard({ data, userData }) {
           onChangeText={(text) => handleInputChange(item.path, ["123", text])}
         />
       )}
-    </View>
-  );
+    </Animated.View>
+  )};
 
   const countFObjects = (data) => {
     let count = 0;
@@ -347,7 +370,7 @@ function FormCard({ data, userData }) {
   const totalFObjects = countFObjects(data);
   console.log("totalFObjects: " + JSON.stringify(totalFObjects))
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     const backgroundColor = colorEnum.aufenthaltsTitelcolor;
     const color = colorEnum.primary;
 
@@ -356,6 +379,7 @@ function FormCard({ data, userData }) {
         item={item}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
+        index = {index}
       />
     );
   };
@@ -395,7 +419,12 @@ function FormCard({ data, userData }) {
   
   return (
     <>
-      <View style={[styles.container, { backgroundColor: background }]}>
+      <Animated.View
+      style={{
+        ...styles.container,
+        opacity: fadeAnim, // Animate the opacity property
+      }}
+    >
         <View style={{ alignItems: "center", padding: 15 }}>
           <Text style={[styles.titleHead]}>{data.title}</Text>
           <Text style={[styles.pflichtkarte, { color: "red", textDecorationLine: "underline" }]}>{data.required ? "(Pflichtkarte)" : null}</Text>
@@ -409,7 +438,7 @@ function FormCard({ data, userData }) {
         <View style={{ alignItems: "center", padding: 30 }}>
           <Button label="speichern" onPress={collectData} />
         </View>
-      </View>
+      </Animated.View>
     </>
   );
 }

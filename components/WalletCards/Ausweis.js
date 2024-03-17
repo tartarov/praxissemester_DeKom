@@ -8,6 +8,8 @@ import {
   Image,
   Pressable,
   useWindowDimensions,
+  Animated,
+  Easing 
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -39,13 +41,10 @@ function Ausweis({ data, refrence }) {
   const [letterToWidthRatioVor, setWidthRatioVor] = useState(
     textNachname.length / width
   );
-  //const [decodedToken, setDecodedToken] = useState({});
-  const [isAuthenticationInProgress, setAuthenticationInProgress] =
-    useState(false);
-    let decodedToken
 
   const [fontSizeNachname, setFontSizeNachname] = useState(maxSize);
   const [fontSizeVorname, setFontSizeVorname] = useState(maxSize);
+ 
 
   useEffect(() => {
     // Do your calculation here
@@ -60,10 +59,21 @@ function Ausweis({ data, refrence }) {
     setFontSizeVorname(sizeV);
   }, [width, textNachname, letterToWidthRatioNach]);
 
+  const translateY = useRef(new Animated.Value(-1000)).current;
+  useEffect(() => {
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 1000, // Dauer der Animation in Millisekunden
+      delay: 1 * 200, 
+      easing: Easing.out(Easing.exp), // Verwenden Sie die Easing-Funktion für schnellen Start und langsames Ende
+      useNativeDriver: true, // Führe die Animation auf dem nativen Thread aus (Performance)
+    }).start();
+  }, [translateY]);
+
   //if (isFingerprintRead) {  || Object.keys(decodedToken).length > 0
     return (
       <>
-        <View style={[styles.container, {backgroundColor: data.document.dokumentTyp == "AR" ? colorEnum.aufenthaltsTitelcolor : colorEnum.quartiary,}]}>
+        <Animated.View style={[styles.container, {backgroundColor: data.document.dokumentTyp == "AR" ? colorEnum.aufenthaltsTitelcolor : colorEnum.quartiary, transform: [{ translateY: translateY }]}]}>
           <View style={{ flexDirection: "column" }}>
             <Text
               style={[
@@ -299,7 +309,7 @@ function Ausweis({ data, refrence }) {
             </View>
           </View>
           {/* <BottomQRCode activeHeight={height * 0.9} ref={bottomSheetRefQr}/>*/}
-        </View>
+        </Animated.View>
       </>
     );
   }
