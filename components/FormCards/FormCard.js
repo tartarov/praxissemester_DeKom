@@ -59,7 +59,7 @@ function FormCard({ data, userData }) {
               parseInt("1");
           }
           */
-          if (property.title == "Staatsangehörigkeit") {
+          if (property.title == "Staatsangehörigkeit" ) {
             formDataRef.current[property.path ? property.path : property.name] =
               userData.staatsangehoerigkeit == "D"
                 ? "000"
@@ -323,23 +323,27 @@ function FormCard({ data, userData }) {
 
   const countFObjects = (data) => {
     let count = 0;
+    let countArray = []
   
     if (data && data.properties) {
       data.properties.forEach((property) => {
         if (property.required == true) {
-          count++;
+          count++
+          countArray.push(property.path? property.path : property.name)
         }
         if (property.type === "object" && property.name.startsWith("G")) {
-          count += countFObjects(property);
+          const { count: subCount, countArray: subCountArray } = countFObjects(property);
+          count += subCount;
+          countArray = countArray.concat(subCountArray);
         }
       });
     }
   
-    return count;
+    return  { count, countArray }
   };
   // Aufruf der Funktion
   const totalFObjects = countFObjects(data);
-  console.log("totalFObjects: " + totalFObjects)
+  console.log("totalFObjects: " + JSON.stringify(totalFObjects))
 
   const renderItem = ({ item }) => {
     const backgroundColor = colorEnum.aufenthaltsTitelcolor;
@@ -355,18 +359,34 @@ function FormCard({ data, userData }) {
   };
 
   const collectData = () => {
-    if (Object.keys(formDataRef.current).length >= totalFObjects) {
+    let count = 0;
+    console.log(data.properties)
+
+    Object.keys(formDataRef.current).forEach((key) => {
+      console.log("Key: " + key)
+      const value = formDataRef.current[key];
+      console.log(value)
+      console.log("totalFObjects.countArray[key]: " +totalFObjects.countArray.includes(key) + "value: " + value)
+      if (totalFObjects.countArray.includes(key) && value || value == false) {
+        console.log("moin")
+        count++;
+      }
+    });
+  
+    console.log(count)
+    console.log(totalFObjects)
+    if (count == totalFObjects.count) {
       setBackground("lightgreen");
       fillAntrag(formDataRef.current);
     } else {
       setBackground("lightcoral");
       Alert.alert("Fehler", "Bitte füllen Sie alle Pflichtfelder aus.");
     }
-
+  
     console.log("Gesammelte Daten:", formDataRef.current);
     // Hier kannst du weitere Aktionen ausführen, z.B. Daten speichern, usw.
   };
-
+  
   return (
     <>
       <View style={[styles.container, { backgroundColor: background }]}>

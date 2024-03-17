@@ -12,6 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import colorEnum from "../DeKomColors";
 import AntragContext from "../../context/AntragContext";
+import HoverCircle from "../animations/HoverCircle";
 
 const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.95;
@@ -40,29 +41,55 @@ function NotificationButton({ onPress }) {
     changeIconColor();
   }, [changedAntraege]);
 
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  const Item = ({ item, onPress, backgroundColor, textColor, statusColor }) => (
+    <>
+    <Text>Es gibt Statusneuigkeiten: </Text>
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>
-        {item.ANTRAGSNAME + " => " + item.STATUS}
+        {item.ANTRAGSNAME + " => "}
       </Text>
+      <Text style={{backgroundColor: statusColor, fontWeight:"600", textDecorationLine: "underline"}}>{item.STATUS}</Text>
     </TouchableOpacity>
+    </>
   );
 
   const renderItem = ({ item }) => {
       const backgroundColor =
         item.SUBMISSION_ID === selectedId
-          ? colorEnum.tertiary
-          : colorEnum.secondary;
+          ? "white"
+          : "white"
       const color =
         item.SUBMISSION_ID === selectedId
-          ? colorEnum.primary
-          : colorEnum.quartiary;
+          ? "white"
+          : colorEnum.primary;
+      let statusColor;
+
+      
+  if ( item.STATUS === "SUBMITTED") {
+    // Set red color for specific statuses
+    statusColor = "brown";
+  } else if (
+    item.STATUS === "ACCEPTED"
+  ) {
+   
+    statusColor = "green"; // Set default color for other statuses
+  } else if (
+    item.STATUS === "REJECTED"
+  ) {
+ 
+    statusColor = "red";
+  }  else if (
+    item.STATUS === "NOTIFIED"
+  ) {
+    statusColor = "gold";
+  }
 
       return (
         <Item
           item={item}
           backgroundColor={{ backgroundColor }}
           textColor={{ color }}
+          statusColor = {{statusColor}}
         />
       );
   };
@@ -78,11 +105,13 @@ function NotificationButton({ onPress }) {
         }
         android_ripple={{ color: colorEnum.secondary }}
       >
+         {iconColor === "red" && <HoverCircle />}
         <Ionicons
           name="notifications-outline"
           size={32}
-          style={{ color:  iconColor}}
+          style={{ color:  iconColor, elevation: iconColor == "red" ? 9 : 2}}
         />
+       
       </Pressable>
       <Modal
         animationType="slide"
@@ -130,7 +159,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 20,
+    paddingHorizontal: 1,
+    paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
   },
@@ -148,10 +178,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   item: {
-    padding: 20,
-    marginVertical: 3,
-    marginHorizontal: 10,
-    borderRadius: 6,
+    paddingVertical: 10,
+    marginVertical: 1,
+    marginHorizontal: 0,
+    borderRadius: 1,
     elevation: 1,
   },
 });

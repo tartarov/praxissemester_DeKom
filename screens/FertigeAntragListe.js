@@ -209,6 +209,26 @@ const FertigeAntragListe = ({ navigation, isExpanded }) => {
         <TouchableOpacity
           style={[
             styles.navigationButton,
+            selectedStatus === "NOTIFIED" && styles.activeNavigationButton,
+          ]}
+          onPress={() => {
+            setSelectedStatus("NOTIFIED");
+            filterAndAnimateFlatList();
+          }}
+        >
+          <Text
+            style={[
+              styles.navigationButtonText,
+              selectedStatus === "NOTIFIED" &&
+                styles.activeNavigationButtonText,
+            ]}
+          >
+            NOTIFIED
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.navigationButton,
             selectedStatus === "REJECTED" && styles.activeNavigationButton,
           ]}
           onPress={() => {
@@ -345,9 +365,10 @@ const styles = StyleSheet.create({
   navigationButton: {
     paddingHorizontal: 10,
     paddingVertical: 5,
+    fontSize:10
   },
   navigationButtonText: {
-    fontSize: 16,
+    fontSize: 10,
     color: "gray",
   },
   activeNavigationButton: {

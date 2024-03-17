@@ -3,22 +3,22 @@ import LottieView from "lottie-react-native";
 import { View } from "react-native";
 import colorEnum from "../DeKomColors";
 
-function Refreshing() {
+function HoverCircle() {
   return (
-    <View style={{ flex: 1, alignItems:"center" ,backgroundColor: colorEnum.primary, paddingRight:16,marginLeft:20,marginBottom:20, right:20 }}>
+    <View style={{ flex: 1, alignItems:"center" , backgroundColor: "transparent", bottom:10, right:12 }}>
      <LottieView
       autoPlay
         style={{
-          width: 10,
-          height: 75,
-          backgroundColor: colorEnum.primary,
+          width: 50,
+          height: 55,
+          backgroundColor: "transparent",
           borderRadius: 20
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
-        source={require("../../assets/refreshing.json")}
+        source={require("../../assets/hoverCircle.json")}
       />
     </View>
   );
 }
 
-export default Refreshing;
+export default HoverCircle;
