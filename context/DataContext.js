@@ -124,7 +124,7 @@ export const DataProvider = ({ children }) => {
     let thisUser;
 
     thisUser = await SecureStore.getItemAsync("userToken", {
-      requireAuthentication: false,
+      requireAuthentication: true,
     });
 
     /*

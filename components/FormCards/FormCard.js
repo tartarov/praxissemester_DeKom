@@ -422,7 +422,8 @@ function FormCard({ data, userData }) {
       <Animated.View
       style={{
         ...styles.container,
-        opacity: fadeAnim, // Animate the opacity property
+        opacity: fadeAnim,
+        backgroundColor: background // Animate the opacity property
       }}
     >
         <View style={{ alignItems: "center", padding: 15 }}>

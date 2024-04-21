@@ -25,7 +25,7 @@ const DATA = [
   {
     id: "1",
     title: "Meine persönlichen Daten",
-    navigator: "ScreenDoesNotExist",
+    navigator: "MeinePersoenlichenDaten",
   },
   {
     id: "2",
@@ -40,7 +40,7 @@ const DATA = [
   {
     id: "4",
     title: "Privatsphäre",
-    navigator: "ScreenDoesNotExist",
+    navigator: "Privatsphaere",
   },
   {
     id: "5",

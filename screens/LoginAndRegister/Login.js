@@ -239,6 +239,18 @@ export default function Login({ navigation }) {
              
              // backgroundColor:"red",
                 }}>
+                               <CustomText
+                style={{
+                  color: colorEnum.quartiary,
+                  alignSelf: "center",
+                  fontSize: 8,
+                  marginTop: 20,
+                  textAlign: "center",
+                  marginHorizontal: 20,
+                }}
+              >
+                Mit dem Auflegen und Ablesen des Personalausweises stimmen Sie unsere Datenschutzbestimmungen zu.
+              </CustomText>
             <ProgressBar progress={idCardData.progress} /> 
           </View>
             {(idCardData.msg === "INSERT_CARD" ||

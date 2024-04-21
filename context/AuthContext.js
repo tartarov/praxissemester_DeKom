@@ -83,9 +83,9 @@ export const AuthProvider = ({ children }) => {
       console.log("TOKEN: " + token);
       if (token) {
         dispatch({ type: "SET_TOKEN", payload: token });
-        AsyncStorage.setItem("userToken", token);
+      //  AsyncStorage.setItem("userToken", token);
         console.log("vor Secure Store");
-        await SecureStore.setItemAsync("userToken", token, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }); //, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }
+        await SecureStore.setItemAsync("userToken", token,  { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }); //, { requireAuthentication: true, authenticationPrompt: "Für sicheren Zugriff auf deine Daten: " }
         console.log("nach Secure Store");
       } else {
         Alert.alert(
@@ -129,8 +129,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async() => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "CLEAR" });
-    AsyncStorage.removeItem("userToken");
-    AsyncStorage.removeItem("isSignedUp");
+  //  AsyncStorage.removeItem("userToken");
+  //  AsyncStorage.removeItem("isSignedUp");
    await SecureStore.deleteItemAsync("userToken");
    await SecureStore.deleteItemAsync("isSignedUp");
     dispatch({ type: "SET_LOADING", payload: false });
@@ -173,8 +173,9 @@ export const AuthProvider = ({ children }) => {
   const isLoggedIn = async () => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const userToken = await AsyncStorage.getItem("userToken");
-      dispatch({ type: "SET_TOKEN", payload: userToken });
+     // const userToken = await AsyncStorage.getItem("userToken");
+      const secureUserToken = await SecureStore.getItemAsync("userToken");
+      dispatch({ type: "SET_TOKEN", payload: secureUserToken });
       dispatch({ type: "SET_LOADING", payload: false });
     } catch (e) {
       console.log(`isLoggedIn error : ${e}`);

@@ -196,6 +196,13 @@ app.get("/auth", async (req, res) => {
     "base64"
   );
   console.log("authorizationHeader: " + authorizationHeader);
+  const params = new URLSearchParams();
+
+  params.append('code',  req.query.code);
+  params.append('grant_type', 'authorization_code');
+  params.append('redirect_uri', 'https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth');
+
+  console.log("params: " + params)
 
   const requestOptions = {
     method: "POST",
@@ -203,13 +210,14 @@ app.get("/auth", async (req, res) => {
       Authorization: "Basic " + authorizationHeader,
       "Content-Type": "application/x-www-form-urlencoded",
     },
+    body: params
   };
 
   let responseJSON;
 
   try {
     const response = await fetch(
-      `https://ref-ausweisident.eid-service.de/oic/token?code=${req.query.code}&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth`,
+      `https://ref-ausweisident.eid-service.de/oic/token`,
       requestOptions
     );
     responseJSON = await response.json();
