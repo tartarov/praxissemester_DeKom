@@ -214,7 +214,6 @@ export function AntragProvider({ children }) {
         }
       });
 
-      // Finde ungenutzte F-Objekte
       const gObjectData = {
         name: null,
         type: "Ghost",

@@ -12,14 +12,15 @@ import {
   View,
   Text,
   useWindowDimensions,
-  NativeModules,
   KeyboardAvoidingView,
   TouchableOpacity,
+  NativeModules,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+
   withSpring,
 } from "react-native-reanimated";
 import LogoText from "./LogoFont";
@@ -70,6 +71,7 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
 
   const { login } = useContext(AuthContext);
 
+
   const animationStyle = useAnimatedStyle(() => {
     const top = topAnimation.value;
     return {
@@ -98,11 +100,25 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
     () => ({
       expand,
       close,
+      sendToLogin
     }),
-    [expand, close]
+    [expand, close, sendToLogin]
   );
 
   const { Aa2_Connector } = NativeModules;
+
+  const sendToLogin = () => {
+    login(enteredNumbers);
+  //  Aa2_Connector.disconnect();
+  }
+
+  const sendToAa2 = (value) => {
+    const ourCan = value.toString();
+    Aa2_Connector.sendCommand(
+      '{"cmd": "SET_CAN", "value": "' + ourCan + '"}'
+    );
+    close()
+  };
 
   const LoginSchema = Yup.object().shape({
     can: Yup.string()
@@ -252,7 +268,7 @@ const BottomSheetCAN = forwardRef(({ activeHeight }, ref) => {
         </View>
 
         <View style={{ alignSelf: "center", marginTop: 50 }}>
-          <Button label="Authentifizieren" onPress={handleSubmit} />
+          <Button label="Authentifizieren" onPress={() => sendToAa2(enteredNumbers)} />
         </View>
       </View>
     </Animated.View>

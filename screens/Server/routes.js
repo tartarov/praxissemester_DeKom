@@ -196,13 +196,8 @@ app.get("/auth", async (req, res) => {
     "base64"
   );
   console.log("authorizationHeader: " + authorizationHeader);
-  const params = new URLSearchParams();
 
-  params.append('code',  req.query.code);
-  params.append('grant_type', 'authorization_code');
-  params.append('redirect_uri', 'https%3A%2F%2Fdekom.ddns.net%3A4222%2Fauth');
-
-  console.log("params: " + params)
+  const redirectUri = "https://dekom.ddns.net:4222/auth"
 
   const requestOptions = {
     method: "POST",
@@ -210,7 +205,7 @@ app.get("/auth", async (req, res) => {
       Authorization: "Basic " + authorizationHeader,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: params
+    body: `code=${req.query.code}&grant_type=authorization_code&redirect_uri=${redirectUri}`,
   };
 
   let responseJSON;
@@ -742,36 +737,36 @@ app.post("/user/antrag/update/status", cookieJWTAuth, async (req, resData) => {
       for (const entry of schemaData) {
         const id = Object.keys(entry)[0];
         const value = entry[id];
-      connectionDekomdb.query(
-        `UPDATE  dekomdb.userdocuments SET STATUS = ? WHERE SUBMISSION_ID = ?`, (values = [value, id]),
-        (err, res) => {
-          //(values = [antragId])
-          console.log("RES: " + JSON.stringify(res));
-          if (err) {
-            console.log(err);
-            throw err;
-          } else if (res) {
-            console.log("Document Updated ++++ : " + JSON.stringify(res));
-            statuscontrol.push(res);
-            if(statuscontrol.length == schemaData.length){
-              console.log(statuscontrol)
-              resData.send(
-                formattingResponse(token, {
-                  value: true,
-                  result: statuscontrol,
-                })
-              );
+        connectionDekomdb.query(
+          `UPDATE  dekomdb.userdocuments SET STATUS = ? WHERE SUBMISSION_ID = ?`,
+          (values = [value, id]),
+          (err, res) => {
+            //(values = [antragId])
+            console.log("RES: " + JSON.stringify(res));
+            if (err) {
+              console.log(err);
+              throw err;
+            } else if (res) {
+              console.log("Document Updated ++++ : " + JSON.stringify(res));
+              statuscontrol.push(res);
+              if (statuscontrol.length == schemaData.length) {
+                console.log(statuscontrol);
+                resData.send(
+                  formattingResponse(token, {
+                    value: true,
+                    result: statuscontrol,
+                  })
+                );
+              }
+            } else {
+              console.log("No Document found to remove -------- ");
+              resData.send(formattingResponse(token, { value: false }));
             }
-          } else {
-            console.log("No Document found to remove -------- ");
-            resData.send(formattingResponse(token, { value: false }));
           }
-        }
-      );
+        );
       }
       ourConnection.release();
     });
-
   } catch (error) {
     console.error(`Error during sending antrag: ${error.message}`);
     throw error;
@@ -782,7 +777,7 @@ const server = https.createServer(optionsNoIp, app);
 const serversimple = http.createServer(app);
 
 // Starting our server.
-server.listen(process.env.PORT, process.env.IP, () => {
+server.listen(process.env.PORT, process.env.IP2, () => {
   console.log(
     `Server has been started and listens to port ${process.env.PORT}.`
   );
