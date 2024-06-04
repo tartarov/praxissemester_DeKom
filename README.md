@@ -10,3 +10,5 @@ Navigations: Navigations enthält alle navigationskomponenten einer React Native
 Context: Context ist ein wichtiger Ornder, der alle Schichten der Anwendung enthält. Beispielsweise gibt es einen Authentifizierungskontext-file, der die Logik der Authentifizerung enthält. DataKontext kontrolliert den Datenfluss der Anwendung während AntragKontext die Rolle des Antragsmanagements übernimmt. Der Context-Ordner ist somit das Herz der DeKom-App Anwendung.
 
 Components: Dieser Ordner enthält alle wiederverwendbare Kompontenten, wie Buttons, Lottie-Files, Formular-Karten und andere Blueprints, die für das UI und UX wichtig sind. 
+
+Der Android-Ordner enthält zusätzlich noch die Integration des AusweisApp2-Clients mittels einer Bridge.
